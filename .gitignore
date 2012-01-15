@@ -1,0 +1,8 @@
+/res
+/debug
+/release
+.project
+.cproject
+Makefile
+Makefile.Debug
+Makefile.Release

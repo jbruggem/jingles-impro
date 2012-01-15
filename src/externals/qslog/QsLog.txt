@@ -1,0 +1,4 @@
+Credit for QsLog goes to Razvan Petru.
+
+This module was downloaded from:
+https://bitbucket.org/razvanpetru/qt-components/downloads/

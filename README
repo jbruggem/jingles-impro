@@ -1,0 +1,28 @@
+
+== Building the jingles-qt project ==
+
+This project needs:
+- g++
+- libvlc-dev
+- libqt4-dev
+- a "res" (as in "resources") subdirectory with two audio files named "one.mp3" and "two.mp3"
+
+To generate the directory structure and the makefiles for the build:
+	$ qmake
+
+To compile in release mode:
+	$ make
+To compile in debug mode:
+	$ make debug
+To compile in both debug and release modes:
+	$ make all
+
+To compile several files in parallel, use the "-j" flag:
+	$ make -j4 all
+To make compilation even (much) faster, install and use ccache:
+	$ sudo apt-get install ccache
+	$ make -j4 CXX="ccache g++" all
+
+To run the generated executables:
+	$ ./release/jingles-qt
+	$ ./debug/jingles-qt
