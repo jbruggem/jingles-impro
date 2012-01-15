@@ -14,9 +14,7 @@ class MediaPlayerHandler {
 		void print();
 	private:
 		void cleanup();
-		// We should in fact be using a QMap<QString, QList<MediaPlayerInterface *> > mpMap;
-		QMap<QString, QList<LibvlcMediaPlayer> > mpMap;
-		// We should also have libvlc_instance_t here to pass to all new LibvlcMediaPlayer instances.
+		QMap<QString, QList<MediaPlayerInterface *> > mpMap;
 };
 
 #endif
