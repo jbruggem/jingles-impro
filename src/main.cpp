@@ -29,7 +29,9 @@ int main(int argc, char **argv) {
 	logger.addDestination(fileDestination.get());
 	
 	MediaPlaylist playlist;
+	
 	MainWindow mw;
+	mw.setPlaylist(&playlist);
 	mw.show();
 
 	return app.exec();
