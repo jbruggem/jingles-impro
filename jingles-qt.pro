@@ -10,8 +10,10 @@ LIBS += -lvlc
 # Input
 HEADERS += \
 	src/avobject.h \
+	src/buttonpanel.h \
 #	src/improgui.h \
 	src/libvlcmediaplayer.h \
+	src/mainwindow.h \
 	src/mediaplayerhandler.h \
 	src/mediaplayerinterface.h \
 	src/mediaplaylist.h \
@@ -23,9 +25,11 @@ HEADERS += \
 	src/externals/qslog/QsLogDest.h
 SOURCES += \
 	src/avobject.cpp \
+	src/buttonpanel.cpp \
 #	src/improgui.cpp \
 	src/libvlcmediaplayer.cpp \
 	src/main.cpp \
+	src/mainwindow.cpp \
 	src/mediaplayerhandler.cpp \
 	src/mediaplaylist.cpp \
 	src/pushbuttonwithextras.cpp \
