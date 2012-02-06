@@ -7,6 +7,7 @@
 class ButtonPanel;
 class QAction;
 class MediaPlaylist;
+class MediaPlayerHandler;
 
 class MainWindow : public QMainWindow {
 	
@@ -15,8 +16,12 @@ class MainWindow : public QMainWindow {
 	public:
 		MainWindow(QWidget *parent = 0);
 		void setPlaylist(MediaPlaylist *);
+		void setMediaPlayer(MediaPlayerHandler *);
 	
 	private slots:
+		void buttonShortClicked(int);
+		void buttonLongClicked(int);
+		void stopAll();
 		void addTracks();
 		void toggleEditMode();
 		void clearPlaylist();
@@ -36,6 +41,7 @@ class MainWindow : public QMainWindow {
 		ButtonPanel *buttonPanel;
 		
 		// Actions
+		QAction *stopAllAction;
 		QAction *addAction;
 		QAction *editAction;
 		QAction *clearAction;
@@ -46,6 +52,7 @@ class MainWindow : public QMainWindow {
 		// Other members
 		bool editMode;
 		MediaPlaylist *playlist;
+		MediaPlayerHandler *mediaPlayer;
 };
 
 #endif

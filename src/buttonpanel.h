@@ -20,9 +20,6 @@ class ButtonPanel : public QWidget {
 		void addButton(const QString &);
 		void addButtons(const QStringList &);
 		void clear();
-	private slots:
-		void buttonShortClickedSlot(int);
-		void buttonLongClickedSlot(int);
 	signals:
 		void buttonShortClicked(int);
 		void buttonLongClicked(int);

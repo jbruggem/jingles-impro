@@ -7,17 +7,20 @@
 #include "QsLog.h"
 #include "buttonpanel.h"
 #include "mediaplaylist.h"
+#include "mediaplayerhandler.h"
 #include "nullptr.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent) {
 	QLOG_TRACE() << "MainWindow::MainWindow()";
+	
+	editMode    = false;
+	playlist    = nullptr;
+	mediaPlayer = nullptr;
+	
 	createCentralWidget();
 	createActions();
 	createSideBar();
-	
-	editMode = false;
-	playlist = nullptr;
 	
 	update();
 }
@@ -26,10 +29,17 @@ void MainWindow::createCentralWidget() {
 	QLOG_TRACE() << "MainWindow::createCentralWidget()";
 	buttonPanel = new ButtonPanel;
 	setCentralWidget(buttonPanel);
+	
+	connect(buttonPanel, SIGNAL(buttonShortClicked(int)), this, SLOT(buttonShortClicked(int)));
 }
 
 void MainWindow::createActions() {
 	QLOG_TRACE() << "MainWindow::createActions()";
+	stopAllAction = new QAction(tr("&Stop All"), this);
+	stopAllAction->setToolTip(tr("Stop all tracks that are playing"));
+	stopAllAction->setStatusTip(tr("Stop all tracks that are playing"));
+	connect(stopAllAction, SIGNAL(triggered()), this, SLOT(stopAll()));
+	
 	addAction = new QAction(tr("&Add"), this);
 	addAction->setToolTip(tr("Add tracks to the playlist"));
 	addAction->setStatusTip(tr("Add tracks to the playlist"));
@@ -50,6 +60,8 @@ void MainWindow::createActions() {
 void MainWindow::createSideBar() {
 	QLOG_TRACE() << "MainWindow::createSideBar()";
 	sideBar = new QToolBar(tr("SideBar"));
+	sideBar->addAction(stopAllAction);
+	sideBar->addSeparator();
 	sideBar->addAction(addAction);
 	sideBar->addAction(editAction);
 	sideBar->addAction(clearAction);
@@ -64,6 +76,22 @@ void MainWindow::setPlaylist(MediaPlaylist *playlist) {
 	foreach (const QString &s, *(this->playlist)) {
 		buttonPanel->addButton(QFileInfo(s).baseName());
 	}
+	update();
+}
+
+void MainWindow::setMediaPlayer(MediaPlayerHandler *mph) {
+	QLOG_TRACE() << "MainWindow::setMediaPlayer()";
+	this->mediaPlayer = mph;
+	update();
+}
+
+void MainWindow::stopAll() {
+	QLOG_TRACE() << "MainWindow::stopAll()";
+	if (not mediaPlayer) {
+		return;
+	}
+	mediaPlayer->stop();
+	update();
 }
 
 void MainWindow::addTracks() {
@@ -80,6 +108,7 @@ void MainWindow::addTracks() {
 void MainWindow::toggleEditMode() {
 	QLOG_TRACE() << "MainWindow::toggleEditMode()";
 	editMode = !editMode;
+	update();
 }
 
 void MainWindow::clearPlaylist() {
@@ -110,10 +139,28 @@ void MainWindow::updateSideBar() {
 void MainWindow::updateButtonPanel() {
 	QLOG_TRACE() << "MainWindow::updateButtonPanel()";
 	if (not playlist) {
+		buttonPanel->clear();
 		return;
+	}
+	if (not mediaPlayer) {
+		buttonPanel->setEnabled(false);
+		return;
+	} else {
+		buttonPanel->setEnabled(true);
 	}
 	buttonPanel->clear();
 	foreach (const QString &s, *playlist) {
 		buttonPanel->addButton(QFileInfo(s).baseName());
 	}
+}
+
+void MainWindow::buttonShortClicked(int index) {
+	QLOG_TRACE() << "Button" << index << "short clicked.";
+	if (!editMode) {
+		mediaPlayer->play(playlist->at(index));
+	}
+}
+
+void MainWindow::buttonLongClicked(int index) {
+	QLOG_TRACE() << "Button" << index << "long clicked.";
 }

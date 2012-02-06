@@ -5,6 +5,7 @@
 #include "QsLogDest.h"
 #include "mainwindow.h"
 #include "mediaplaylist.h"
+#include "mediaplayerhandler.h"
 
 #ifdef Q_WS_X11
 	#include <X11/Xlib.h>
@@ -29,9 +30,16 @@ int main(int argc, char **argv) {
 	logger.addDestination(fileDestination.get());
 	
 	MediaPlaylist playlist;
+	playlist.append("res/one.mp3");
+	playlist.append("res/two.mp3");
+	playlist.append("res/three.mp3");
+	
+	MediaPlayerHandler mph;
 	
 	MainWindow mw;
 	mw.setPlaylist(&playlist);
+	mw.setMediaPlayer(&mph);
+	
 	mw.show();
 
 	return app.exec();

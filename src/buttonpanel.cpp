@@ -54,11 +54,3 @@ void ButtonPanel::clear() {
 	qDeleteAll(buttonList);
 	buttonList.clear();
 }
-
-void ButtonPanel::buttonShortClickedSlot(int buttonNumber) {
-	QLOG_TRACE() << "Button" << buttonNumber << "short clicked.";
-}
-
-void ButtonPanel::buttonLongClickedSlot(int buttonNumber) {
-	QLOG_TRACE() << "Button" << buttonNumber << "long clicked.";
-}
