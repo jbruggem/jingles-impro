@@ -23,10 +23,10 @@ HEADERS += \
 	src/externals/qslog/QsDebugOutput.h \
 	src/externals/qslog/QsLog.h \
 	src/externals/qslog/QsLogDest.h \
-    workspace.h \
-    trackstock.h \
-    trackplaylist.h \
-    track.h
+        src/workspace/workspace.h \
+        src/workspace/trackstock.h \
+        src/workspace/trackplaylist.h \
+        src/workspace/track.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -41,10 +41,11 @@ SOURCES += \
 	src/externals/qslog/QsDebugOutput.cpp \
 	src/externals/qslog/QsLog.cpp \
 	src/externals/qslog/QsLogDest.cpp \
-    workspace.cpp \
-    trackstock.cpp \
-    trackplaylist.cpp \
-    track.cpp
+        src/workspace/workspace.cpp \
+        src/workspace/trackstock.cpp \
+        src/workspace/trackplaylist.cpp \
+        src/workspace/track.cpp \
+        src/new-main.cpp
 
 CONFIG(debug, debug|release) {
 	message("debug")

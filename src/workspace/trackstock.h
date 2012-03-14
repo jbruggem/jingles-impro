@@ -10,6 +10,7 @@ class TrackStock : public QObject
     Q_OBJECT
 public:
     explicit TrackStock(QObject *parent = 0);
+    void add(Track & track);
 
 private:
     QList<Track> * m_tracks;

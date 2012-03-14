@@ -10,7 +10,7 @@ class Workspace : public QObject
     Q_OBJECT
     Q_PROPERTY(TrackStock * stock READ getStock)
 public:
-    explicit Workspace(QObject *parent = 0);
+    Workspace(QObject *parent = 0);
     TrackStock * getStock();
 
 
