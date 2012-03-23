@@ -10,13 +10,13 @@ Track::Track(const Track& track):
     fadeOutDuration(track.getFadeOutDuration())
 {
     this->path = *track.getPath();
-    std::cout << "Building Track from other track"<<std::endl;
+     QLOG_TRACE() << "Building Track from other track";
 }
 
 Track::Track(QObject *parent) :
     QObject(parent)
 {
-    std::cout << "Building Track from nothing"<<std::endl;
+   QLOG_TRACE() << "Building Track from nothing";
 }
 
 Track::Track(const QString &url, bool loop, int startTime, int endTime, int fadeInDuration, int fadeOutDuration,QObject *parent) :
@@ -28,14 +28,14 @@ Track::Track(const QString &url, bool loop, int startTime, int endTime, int fade
     fadeInDuration(fadeInDuration),
     fadeOutDuration(fadeOutDuration)
 {
-    std::cout << "Building Track with full params"<<std::endl;
+    QLOG_TRACE() << "Building Track with full params";
 }
 
 Track::Track(const QString &url,QObject *parent) :
     QObject(parent),
     path(url)
 {
-    std::cout << "Building Track from URL"<<std::endl;
+    QLOG_TRACE() << "Building Track from URL";
 }
 
 

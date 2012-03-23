@@ -17,15 +17,11 @@
 #include "workspace/workspace.h"
 
 
-
-
 int newmain(int argc, char ** argv){
     QApplication app(argc, argv);
     app.setApplicationName(QObject::tr("ImproGui"));
 
-    // this is just a draft
-    // Initialise the logging module
-    QsLogging::Logger& logger = QsLogging::Logger::instance();
+    QsLogging::Logger& logger  = QsLogging::Logger::instance();
     logger.setLoggingLevel(QsLogging::TraceLevel);
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("log.txt"));
     QsLogging::DestinationPtr fileDestination( QsLogging::DestinationFactory::MakeFileDestination(sLogPath) );
@@ -33,24 +29,29 @@ int newmain(int argc, char ** argv){
     logger.addDestination(debugDestination.get());
     logger.addDestination(fileDestination.get());
 
-
     QLOG_TRACE() << "Logging initiated";
 
     // manually set some file paths for scaffolding
     // load it in the workspace using the workspace API
     // with the appropriate settings for all the Track properties
     Workspace * activeWorkspace = new Workspace(0);
+    //TrackStock * stock = activeWorkspace->getStock();
+    //TrackPlaylist * playlist = activeWorkspace->getTrackPlaylist();
 
     Track * t;
 
-    t = new Track("file:///home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,30,200,0,0,activeWorkspace);
+    t = new Track("file:///home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,3000,20000,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
 
-    TrackStock * stock = activeWorkspace->getStock();
+    t = new Track("file:///home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 10 Le vaste espace.mp3",false,1000,-1,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
 
-    stock->add(t);
-
+    t = new Track("file:///home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 03 Sueurs froides.mp3",false,8000,25000,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
 
     // add some elements of the stocklist to the playlist using the workspace API
+    activeWorkspace->stockToList(5);
+
 
     delete activeWorkspace;
     QLOG_TRACE() << "Workspace deleted";

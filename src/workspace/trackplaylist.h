@@ -3,15 +3,17 @@
 
 #include <iostream>
 #include <QObject>
+#include "common.h"
+#include "trackcollection.h"
 
-class TrackPlaylist : public QObject
+class TrackPlaylist : public TrackCollection
 {
-    Q_OBJECT
 public:
     explicit TrackPlaylist(QObject *parent = 0);
     ~TrackPlaylist(){
-        std::cout << "deleting TrackPlaylist " << std::endl;
+        QLOG_TRACE() << "deleting TrackPlaylist ";
     }
+private:
 
 signals:
     

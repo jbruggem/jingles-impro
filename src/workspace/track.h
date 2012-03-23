@@ -2,9 +2,9 @@
 #define TRACK_H
 
 #include <sstream>
-#include <iostream>
 #include <string>
 #include <QObject>
+#include "common.h"
 
 class Track : public QObject
 {
@@ -18,13 +18,11 @@ class Track : public QObject
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
-        std::cout << "deleting Track[";
-        std::cout << this->path.toStdString();
-        std::cout << "|";
-        std::cout << this->startTime ;
-        std::cout << "-";
-        std::cout << this->endTime;
-        std::cout << "]" << std::endl;
+        QLOG_TRACE() << "deleting Track[" << this->path << "|"
+                     << this->startTime
+                     << "-"
+                     << this->endTime
+                     << "]";
     }
 
 

@@ -5,22 +5,21 @@
 #include <iostream>
 #include <QObject>
 #include <QList>
+#include "trackcollection.h"
 #include "track.h"
+#include "common.h"
 
-class TrackStock : public QObject
+class TrackStock : public TrackCollection
 {
-    Q_OBJECT
-public:
-    explicit TrackStock(QObject *parent = 0);
-    void add(Track * track);
+    public:
+        explicit TrackStock(QObject *parent = 0);
 
-    ~TrackStock(){
-        std::cout<< "deleting TrackStock"<<std::endl;
+        ~TrackStock(){
+            QLOG_TRACE() << "deleting TrackStock";
     }
 
 
 private:
-    QList<QExplicitlySharedDataPointer<Track> > * m_tracks;
 
 signals:
     
