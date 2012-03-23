@@ -3,8 +3,8 @@ CONFIG += debug_and_release
 
 TEMPLATE = app
 TARGET = 
-DEPENDPATH += . src src/externals/qslog
-INCLUDEPATH += . src src/externals/qslog
+DEPENDPATH += . src src/externals/qslog src/workspace src/qt-ui
+INCLUDEPATH += . src src/externals/qslog src/workspace src/qt-ui
 LIBS += -lvlc
 
 # Input
@@ -23,10 +23,12 @@ HEADERS += \
 	src/externals/qslog/QsDebugOutput.h \
 	src/externals/qslog/QsLog.h \
 	src/externals/qslog/QsLogDest.h \
-        src/workspace/workspace.h \
-        src/workspace/trackstock.h \
-        src/workspace/trackplaylist.h \
-        src/workspace/track.h \
+    src/qt-ui/basicui.h \
+    src/qt-ui/mainwidget.h \
+    src/workspace/workspace.h \
+    src/workspace/trackstock.h \
+    src/workspace/trackplaylist.h \
+    src/workspace/track.h \
     src/workspace/common.h \
     src/workspace/trackcollection.h
 SOURCES += \
@@ -43,10 +45,12 @@ SOURCES += \
 	src/externals/qslog/QsDebugOutput.cpp \
 	src/externals/qslog/QsLog.cpp \
 	src/externals/qslog/QsLogDest.cpp \
-        src/workspace/workspace.cpp \
-        src/workspace/trackstock.cpp \
-        src/workspace/trackplaylist.cpp \
-        src/workspace/track.cpp \
+    src/qt-ui/basicui.cpp \
+    src/qt-ui/mainwidget.cpp \
+    src/workspace/workspace.cpp \
+    src/workspace/trackstock.cpp \
+    src/workspace/trackplaylist.cpp \
+    src/workspace/track.cpp \
     src/workspace/trackcollection.cpp
 
 CONFIG(debug, debug|release) {

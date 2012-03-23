@@ -14,8 +14,10 @@
 
 
 // -----------new main
-#include "workspace/workspace.h"
+#include "workspace.h"
 #include <iostream>
+
+#include "basicui.h"
 
 
 int newmain(int argc, char ** argv){
@@ -66,6 +68,11 @@ int newmain(int argc, char ** argv){
     // ask the media player to start a Track
     // ...
     //new LibvlcMediaPlayer(fileName.toLocal8Bit().constData())
+
+    BasicUi ui;
+    ui.setWorkspace(activeWorkspace);
+    ui.show();
+    app.exec();
 
     delete activeWorkspace;
     QLOG_TRACE() << "Workspace deleted";
