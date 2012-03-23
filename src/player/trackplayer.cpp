@@ -9,21 +9,23 @@ TrackPlayer::TrackPlayer(Track * track,MediaPlayerFactory * factory,QObject *par
 }
 
 void TrackPlayer::provisionPlayer(){
-    QLOG_TRACE << "Provisionning media player";
-    mediaplayers.append(playerFactory->getMediaPlayerInstance());
+    QLOG_TRACE() << "Provisionning media player";
+    MediaPlayerInterface * player = playerFactory->getMediaPlayerInstance();
+    player->setFileName(this->track->getPath()->toStdString().c_str());
+    mediaplayers.append(player);
 
 }
 
 void TrackPlayer::playNew(){
-    QLOG_TRACE << "TrackPlayer playNew";
+    QLOG_TRACE() << "TrackPlayer playNew";
     mediaplayers.last()->play();
     this->provisionPlayer();
 }
 
 void TrackPlayer::stopAll(){
-    QLOG_TRACE << "TrackPlayer stopAll";
+    QLOG_TRACE() << "TrackPlayer stopAll";
 
-    for(i=0;i<mediaplayers.size();i++){
+    for(int i=0;i<mediaplayers.size();i++){
         mediaplayers.at(i)->stop();
         delete mediaplayers.at(i);
     }

@@ -16,7 +16,7 @@ void PlayerWrapper::load(Track *t){
 
 void PlayerWrapper::stopAll(Track *t){
     if(!players.contains(t)){
-        QLOG_FATAL << "Can't stop track: not loaded.";
+        QLOG_FATAL() << "Can't stop track: not loaded.";
         return;
     }
 

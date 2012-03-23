@@ -39,6 +39,7 @@ int main(int argc, char ** argv){
     Track * t;
 
     t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,3000,20000,0,0,activeWorkspace);
+
     activeWorkspace->addTrack(t);
 
     t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 10 Le vaste espace.mp3",false,1000,-1,0,0,activeWorkspace);
@@ -54,6 +55,7 @@ int main(int argc, char ** argv){
     activeWorkspace->addTrack(t);
 
     t = new Track("res/three.mp3",false,0,-1,0,0,activeWorkspace);
+
     activeWorkspace->addTrack(t);
 
     // add some elements of the stocklist to the playlist using the workspace API

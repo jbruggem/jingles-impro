@@ -3,7 +3,7 @@
 #define MEDIAPLAYERHANDLER_H
 
 #include <QMap>
-#include "player/vlc/libvlcmediaplayer.h"
+#include "libvlcmediaplayer.h"
 
 class MediaPlayerHandler {
 	public:

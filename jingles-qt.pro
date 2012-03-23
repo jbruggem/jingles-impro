@@ -38,7 +38,6 @@ SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
 #	src/improgui.cpp \
-	src/libvlcmediaplayer.cpp \
 	src/main.cpp \
 	src/mainwindow.cpp \
 	src/mediaplayerhandler.cpp \
@@ -55,8 +54,8 @@ SOURCES += \
     src/workspace/trackcollection.cpp \
     src/player/playerwrapper.cpp \
     src/player/trackplayer.cpp \
-    src/player/mediaplayerfactory.cpp \
-    src/player/vlc/vlcmediaplayerfactory.cpp
+    src/player/vlc/vlcmediaplayerfactory.cpp \
+    src/player/vlc/libvlcmediaplayer.cpp
 
 
 CONFIG(debug, debug|release) {
