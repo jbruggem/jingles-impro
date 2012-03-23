@@ -1,12 +1,33 @@
 #ifndef TRACK_H
 #define TRACK_H
 
+#include <sstream>
+#include <iostream>
+#include <string>
 #include <QObject>
 
 class Track : public QObject
 {
+
     Q_OBJECT
+    Q_PROPERTY(const QString * path READ getPath)
+    Q_PROPERTY(bool loopEnabled READ isLoopEnabled)
+    Q_PROPERTY(int startTime READ getStartTime)
+    Q_PROPERTY(int endTime READ getEndTime)
+    Q_PROPERTY(int fadeInDuration READ getFadeInDuration)
+    Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
+    ~Track(){
+        std::cout << "deleting Track[";
+        std::cout << this->path.toStdString();
+        std::cout << "|";
+        std::cout << this->startTime ;
+        std::cout << "-";
+        std::cout << this->endTime;
+        std::cout << "]" << std::endl;
+    }
+
+
     explicit Track(const Track& track);
 
     explicit Track(
@@ -20,14 +41,22 @@ public:
     explicit Track(const QString &url,QObject *parent = 0);
     explicit Track(QObject *parent = 0);
 
-   // private properties:
-   // - file name
-   // - loop
-   // - startTime
-   // - endTime
-   // - fadeInDuration
-   // - fadeOutDuration
-    
+
+    const QString * getPath() const{return &path;}
+    bool isLoopEnabled() const{return loopEnabled;}
+    int getStartTime() const{return startTime;}
+    int getEndTime() const{return endTime;}
+    int getFadeInDuration() const{return fadeInDuration;}
+    int getFadeOutDuration() const{return fadeOutDuration;}
+
+private:
+    QString path;
+    bool loopEnabled;
+    int startTime; // milliseconds
+    int endTime;
+    int fadeInDuration;
+    int fadeOutDuration;
+
 signals:
     
 public slots:

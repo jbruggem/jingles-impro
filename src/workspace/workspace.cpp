@@ -3,8 +3,8 @@
 Workspace::Workspace(QObject *parent) :
     QObject(parent)
 {
-    m_stock = new TrackStock();
-    m_list = new TrackPlaylist();
+    m_stock = new TrackStock(this);
+    m_list = new TrackPlaylist(this);
 
 }
 

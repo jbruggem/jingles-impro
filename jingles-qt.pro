@@ -44,8 +44,7 @@ SOURCES += \
         src/workspace/workspace.cpp \
         src/workspace/trackstock.cpp \
         src/workspace/trackplaylist.cpp \
-        src/workspace/track.cpp \
-        src/new-main.cpp
+        src/workspace/track.cpp
 
 CONFIG(debug, debug|release) {
 	message("debug")

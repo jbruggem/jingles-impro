@@ -1,6 +1,7 @@
 #ifndef WORKSPACE_H
 #define WORKSPACE_H
 
+#include <iostream>
 #include <QObject>
 #include "trackstock.h"
 #include "trackplaylist.h"
@@ -13,6 +14,9 @@ public:
     Workspace(QObject *parent = 0);
     TrackStock * getStock();
 
+    ~Workspace(){
+        std::cout << "deleting Workspace " << std::endl;
+    }
 
 private:
     TrackPlaylist * m_list;
