@@ -2,9 +2,9 @@
 #define TRACKPLAYER_H
 
 #include <QObject>
-#include "../workspace/track.h"
+#include "track.h"
 #include "mediaplayerinterface.h"
-#include "../common.h"
+#include "common.h"
 #include "mediaplayerfactory.h"
 
 class TrackPlayer : public QObject

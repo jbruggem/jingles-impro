@@ -6,7 +6,6 @@
 #include "QsLogDest.h"
 #include "mainwindow.h"
 
-
 #include "testui.h"
 
 #ifdef Q_WS_X11
@@ -15,6 +14,7 @@
 
 #include "workspace.h"
 #include "basicui.h"
+
 
 
 int main(int argc, char ** argv){

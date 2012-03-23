@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "QMap"
-#include "../common.h"
+#include "common.h"
 #include "trackplayer.h"
 
 class PlayerWrapper : public QObject
