@@ -70,12 +70,12 @@ int main(int argc, char ** argv){
     // the media player should register to the signals triggered when a track is added or remove from the playlist
     // ...
 
-
     BasicUi ui;
     ui.setWorkspace(activeWorkspace);
 //    TestUi ui;
     ui.show();
     app.exec();
+
 
     delete activeWorkspace;
     delete mediaPlayerFactory;

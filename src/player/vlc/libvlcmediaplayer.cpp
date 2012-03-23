@@ -130,13 +130,41 @@ const char * LibvlcMediaPlayer::getFileName() const {
 
 int LibvlcMediaPlayer::play() {
 	QLOG_TRACE() << "LibvlcMediaPlayer::play() |" << (fileName? fileName : "no file");
-	// Play/resume the media_player 
-	int error = libvlc_media_player_play (libvlcMediaPlayer);
+    // Play/resume the media_player
+    QLOG_TRACE() << "state" << libvlc_media_player_get_state(libvlcMediaPlayer);
+
+    //*
+    libvlc_media_player_play (libvlcMediaPlayer);
+    libvlc_media_player_pause (libvlcMediaPlayer);
+    libvlc_media_player_set_time(libvlcMediaPlayer,5000);
+    //*/
+    int error = libvlc_media_player_play (libvlcMediaPlayer);
+
 	if (not error) {
 		// Playback was successfully started, so we store the initial time
 		timeStartedPlaying = time(nullptr);
 		state = PLAYBACK_STARTED;
 	}
+
+
+    int fadeDuration = 10000; // milliseconds
+    int startVolume = 0; //libvlc_audio_get_volume(libvlcMediaPlayer);
+    int endVolume = 120;
+    int factor = 1;
+    int microStep = factor*fadeDuration*1000/(endVolume-startVolume);
+
+    QLOG_TRACE() << "step" << microStep;
+
+    for(int i=startVolume; i <= endVolume; i+=factor){
+        libvlc_audio_set_volume(libvlcMediaPlayer,i);
+        usleep(microStep);
+    }
+    libvlc_audio_set_volume(libvlcMediaPlayer,endVolume);
+
+
+    QLOG_TRACE() << "volue " << libvlc_audio_get_volume (libvlcMediaPlayer);
+    //for(int i)
+
 	return error;
 }
 

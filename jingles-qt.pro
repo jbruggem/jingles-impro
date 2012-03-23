@@ -26,14 +26,14 @@ HEADERS += \
         src/workspace/trackstock.h \
         src/workspace/trackplaylist.h \
         src/workspace/track.h \
-    src/workspace/trackcollection.h \
-    src/player/playerwrapper.h \
-    src/player/trackplayer.h \
-    src/player/mediaplayerinterface.h \
-    src/player/mediaplayerfactory.h \
-    src/player/vlc/libvlcmediaplayer.h \
-    src/player/vlc/vlcmediaplayerfactory.h \
-    src/common.h
+        src/workspace/trackcollection.h \
+        src/player/playerwrapper.h \
+        src/player/trackplayer.h \
+        src/player/mediaplayerinterface.h \
+        src/player/mediaplayerfactory.h \
+        src/player/vlc/libvlcmediaplayer.h \
+        src/player/vlc/vlcmediaplayerfactory.h \
+        src/common.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -51,11 +51,11 @@ SOURCES += \
         src/workspace/trackstock.cpp \
         src/workspace/trackplaylist.cpp \
         src/workspace/track.cpp \
-    src/workspace/trackcollection.cpp \
-    src/player/playerwrapper.cpp \
-    src/player/trackplayer.cpp \
-    src/player/vlc/vlcmediaplayerfactory.cpp \
-    src/player/vlc/libvlcmediaplayer.cpp
+        src/workspace/trackcollection.cpp \
+        src/player/playerwrapper.cpp \
+        src/player/trackplayer.cpp \
+        src/player/vlc/vlcmediaplayerfactory.cpp \
+        src/player/vlc/libvlcmediaplayer.cpp
 
 
 CONFIG(debug, debug|release) {
