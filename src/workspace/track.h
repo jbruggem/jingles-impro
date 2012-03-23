@@ -18,11 +18,11 @@ class Track : public QObject
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
-        QLOG_TRACE() << "deleting Track[" << this->path << "|"
-                     << this->startTime
-                     << "-"
-                     << this->endTime
-                     << "]";
+        //QLOG_TRACE() << "deleting Track[" << this->path << "|"
+        //             << this->startTime
+       //              << "-"
+       //              << this->endTime
+       //              << "]";
     }
 
 

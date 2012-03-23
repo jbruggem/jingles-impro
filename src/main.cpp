@@ -15,6 +15,7 @@
 
 // -----------new main
 #include "workspace/workspace.h"
+#include <iostream>
 
 
 int newmain(int argc, char ** argv){
@@ -58,9 +59,13 @@ int newmain(int argc, char ** argv){
 
     // display stock & list
     // ...
+    //QLOG_TRACE() << (* activeWorkspace);
+    std::cout << "Workspace: " << * activeWorkspace <<std::endl;
+
 
     // ask the media player to start a Track
     // ...
+    //new LibvlcMediaPlayer(fileName.toLocal8Bit().constData())
 
     delete activeWorkspace;
     QLOG_TRACE() << "Workspace deleted";

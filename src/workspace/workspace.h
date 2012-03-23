@@ -7,6 +7,7 @@
 #include "trackplaylist.h"
 #include "common.h"
 
+
 class Workspace : public QObject
 {
     Q_OBJECT
@@ -25,8 +26,12 @@ public:
     bool stockToList(Track * track);
 
     ~Workspace(){
-        std::cout << "deleting Workspace " << std::endl;
+         //QLOG_TRACE() << "deleting Workspace ";
     }
+
+    friend std::ostream& operator<< (std::ostream &out, const Workspace & wsp);
+
+
 
 private:
     TrackPlaylist * m_list;

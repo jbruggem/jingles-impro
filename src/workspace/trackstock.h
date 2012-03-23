@@ -15,7 +15,7 @@ class TrackStock : public TrackCollection
         explicit TrackStock(QObject *parent = 0);
 
         ~TrackStock(){
-            QLOG_TRACE() << "deleting TrackStock";
+            //QLOG_TRACE() << "deleting TrackStock";
     }
 
 

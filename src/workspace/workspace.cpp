@@ -24,9 +24,13 @@ bool Workspace::stockToList(int index){
 // Moves track from the stock to the list
 bool Workspace::stockToList(Track * track){
     QLOG_TRACE() << "Asserting that track is in stock.";
-    assert(this->m_stock->hasTrack(track));
-    // TODO    QLOG_TRACE() << "Adding track to playlist";
-    return 0 <= m_list->add(track);
+    if(!this->m_stock->hasTrack(track)){
+        QLOG_FATAL() << "Error: track not in stock!";
+        return false;
+    }else{
+        QLOG_TRACE() << "Adding track to playlist";
+        return 0 <= m_list->add(track);
+    }
 }
 
 
@@ -36,4 +40,13 @@ TrackStock * Workspace::getStock(){
 
 TrackPlaylist * Workspace::getPlaylist(){
     return m_list;
+}
+
+std::ostream& operator<< (std::ostream &out, const Workspace & wsp){
+    out << "\n***** Workspace: ";
+    out << "\n *** Stock: ";
+    out << *wsp.m_stock;
+    out << "\n *** List: ";
+    out << *wsp.m_list;
+    return out;
 }

@@ -11,7 +11,7 @@ class TrackPlaylist : public TrackCollection
 public:
     explicit TrackPlaylist(QObject *parent = 0);
     ~TrackPlaylist(){
-        QLOG_TRACE() << "deleting TrackPlaylist ";
+       // QLOG_TRACE() << "deleting TrackPlaylist ";
     }
 private:
 
