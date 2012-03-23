@@ -4,7 +4,7 @@
 
 #include <vlc/vlc.h>
 #include <time.h>
-#include "mediaplayerinterface.h"
+#include "player/mediaplayerinterface.h"
 #include "nullptr.h"
 
 class LibvlcMediaPlayer : public MediaPlayerInterface {

@@ -11,7 +11,7 @@ bool TrackCollection::hasTrack(Track * const &track){
     return m_tracks->contains(track);
 }
 
-Track * TrackCollection::fetchTrack(int index){
+Track * TrackCollection::getTrack(int index){
     QLOG_TRACE() << "Collection: fetchTrack";
     return m_tracks->value(index);
 }

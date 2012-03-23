@@ -13,7 +13,7 @@ public:
     explicit TrackCollection(QObject *parent = 0);
     int add(Track * track);
 
-    Track * fetchTrack(int index);
+    Track * getTrack(int index);
     bool hasTrack(Track * const &track);
 
     ~TrackCollection(){
