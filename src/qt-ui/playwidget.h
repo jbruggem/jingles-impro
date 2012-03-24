@@ -4,10 +4,8 @@
 
 #include <QWidget>
 
-class QGroupBox;
 class QGridLayout;
-class QHBoxLayout;
-class PushButtonWithExtras;
+class PlayWidgetEntry;
 
 class PlayWidget : public QWidget {
 
@@ -16,11 +14,8 @@ class PlayWidget : public QWidget {
 	public:
 		PlayWidget(QWidget *parent = 0);
 	private:
-		QGridLayout *gridLayout;
-		QGroupBox   *groupBox;
-		QHBoxLayout *layout;
-		PushButtonWithExtras *playButton;
-		PushButtonWithExtras *stopButton;
+		QGridLayout     *gridLayout;
+		PlayWidgetEntry *trackEntry;
 };
 
 #endif
