@@ -25,6 +25,7 @@ HEADERS += \
 	src/externals/qslog/QsLogDest.h \
     src/qt-ui/basicui.h \
     src/qt-ui/mainwidget.h \
+    src/qt-ui/playwidget.h \
     src/workspace/workspace.h \
     src/workspace/trackstock.h \
     src/workspace/trackplaylist.h \
@@ -47,6 +48,7 @@ SOURCES += \
 	src/externals/qslog/QsLogDest.cpp \
     src/qt-ui/basicui.cpp \
     src/qt-ui/mainwidget.cpp \
+    src/qt-ui/playwidget.cpp \
     src/workspace/workspace.cpp \
     src/workspace/trackstock.cpp \
     src/workspace/trackplaylist.cpp \

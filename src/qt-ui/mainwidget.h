@@ -6,18 +6,24 @@
 
 class Workspace;
 //class EditWidget;
-//class PlayWidget;
+class PlayWidget;
 class QGridLayout;
 class QPushButton;
 
 class MainWidget : public QWidget {
+
+	Q_OBJECT
+
 	public:
 		MainWidget(QWidget *parent = 0);
 		void setWorkspace(Workspace *wsp);
+	private slots:
+		void modeButtonClicked(bool);
 	private:
 		Workspace   *wsp;
 		QGridLayout *layout;
-		QPushButton *editModeButton;
+		QPushButton *modeButton;
+		PlayWidget  *playWidget;
 };
 
 #endif
