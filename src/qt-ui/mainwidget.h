@@ -5,9 +5,11 @@
 #include <QWidget>
 
 class Workspace;
-//class EditWidget;
+// class EditWidget;
 class PlayWidget;
-class QGridLayout;
+// class QGridLayout;
+class QVBoxLayout;
+class QHBoxLayout;
 class QPushButton;
 
 class MainWidget : public QWidget {
@@ -21,7 +23,9 @@ class MainWidget : public QWidget {
 		void modeButtonClicked(bool);
 	private:
 		Workspace   *wsp;
-		QGridLayout *layout;
+		// QGridLayout *layout;
+		QVBoxLayout *layout;
+		QHBoxLayout *modeButtonLayout;
 		QPushButton *modeButton;
 		PlayWidget  *playWidget;
 };

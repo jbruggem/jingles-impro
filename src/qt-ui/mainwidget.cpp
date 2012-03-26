@@ -2,7 +2,9 @@
 #include "mainwidget.h"
 
 #include <QGridLayout>
+#include <QVBoxLayout>
 #include <QPushButton>
+#include <QStringList>
 #include "QsLog.h"
 #include "workspace.h"
 #include "nullptr.h"
@@ -20,11 +22,20 @@ MainWidget::MainWidget(QWidget *parent)
 
 	// initialise play widget
 	playWidget = new PlayWidget;
+	QStringList l;
+	l << "mop1" << "mop2" << "mop3";
+	playWidget->update(l);
 
 	// set up the layout
-	layout = new QGridLayout;
-	layout->addWidget(modeButton, 1, 2, Qt::AlignRight);
-	layout->addWidget(playWidget, 2, 1, 1, 2);
+	layout           = new QVBoxLayout;
+	modeButtonLayout = new QHBoxLayout;
+	// layout = new QGridLayout;
+	// layout->addWidget(modeButton, 0, 1, Qt::AlignRight);
+	// layout->addWidget(playWidget, 1, 0, 1, 2);
+	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
+	layout->addLayout(modeButtonLayout);
+	layout->addStretch();
+	layout->addWidget(playWidget);
 	setLayout(layout);
 }
 
@@ -35,5 +46,11 @@ void MainWidget::setWorkspace(Workspace *wsp) {
 
 void MainWidget::modeButtonClicked(bool checked) {
 	QLOG_TRACE() << "MainWidget::modeButtonClicked() " << "checked: " << (checked ? "true" : "false");
-	modeButton->setText(checked ? tr("Edit Mode") : tr("Play Mode"));
+	if (checked) {
+		modeButton->setText(tr("Edit Mode"));
+		playWidget->hide();
+	} else {
+		modeButton->setText(tr("Play Mode"));
+		playWidget->show();
+	}
 }
