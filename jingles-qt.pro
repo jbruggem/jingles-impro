@@ -8,6 +8,7 @@ DEPENDPATH  += . src src/player src/player/vlc src/workspace src/externals/qslog
 INCLUDEPATH += . src src/player src/player/vlc src/workspace src/externals/qslog
 LIBS += -lvlc
 
+
 # Input
 HEADERS += \
 	src/avobject.h \
@@ -76,3 +77,6 @@ CONFIG(release, debug|release) {
 }
 
 unix:!macx:!symbian: LIBS += -lX11
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += gstreamer-0.10
