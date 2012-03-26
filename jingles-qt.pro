@@ -32,7 +32,8 @@ HEADERS += \
     src/workspace/trackplaylist.h \
     src/workspace/track.h \
     src/workspace/common.h \
-    src/workspace/trackcollection.h
+    src/workspace/trackcollection.h \
+    src/workspace/tracklist.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -55,7 +56,8 @@ SOURCES += \
     src/workspace/trackstock.cpp \
     src/workspace/trackplaylist.cpp \
     src/workspace/track.cpp \
-    src/workspace/trackcollection.cpp
+    src/workspace/trackcollection.cpp \
+    src/workspace/tracklist.cpp
 
 CONFIG(debug, debug|release) {
 	message("debug")

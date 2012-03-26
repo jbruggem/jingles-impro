@@ -1,24 +1,15 @@
+
 #ifndef TRACKPLAYLIST_H
 #define TRACKPLAYLIST_H
 
-#include <iostream>
-#include <QObject>
-#include "common.h"
-#include "trackcollection.h"
+#include "tracklist.h"
 
-class TrackPlaylist : public TrackCollection
-{
-public:
-    explicit TrackPlaylist(QObject *parent = 0);
-    ~TrackPlaylist(){
-       // QLOG_TRACE() << "deleting TrackPlaylist ";
-    }
-private:
+class TrackPlaylist : public TrackList {
 
-signals:
-    
-public slots:
-    
+	Q_OBJECT
+
+	public:
+		TrackPlaylist(QObject *parent = 0);
 };
 
-#endif // TRACKPLAYLIST_H
+#endif

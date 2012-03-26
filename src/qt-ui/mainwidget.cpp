@@ -22,9 +22,6 @@ MainWidget::MainWidget(QWidget *parent)
 
 	// initialise play widget
 	playWidget = new PlayWidget;
-	QStringList l;
-	l << "mop1" << "mop2" << "mop3";
-	playWidget->update(l);
 
 	// set up the layout
 	layout           = new QVBoxLayout;
@@ -42,6 +39,7 @@ MainWidget::MainWidget(QWidget *parent)
 void MainWidget::setWorkspace(Workspace *wsp) {
 	QLOG_TRACE() << "MainWidget::setWorkspace()";
 	this->wsp = wsp;
+	playWidget->update(*(wsp->getPlaylist()));
 }
 
 void MainWidget::modeButtonClicked(bool checked) {

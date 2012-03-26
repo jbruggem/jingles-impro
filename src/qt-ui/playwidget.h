@@ -7,6 +7,7 @@
 
 class QGridLayout;
 class PlayWidgetEntry;
+class TrackList;
 
 class PlayWidget : public QWidget {
 
@@ -15,8 +16,10 @@ class PlayWidget : public QWidget {
 	public:
 		PlayWidget(QWidget *parent = 0);
 		void clear();
-		void update(const QStringList &);
-		void append(const QStringList &);
+		// void update(const QStringList &);
+		// void append(const QStringList &);
+		void update(const TrackList &);
+		void append(const TrackList &);
 	private:
 		QGridLayout *layout;
 		QList<PlayWidgetEntry *> entryList;

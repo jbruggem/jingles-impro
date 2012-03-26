@@ -1,8 +1,5 @@
+
 #include "trackstock.h"
 
-
-TrackStock::TrackStock(QObject *parent) :
-    TrackCollection(parent)
-{
-
+TrackStock::TrackStock(QObject *parent) : TrackList(parent) {
 }

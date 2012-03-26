@@ -1,30 +1,15 @@
+
 #ifndef TRACKSTOCK_H
 #define TRACKSTOCK_H
 
-#include <QExplicitlySharedDataPointer>
-#include <iostream>
-#include <QObject>
-#include <QList>
-#include "trackcollection.h"
-#include "track.h"
-#include "common.h"
+#include "tracklist.h"
 
-class TrackStock : public TrackCollection
-{
-    public:
-        explicit TrackStock(QObject *parent = 0);
+class TrackStock : public TrackList {
 
-        ~TrackStock(){
-            //QLOG_TRACE() << "deleting TrackStock";
-    }
+	Q_OBJECT
 
-
-private:
-
-signals:
-    
-public slots:
-    
+	public:
+		TrackStock(QObject *parent = 0);
 };
 
-#endif // TRACKSTOCK_H
+#endif

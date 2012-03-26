@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include "QsLog.h"
 #include "playwidgetentry.h"
+#include "tracklist.h"
 
 PlayWidget::PlayWidget(QWidget *parent)
 	: QWidget (parent) {
@@ -18,14 +19,16 @@ void PlayWidget::clear() {
 	entryList.clear();
 }
 
-void PlayWidget::update(const QStringList &list) {
+// void PlayWidget::update(const QStringList &list) {
+void PlayWidget::update(const TrackList &list) {
 	clear();
 	append(list);
 }
 
-void PlayWidget::append(const QStringList &list) {
-	foreach(const QString &s, list) {
-		entryList.append(new PlayWidgetEntry(s));
+// void PlayWidget::append(const QStringList &list) {
+void PlayWidget::append(const TrackList &list) {
+	for(int i = 0; i < list.size(); i++) {
+		entryList.append(new PlayWidgetEntry(*list.at(i)));
 		layout->addWidget(entryList.last());
 	}
 }
