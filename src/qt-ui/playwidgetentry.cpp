@@ -27,6 +27,7 @@ PlayWidgetEntry::PlayWidgetEntry(const Track &t, QWidget *parent)
 
 	buttonLayout->addWidget(playButton);
 	buttonLayout->addWidget(stopButton);
+	buttonLayout->addStretch();
 	innerLayout->addLayout(buttonLayout, 0, 0);
 	groupBox->setLayout(innerLayout);
 	outerLayout->addWidget(groupBox);

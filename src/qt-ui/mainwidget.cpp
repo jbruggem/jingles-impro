@@ -21,7 +21,7 @@ MainWidget::MainWidget(QWidget *parent)
 	connect(modeButton, SIGNAL(clicked(bool)), this, SLOT(modeButtonClicked(bool)));
 
 	// initialise play widget
-	playWidget = new PlayWidget;
+	playWidget = new PlayWidget(3);
 
 	// set up the layout
 	layout           = new QVBoxLayout;
@@ -31,8 +31,8 @@ MainWidget::MainWidget(QWidget *parent)
 	// layout->addWidget(playWidget, 1, 0, 1, 2);
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
-	layout->addStretch();
 	layout->addWidget(playWidget);
+	layout->addStretch();
 	setLayout(layout);
 }
 

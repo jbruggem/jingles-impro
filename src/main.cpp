@@ -53,7 +53,9 @@ int newmain(int argc, char ** argv){
     activeWorkspace->addTrack(t);
 
     // add some elements of the stocklist to the playlist using the workspace API
+    activeWorkspace->stockToList(0);
     activeWorkspace->stockToList(1);
+    activeWorkspace->stockToList(2);
 
     // give the workspace to the media player (or use the controller as a broker between them?)
     // the media player should register to the signals triggered when a track is added or remove from the playlist
