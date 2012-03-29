@@ -23,6 +23,7 @@ class MainWidget : public QWidget {
 	private slots:
 		void modeButtonClicked(bool);
 		void doSth();
+		void doSthElse();
 	private:
 		Workspace   *wsp;
 		// QGridLayout *layout;

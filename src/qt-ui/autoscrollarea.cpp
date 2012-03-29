@@ -8,7 +8,7 @@ AutoScrollArea::AutoScrollArea(QWidget *parent)
 	: QScrollArea(parent) {
 
 	// set up scrolling mode
-	state = Idle;
+	state = Minimum;
 	mode  = Continuous;
 	paused = true;
 	rewindAfterScroll = false;
@@ -19,6 +19,7 @@ AutoScrollArea::AutoScrollArea(QWidget *parent)
 	waitTime        = 1000;
 
 	timer = new QTimer;
+	timer->setSingleShot(true);
 	connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
@@ -38,21 +39,21 @@ void AutoScrollArea::setTimings(int scrollInterval, int scrollIncrement, int wai
 
 void AutoScrollArea::stopScrolling() {
 	paused = true;
-	state = Idle;
-	horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
+	state = Minimum;
+	rewind();
 }
 
 void AutoScrollArea::pauseScrolling() {
 	paused = true;
 }
 
-void AutoScrollArea::startScrolling(int delay) {
+void AutoScrollArea::startScrolling() {
 	paused = false;
-	if ((state == Idle) or (state == EndOfScroll)) {
-		state = ScrollMinToMax;
-	}
-	timer->setSingleShot(true);
-	timer->start(delay);
+	timer->start();
+}
+
+void AutoScrollArea::rewind() {
+	horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
 }
 
 void AutoScrollArea::update() {
@@ -60,9 +61,6 @@ void AutoScrollArea::update() {
 		return;
 	}
 	switch(state) {
-		case Idle:
-			horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
-			break;
 		case Minimum:
 			horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
 			state = ScrollMinToMax;
@@ -77,8 +75,10 @@ void AutoScrollArea::update() {
 					state = Minimum;
 					timer->start(waitTime);
 				} else if (mode == OneTimeOneWay) {
-					state = EndOfScroll;
-					timer->start();
+					state = Minimum;
+					if (rewindAfterScroll) {
+						QTimer::singleShot(waitTime, this, SLOT(stopScrolling()));
+					}
 				} else {  // Continuous or OneTime
 					state = Maximum;
 					timer->start(scrollInterval);
@@ -95,17 +95,11 @@ void AutoScrollArea::update() {
 				timer->start(scrollInterval);
 			} else {
 				if (mode == OneTime) {
-					state = Idle;
+					state = Minimum;
 				} else {  // Continuous
 					state = Minimum;
 					timer->start(scrollInterval);
 				}
-			}
-			break;
-		case EndOfScroll:
-			if (rewindAfterScroll) {
-				state = Idle;
-				timer->start(waitTime);
 			}
 			break;
 	}

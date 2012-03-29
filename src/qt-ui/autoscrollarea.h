@@ -12,12 +12,10 @@ class AutoScrollArea : public QScrollArea {
 
 	public:
 		enum StateEnum {
-			Idle,
 			Minimum,
 			ScrollMinToMax,
 			Maximum,
-			ScrollMaxToMin,
-			EndOfScroll
+			ScrollMaxToMin
 		};
 		enum ScrollingMode {
 			Continuous,
@@ -29,9 +27,11 @@ class AutoScrollArea : public QScrollArea {
 		void setMode(ScrollingMode);
 		void setRewindAfterScroll(bool);
 		void setTimings(int scrollInterval, int scrollIncrement, int waitTime);
-		void startScrolling(int delay = 0);
-		void stopScrolling();
+	public slots:
+		void startScrolling();
 		void pauseScrolling();
+		void stopScrolling();
+		void rewind();
 	private slots:
 		void update();
 	private:
