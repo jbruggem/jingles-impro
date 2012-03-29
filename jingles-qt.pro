@@ -23,6 +23,7 @@ HEADERS += \
 	src/externals/qslog/QsDebugOutput.h \
 	src/externals/qslog/QsLog.h \
 	src/externals/qslog/QsLogDest.h \
+    src/qt-ui/autoscrollarea.h \
     src/qt-ui/basicui.h \
     src/qt-ui/mainwidget.h \
     src/qt-ui/playwidget.h \
@@ -48,6 +49,7 @@ SOURCES += \
 	src/externals/qslog/QsDebugOutput.cpp \
 	src/externals/qslog/QsLog.cpp \
 	src/externals/qslog/QsLogDest.cpp \
+    src/qt-ui/autoscrollarea.cpp \
     src/qt-ui/basicui.cpp \
     src/qt-ui/mainwidget.cpp \
     src/qt-ui/playwidget.cpp \

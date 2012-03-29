@@ -7,10 +7,12 @@
 class Workspace;
 // class EditWidget;
 class PlayWidget;
-// class QGridLayout;
 class QVBoxLayout;
 class QHBoxLayout;
 class QPushButton;
+class QScrollArea;
+class QLabel;
+class QTimer;
 
 class MainWidget : public QWidget {
 
@@ -21,6 +23,7 @@ class MainWidget : public QWidget {
 		void setWorkspace(Workspace *wsp);
 	private slots:
 		void modeButtonClicked(bool);
+		void scroll();
 	private:
 		Workspace   *wsp;
 		// QGridLayout *layout;
@@ -28,6 +31,9 @@ class MainWidget : public QWidget {
 		QHBoxLayout *modeButtonLayout;
 		QPushButton *modeButton;
 		PlayWidget  *playWidget;
+		QScrollArea *scrollArea;
+		QLabel      *label;
+		QTimer      *timer;
 };
 
 #endif
