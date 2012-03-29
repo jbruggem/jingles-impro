@@ -5,6 +5,7 @@
 #include <QScrollArea>
 
 class QTimer;
+class QScrollBar;
 
 class AutoScrollArea : public QScrollArea {
 
@@ -27,6 +28,7 @@ class AutoScrollArea : public QScrollArea {
 		void setMode(ScrollingMode);
 		void setRewindAfterScroll(bool);
 		void setTimings(int scrollInterval, int scrollIncrement, int waitTime);
+		void setOrientation(Qt::Orientation);
 	public slots:
 		void startScrolling();
 		void pauseScrolling();
@@ -35,14 +37,15 @@ class AutoScrollArea : public QScrollArea {
 	private slots:
 		void update();
 	private:
-		QTimer       *timer;
-		StateEnum     state;
-		ScrollingMode mode;
-		bool          paused;
-		bool          rewindAfterScroll;
-		int           scrollIncrement;
-		int           scrollInterval;
-		int           waitTime;
+		QTimer          *timer;
+		StateEnum        state;
+		ScrollingMode    mode;
+		QScrollBar      *scrollBar;
+		bool             paused;
+		bool             rewindAfterScroll;
+		int              scrollIncrement;
+		int              scrollInterval;
+		int              waitTime;
 };
 
 #endif

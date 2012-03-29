@@ -41,17 +41,17 @@ MainWidget::MainWidget(QWidget *parent)
 	scrollArea = new AutoScrollArea;
 	label = new QLabel("A scroll area is used to display the contents of a child widget within a frame. If the widget exceeds the size of the frame, the view can provide scroll bars so that the entire area of the child widget can be viewed.");
 	scrollArea->setWidget(label);
-	scrollArea->setMode(AutoScrollArea::OneTimeOneWay);
+	scrollArea->setMode(AutoScrollArea::Continuous);
 	scrollArea->setRewindAfterScroll(true);
-	scrollArea->setTimings(30, 1, 1000);
+	scrollArea->setTimings(10, 1, 1000);
 	scrollArea->startScrolling();
-	scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	layout->addWidget(scrollArea);
 
 	setLayout(layout);
 
-	QTimer::singleShot(5000, this, SLOT(doSth()));
+	QTimer::singleShot(3000, this, SLOT(doSth()));
 
 }
 
@@ -74,11 +74,11 @@ void MainWidget::modeButtonClicked(bool checked) {
 
 void MainWidget::doSth() {
 	QLOG_TRACE() << "MainWidget::doSth()";
-	scrollArea->pauseScrolling();
+	// scrollArea->stopScrolling();
 	QTimer::singleShot(5000, this, SLOT(doSthElse()));
 }
 
 void MainWidget::doSthElse() {
 	QLOG_TRACE() << "MainWidget::doSthElse()";
-	scrollArea->startScrolling();
+	// scrollArea->startScrolling();
 }

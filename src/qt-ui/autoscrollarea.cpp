@@ -10,6 +10,7 @@ AutoScrollArea::AutoScrollArea(QWidget *parent)
 	// set up scrolling mode
 	state = Minimum;
 	mode  = Continuous;
+	scrollBar = horizontalScrollBar();
 	paused = true;
 	rewindAfterScroll = false;
 
@@ -37,6 +38,14 @@ void AutoScrollArea::setTimings(int scrollInterval, int scrollIncrement, int wai
 	this->waitTime        = waitTime;
 }
 
+void AutoScrollArea::setOrientation(Qt::Orientation orientation) {
+	if (orientation == Qt::Vertical) {
+		scrollBar = verticalScrollBar();
+	} else {
+		scrollBar = horizontalScrollBar();
+	}
+}
+
 void AutoScrollArea::stopScrolling() {
 	paused = true;
 	state = Minimum;
@@ -53,7 +62,7 @@ void AutoScrollArea::startScrolling() {
 }
 
 void AutoScrollArea::rewind() {
-	horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
+	scrollBar->setValue(scrollBar->minimum());
 }
 
 void AutoScrollArea::update() {
@@ -62,13 +71,13 @@ void AutoScrollArea::update() {
 	}
 	switch(state) {
 		case Minimum:
-			horizontalScrollBar()->setValue(horizontalScrollBar()->minimum());
+			scrollBar->setValue(scrollBar->minimum());
 			state = ScrollMinToMax;
 			timer->start(waitTime);
 			break;
 		case ScrollMinToMax:
-			if (horizontalScrollBar()->value() < horizontalScrollBar()->maximum()) {
-				horizontalScrollBar()->setValue(horizontalScrollBar()->value() + scrollIncrement);
+			if (scrollBar->value() < scrollBar->maximum()) {
+				scrollBar->setValue(scrollBar->value() + scrollIncrement);
 				timer->start(scrollInterval);
 			} else {
 				if (mode == ContinuousOneWay) {
@@ -90,8 +99,8 @@ void AutoScrollArea::update() {
 			timer->start(waitTime);
 			break;
 		case ScrollMaxToMin:
-			if (horizontalScrollBar()->value() > horizontalScrollBar()->minimum()) {
-				horizontalScrollBar()->setValue(horizontalScrollBar()->value() - scrollIncrement);
+			if (scrollBar->value() > scrollBar->minimum()) {
+				scrollBar->setValue(scrollBar->value() - scrollIncrement);
 				timer->start(scrollInterval);
 			} else {
 				if (mode == OneTime) {
