@@ -8,13 +8,24 @@
 #include <QTimer>
 #include "QsLog.h"
 
+// todo enable keyboard navigation in right pane
+// todo add navigation buttons
+// todo add filter
+
 EditWidget::EditWidget(QWidget *parent)
 	: QWidget(parent) {
+
+	// set up the timer
+	refreshDelayTimer = new QTimer(this);
+	refreshDelayTimer->setSingleShot(true);
+	refreshDelay = 0;
+
+	leftPaneFolder = QDir::rootPath();
 
 	// set up the left pane
 	dirsOnlyModel = new QFileSystemModel;
 	dirsOnlyModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-	dirsOnlyModel->setRootPath(QDir::rootPath());
+	dirsOnlyModel->setRootPath(leftPaneFolder);
 	leftPane = new QTreeView;
 	leftPane->setModel(dirsOnlyModel);
 	// only show first column (folder names)
@@ -30,7 +41,7 @@ EditWidget::EditWidget(QWidget *parent)
 
 	// set up the right pane
 	fileModel = new QFileSystemModel;
-	fileModel->setRootPath(QDir::rootPath());
+	fileModel->setRootPath(leftPaneFolder);
 	rightPane = new QTreeView;
 	rightPane->setModel(fileModel);
 	rightPane->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -46,13 +57,23 @@ EditWidget::EditWidget(QWidget *parent)
 	connect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 	connect(rightPane, SIGNAL(activated(const QModelIndex &)), this, SLOT(rightPaneItemActivated(const QModelIndex &)));
 	connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneSelectFirstRow()));
+	connect(refreshDelayTimer, SIGNAL(timeout()), this, SLOT(rightPaneUpdate()));
+}
+
+void EditWidget::setRefreshDelay(int delay) {
+	refreshDelay = delay;
+}
+
+int EditWidget::getRefreshDelay() const {
+	return refreshDelay;
 }
 
 void EditWidget::leftPaneItemSelected(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::leftPaneItemSelected()";
-	QString openDir(reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath());
-	QLOG_TRACE() << "directory:" << openDir;
-	rightPaneUpdate(openDir);
+	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
+	QLOG_TRACE() << "directory:" << leftPaneFolder;
+
+	refreshDelayTimer->start(refreshDelay);
 }
 
 void EditWidget::rightPaneItemActivated(const QModelIndex &index) {
@@ -67,6 +88,10 @@ void EditWidget::leftPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::leftPaneUpdate()";
 
 	leftPane->setCurrentIndex(dirsOnlyModel->index(dir));
+}
+
+void EditWidget::rightPaneUpdate() {
+	rightPaneUpdate(leftPaneFolder);
 }
 
 void EditWidget::rightPaneUpdate(const QString &dir) {

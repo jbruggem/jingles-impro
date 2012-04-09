@@ -9,6 +9,7 @@ class QFileSystemModel;
 class QTreeView;
 class QModelIndex;
 class QTimer;
+class QString;
 
 class EditWidget : public QWidget {
 
@@ -16,10 +17,13 @@ class EditWidget : public QWidget {
 
 	public:
 		EditWidget(QWidget *parent = 0);
+		void setRefreshDelay(int);
+		int  getRefreshDelay() const;
 	public slots:
 		void rightPaneItemActivated(const QModelIndex &);
 		void leftPaneItemSelected(const QModelIndex &);
 		void leftPaneUpdate(const QString &);
+		void rightPaneUpdate();
 		void rightPaneUpdate(const QString &);
 		void rightPaneSelectFirstRow();
 	private:
@@ -28,7 +32,9 @@ class EditWidget : public QWidget {
 		QFileSystemModel *fileModel;
 		QTreeView *leftPane;
 		QTreeView *rightPane;
-		QTimer *selectionTimer;
+		QTimer    *refreshDelayTimer;
+		int        refreshDelay;
+		QString    leftPaneFolder;
 };
 
 #endif
