@@ -8,6 +8,7 @@ class QGridLayout;
 class QFileSystemModel;
 class QTreeView;
 class QModelIndex;
+class QTimer;
 
 class EditWidget : public QWidget {
 
@@ -16,7 +17,10 @@ class EditWidget : public QWidget {
 	public:
 		EditWidget(QWidget *parent = 0);
 	public slots:
-		void rightPaneUpdate(const QModelIndex &);
+		void rightPaneItemActivated(const QModelIndex &);
+		void leftPaneItemSelected(const QModelIndex &);
+		void leftPaneUpdate(const QString &);
+		void rightPaneUpdate(const QString &);
 		void rightPaneSelectFirstRow();
 	private:
 		QGridLayout *layout;
@@ -24,6 +28,7 @@ class EditWidget : public QWidget {
 		QFileSystemModel *fileModel;
 		QTreeView *leftPane;
 		QTreeView *rightPane;
+		QTimer *selectionTimer;
 };
 
 #endif
