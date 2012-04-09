@@ -16,7 +16,8 @@ class EditWidget : public QWidget {
 	public:
 		EditWidget(QWidget *parent = 0);
 	public slots:
-		void leftPaneSelectionChanged(const QModelIndex &);
+		void rightPaneUpdate(const QModelIndex &);
+		void rightPaneSelectFirstRow();
 	private:
 		QGridLayout *layout;
 		QFileSystemModel *dirsOnlyModel;
