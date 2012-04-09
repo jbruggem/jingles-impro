@@ -5,13 +5,12 @@
 #include <QWidget>
 
 class Workspace;
-// class EditWidget;
 class PlayWidget;
+class EditWidget;
 class QVBoxLayout;
 class QHBoxLayout;
 class QPushButton;
-class QLabel;
-class AutoScrollArea;
+class QStackedWidget;
 
 class MainWidget : public QWidget {
 
@@ -26,14 +25,12 @@ class MainWidget : public QWidget {
 		void doSthElse();
 	private:
 		Workspace   *wsp;
-		// QGridLayout *layout;
 		QVBoxLayout *layout;
 		QHBoxLayout *modeButtonLayout;
 		QPushButton *modeButton;
 		PlayWidget  *playWidget;
-		// QScrollArea *scrollArea;
-		QLabel      *label;
-		AutoScrollArea *scrollArea;
+		EditWidget  *editWidget;
+		QStackedWidget *stackedWidget;
 };
 
 #endif
