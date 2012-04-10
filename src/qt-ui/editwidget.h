@@ -10,6 +10,7 @@ class QTreeView;
 class QModelIndex;
 class QTimer;
 class QString;
+class QShortcut;
 
 class EditWidget : public QWidget {
 
@@ -25,7 +26,9 @@ class EditWidget : public QWidget {
 		void leftPaneUpdate(const QString &);
 		void rightPaneUpdate();
 		void rightPaneUpdate(const QString &);
+		void rightPaneUpdated();
 		void rightPaneSelectFirstRow();
+		void navigateUp();
 	private:
 		QGridLayout *layout;
 		QFileSystemModel *dirsOnlyModel;
@@ -35,6 +38,7 @@ class EditWidget : public QWidget {
 		QTimer    *refreshDelayTimer;
 		int        refreshDelay;
 		QString    leftPaneFolder;
+		QShortcut *shortcut_backspace;
 };
 
 #endif

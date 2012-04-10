@@ -6,6 +6,7 @@
 #include <QTreeView>
 #include <QModelIndex>
 #include <QTimer>
+#include <QShortcut>
 #include "QsLog.h"
 
 // todo enable keyboard navigation in right pane
@@ -53,11 +54,15 @@ EditWidget::EditWidget(QWidget *parent)
 	layout->addWidget(rightPane, 0, 1);
 	setLayout(layout);
 
+	// set up keyboard shortcuts
+	shortcut_backspace = new QShortcut(QKeySequence("Backspace"), this);
+
 	// connect signals to slots
 	connect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 	connect(rightPane, SIGNAL(activated(const QModelIndex &)), this, SLOT(rightPaneItemActivated(const QModelIndex &)));
-	connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneSelectFirstRow()));
+	// connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneSelectFirstRow()));
 	connect(refreshDelayTimer, SIGNAL(timeout()), this, SLOT(rightPaneUpdate()));
+	connect(shortcut_backspace, SIGNAL(activated()), this, SLOT(navigateUp()));
 }
 
 void EditWidget::setRefreshDelay(int delay) {
@@ -80,7 +85,7 @@ void EditWidget::rightPaneItemActivated(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::rightPaneItemActivated()";
 	QString openDir(reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath());
 	QLOG_TRACE() << "directory:" << openDir;
-	rightPaneUpdate(openDir);
+	// rightPaneUpdate(openDir);
 	leftPaneUpdate(openDir);
 }
 
@@ -96,9 +101,26 @@ void EditWidget::rightPaneUpdate() {
 
 void EditWidget::rightPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::rightPaneUpdate()";
-	// make sure that all folders are collapsed whenever the selection changes
+	QLOG_TRACE() << "rows:" << fileModel->rowCount(fileModel->index(dir));
+
+	bool populatedAndNotEmpty = true;
+	// if the folder contents have not yet been populated, we connect to the directoryLoaded() signal
+	if (not fileModel->rowCount(fileModel->index(dir))) {
+		populatedAndNotEmpty = false;
+		connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneUpdated()));
+	}
+	// make sure that all folders are collapsed whenever the view changes folder
 	rightPane->collapseAll();
 	rightPane->setRootIndex(fileModel->setRootPath(dir));
+	if (populatedAndNotEmpty) {
+		rightPaneUpdated();
+	}
+}
+
+void EditWidget::rightPaneUpdated() {
+	QLOG_TRACE() << "EditWidget::rightPaneUpdated()";
+	disconnect(fileModel, SIGNAL(directoryLoaded(const QString &)), 0, 0);
+	rightPaneSelectFirstRow();
 }
 
 void EditWidget::rightPaneSelectFirstRow() {
@@ -109,5 +131,14 @@ void EditWidget::rightPaneSelectFirstRow() {
 
 	if (rightPane->rootIndex().child(0, 0).isValid()) {
 		rightPane->setCurrentIndex(rightPane->rootIndex().child(0, 0));
+	}
+}
+
+void EditWidget::navigateUp() {
+	QLOG_TRACE() << "EditWidget::navigateUp()";
+	if (leftPane->currentIndex().parent().isValid()) {
+		leftPaneFolder = dirsOnlyModel->fileInfo(leftPane->currentIndex().parent()).absoluteFilePath();
+		leftPaneUpdate(leftPaneFolder);
+		// rightPaneUpdate(leftPaneFolder);
 	}
 }
