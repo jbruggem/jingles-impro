@@ -11,6 +11,7 @@ LIBS += -lvlc
 HEADERS += \
 	src/avobject.h \
 	src/buttonpanel.h \
+	src/history.h \
 #	src/improgui.h \
 	src/libvlcmediaplayer.h \
 	src/mainwindow.h \
@@ -39,6 +40,7 @@ HEADERS += \
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
+	src/history.cpp \
 #	src/improgui.cpp \
 	src/libvlcmediaplayer.cpp \
 	src/main.cpp \

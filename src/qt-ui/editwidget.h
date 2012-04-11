@@ -11,6 +11,7 @@ class QModelIndex;
 class QTimer;
 class QString;
 class QShortcut;
+#include "history.h"
 
 class EditWidget : public QWidget {
 
@@ -21,16 +22,19 @@ class EditWidget : public QWidget {
 		void setRefreshDelay(int);
 		int  getRefreshDelay() const;
 	public slots:
+		void leftPaneUpdate(const QString &);
+		void rightPaneUpdate(const QString &);
+		void navigateUp();
+		void navigateBack();
+		void navigateForward();
+	private slots:
 		void rightPaneItemActivated(const QModelIndex &);
 		void leftPaneItemSelected(const QModelIndex &);
-		void leftPaneUpdate(const QString &);
 		void rightPaneUpdate();
-		void rightPaneUpdate(const QString &);
 		void rightPaneUpdated();
 		void rightPaneSelectFirstRow();
-		void navigateUp();
 	private:
-		QGridLayout *layout;
+		QGridLayout      *layout;
 		QFileSystemModel *dirsOnlyModel;
 		QFileSystemModel *fileModel;
 		QTreeView *leftPane;
@@ -38,7 +42,11 @@ class EditWidget : public QWidget {
 		QTimer    *refreshDelayTimer;
 		int        refreshDelay;
 		QString    leftPaneFolder;
-		QShortcut *shortcut_backspace;
+		QShortcut   *shortcut_backspace;
+		QShortcut   *shortcut_altLeft;
+		QShortcut   *shortcut_altRight;
+		QShortcut   *shortcut_altUp;
+		History      history;
 };
 
 #endif

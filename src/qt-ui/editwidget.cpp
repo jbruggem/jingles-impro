@@ -7,9 +7,11 @@
 #include <QModelIndex>
 #include <QTimer>
 #include <QShortcut>
+#include "history.h"
 #include "QsLog.h"
 
-// todo enable keyboard navigation in right pane
+// todo clean up code, because it is a mess. No idea why it even works.
+// todo modify behaviour of backspace button
 // todo add navigation buttons
 // todo add filter
 
@@ -21,7 +23,9 @@ EditWidget::EditWidget(QWidget *parent)
 	refreshDelayTimer->setSingleShot(true);
 	refreshDelay = 0;
 
-	leftPaneFolder = QDir::rootPath();
+	// initialize navigation history
+	history.add(QDir::rootPath());
+	leftPaneFolder = history.getCurrent();
 
 	// set up the left pane
 	dirsOnlyModel = new QFileSystemModel;
@@ -56,13 +60,18 @@ EditWidget::EditWidget(QWidget *parent)
 
 	// set up keyboard shortcuts
 	shortcut_backspace = new QShortcut(QKeySequence("Backspace"), this);
+	shortcut_altLeft   = new QShortcut(QKeySequence("Alt+Left"), this);
+	shortcut_altRight  = new QShortcut(QKeySequence("Alt+Right"), this);
+	shortcut_altUp     = new QShortcut(QKeySequence("Alt+Up"), this);
 
 	// connect signals to slots
 	connect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 	connect(rightPane, SIGNAL(activated(const QModelIndex &)), this, SLOT(rightPaneItemActivated(const QModelIndex &)));
-	// connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneSelectFirstRow()));
 	connect(refreshDelayTimer, SIGNAL(timeout()), this, SLOT(rightPaneUpdate()));
 	connect(shortcut_backspace, SIGNAL(activated()), this, SLOT(navigateUp()));
+	connect(shortcut_altUp, SIGNAL(activated()), this, SLOT(navigateUp()));
+	connect(shortcut_altLeft, SIGNAL(activated()), this, SLOT(navigateBack()));
+	connect(shortcut_altRight, SIGNAL(activated()), this, SLOT(navigateForward()));
 }
 
 void EditWidget::setRefreshDelay(int delay) {
@@ -77,22 +86,26 @@ void EditWidget::leftPaneItemSelected(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::leftPaneItemSelected()";
 	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
 	QLOG_TRACE() << "directory:" << leftPaneFolder;
+	history.add(leftPaneFolder);
 
 	refreshDelayTimer->start(refreshDelay);
 }
 
 void EditWidget::rightPaneItemActivated(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::rightPaneItemActivated()";
-	QString openDir(reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath());
-	QLOG_TRACE() << "directory:" << openDir;
-	// rightPaneUpdate(openDir);
-	leftPaneUpdate(openDir);
+	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
+	QLOG_TRACE() << "directory:" << leftPaneFolder;
+	history.add(leftPaneFolder);
+	leftPaneUpdate(leftPaneFolder);
+	rightPaneUpdate(leftPaneFolder);
 }
 
 void EditWidget::leftPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::leftPaneUpdate()";
 
+	disconnect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 	leftPane->setCurrentIndex(dirsOnlyModel->index(dir));
+	connect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 }
 
 void EditWidget::rightPaneUpdate() {
@@ -101,18 +114,22 @@ void EditWidget::rightPaneUpdate() {
 
 void EditWidget::rightPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::rightPaneUpdate()";
-	QLOG_TRACE() << "rows:" << fileModel->rowCount(fileModel->index(dir));
 
 	bool populatedAndNotEmpty = true;
 	// if the folder contents have not yet been populated, we connect to the directoryLoaded() signal
 	if (not fileModel->rowCount(fileModel->index(dir))) {
+		QLOG_TRACE() << "folder not yet populated";
 		populatedAndNotEmpty = false;
 		connect(fileModel, SIGNAL(directoryLoaded(const QString &)), this, SLOT(rightPaneUpdated()));
 	}
 	// make sure that all folders are collapsed whenever the view changes folder
 	rightPane->collapseAll();
 	rightPane->setRootIndex(fileModel->setRootPath(dir));
+	// if the folder contents have already been populated
+	// the directoryLoaded() signal will not come, so we call
+	// rightPaneUpdated() directly
 	if (populatedAndNotEmpty) {
+		QLOG_TRACE() << "folder already populated";
 		rightPaneUpdated();
 	}
 }
@@ -137,8 +154,36 @@ void EditWidget::rightPaneSelectFirstRow() {
 void EditWidget::navigateUp() {
 	QLOG_TRACE() << "EditWidget::navigateUp()";
 	if (leftPane->currentIndex().parent().isValid()) {
+		QModelIndex childIndex = rightPane->rootIndex();
 		leftPaneFolder = dirsOnlyModel->fileInfo(leftPane->currentIndex().parent()).absoluteFilePath();
+		history.add(leftPaneFolder);
 		leftPaneUpdate(leftPaneFolder);
-		// rightPaneUpdate(leftPaneFolder);
+		rightPaneUpdate(leftPaneFolder);
+		// put selection on folder we are coming from
+		rightPane->setCurrentIndex(childIndex);
 	}
+}
+
+void EditWidget::navigateBack() {
+	QLOG_TRACE() << "EditWidget::navigateBack()";
+	if (history.canGoBack()) {
+		// store the folder we are coming from
+		QModelIndex previousIndex = rightPane->rootIndex();
+		leftPaneFolder = history.back();
+		leftPaneUpdate(leftPaneFolder);
+		rightPaneUpdate(leftPaneFolder);
+
+		// if we are going up one level,
+		// put selection on folder we are coming from (like in navigateUp())
+		if (fileModel->index(leftPaneFolder) == previousIndex.parent()) {
+			rightPane->setCurrentIndex(previousIndex);
+		}
+	}
+}
+
+void EditWidget::navigateForward() {
+	QLOG_TRACE() << "EditWidget::navigateForward()";
+	leftPaneFolder = history.forward();
+	leftPaneUpdate(leftPaneFolder);
+	rightPaneUpdate(leftPaneFolder);
 }
