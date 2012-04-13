@@ -11,7 +11,6 @@
 #include "QsLog.h"
 
 // todo clean up code, because it is a mess. No idea why it even works.
-// todo modify behaviour of backspace button
 // todo add navigation buttons
 // todo add filter
 
@@ -22,6 +21,9 @@ EditWidget::EditWidget(QWidget *parent)
 	refreshDelayTimer = new QTimer(this);
 	refreshDelayTimer->setSingleShot(true);
 	refreshDelay = 0;
+
+	// set default behaviour of the backspace key to Go To Parent Folder
+	backspaceIsHistoryBack = false;
 
 	// initialize navigation history
 	history.add(QDir::rootPath());
@@ -80,6 +82,21 @@ void EditWidget::setRefreshDelay(int delay) {
 
 int EditWidget::getRefreshDelay() const {
 	return refreshDelay;
+}
+
+void EditWidget::setBackspaceToHistoryBack(bool val) {
+	backspaceIsHistoryBack = val;
+	if (val) {
+		shortcut_backspace->disconnect();
+		connect(shortcut_backspace, SIGNAL(activated()), this, SLOT(navigateBack()));
+	} else {
+		shortcut_backspace->disconnect();
+		connect(shortcut_backspace, SIGNAL(activated()), this, SLOT(navigateUp()));
+	}
+}
+
+bool EditWidget::isBackspaceHistoryBack() const {
+	return backspaceIsHistoryBack;
 }
 
 void EditWidget::leftPaneItemSelected(const QModelIndex &index) {

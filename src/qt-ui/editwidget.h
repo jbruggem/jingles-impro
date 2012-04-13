@@ -21,6 +21,8 @@ class EditWidget : public QWidget {
 		EditWidget(QWidget *parent = 0);
 		void setRefreshDelay(int);
 		int  getRefreshDelay() const;
+		void setBackspaceToHistoryBack(bool);
+		bool isBackspaceHistoryBack() const;
 	public slots:
 		void leftPaneUpdate(const QString &);
 		void rightPaneUpdate(const QString &);
@@ -47,6 +49,7 @@ class EditWidget : public QWidget {
 		QShortcut   *shortcut_altRight;
 		QShortcut   *shortcut_altUp;
 		History      history;
+		bool backspaceIsHistoryBack;
 };
 
 #endif

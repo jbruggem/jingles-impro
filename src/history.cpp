@@ -2,7 +2,6 @@
 #include "history.h"
 
 #include "QsLog.h"
-// #include <QStringList>
 
 History::History() {
 }

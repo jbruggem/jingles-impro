@@ -2,8 +2,6 @@
 #ifndef HISTORY_H_
 #define HISTORY_H_
 
-// class QString;
-// class QStringList;
 #include <QStringList>
 
 class History {
