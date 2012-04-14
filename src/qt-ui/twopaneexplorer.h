@@ -13,12 +13,12 @@ class QString;
 class QShortcut;
 #include "history.h"
 
-class EditWidget : public QWidget {
+class TwoPaneExplorer : public QWidget {
 
 	Q_OBJECT
 
 	public:
-		EditWidget(QWidget *parent = 0);
+		TwoPaneExplorer(QWidget *parent = 0);
 		void setRefreshDelay(int);
 		int  getRefreshDelay() const;
 		void setBackspaceToHistoryBack(bool);

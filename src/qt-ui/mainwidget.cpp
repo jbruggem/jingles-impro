@@ -10,7 +10,7 @@
 #include "workspace.h"
 #include "nullptr.h"
 #include "playwidget.h"
-#include "editwidget.h"
+#include "twopaneexplorer.h"
 
 MainWidget::MainWidget(QWidget *parent)
 	: QWidget(parent),
@@ -24,7 +24,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 	// initialise play and edit widgets
 	playWidget = new PlayWidget(3);
-	editWidget = new EditWidget;
+	editWidget = new TwoPaneExplorer;
 	stackedWidget = new QStackedWidget;
 	stackedWidget->addWidget(playWidget);
 	stackedWidget->addWidget(editWidget);

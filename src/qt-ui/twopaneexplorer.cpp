@@ -1,5 +1,5 @@
 
-#include "editwidget.h"
+#include "twopaneexplorer.h"
 
 #include <QGridLayout>
 #include <QFileSystemModel>
@@ -14,7 +14,7 @@
 // todo add navigation buttons
 // todo add filter
 
-EditWidget::EditWidget(QWidget *parent)
+TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	: QWidget(parent) {
 
 	// set up the timer
@@ -76,15 +76,15 @@ EditWidget::EditWidget(QWidget *parent)
 	connect(shortcut_altRight, SIGNAL(activated()), this, SLOT(navigateForward()));
 }
 
-void EditWidget::setRefreshDelay(int delay) {
+void TwoPaneExplorer::setRefreshDelay(int delay) {
 	refreshDelay = delay;
 }
 
-int EditWidget::getRefreshDelay() const {
+int TwoPaneExplorer::getRefreshDelay() const {
 	return refreshDelay;
 }
 
-void EditWidget::setBackspaceToHistoryBack(bool val) {
+void TwoPaneExplorer::setBackspaceToHistoryBack(bool val) {
 	backspaceIsHistoryBack = val;
 	if (val) {
 		shortcut_backspace->disconnect();
@@ -95,11 +95,11 @@ void EditWidget::setBackspaceToHistoryBack(bool val) {
 	}
 }
 
-bool EditWidget::isBackspaceHistoryBack() const {
+bool TwoPaneExplorer::isBackspaceHistoryBack() const {
 	return backspaceIsHistoryBack;
 }
 
-void EditWidget::leftPaneItemSelected(const QModelIndex &index) {
+void TwoPaneExplorer::leftPaneItemSelected(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::leftPaneItemSelected()";
 	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
 	QLOG_TRACE() << "directory:" << leftPaneFolder;
@@ -108,7 +108,7 @@ void EditWidget::leftPaneItemSelected(const QModelIndex &index) {
 	refreshDelayTimer->start(refreshDelay);
 }
 
-void EditWidget::rightPaneItemActivated(const QModelIndex &index) {
+void TwoPaneExplorer::rightPaneItemActivated(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::rightPaneItemActivated()";
 	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
 	QLOG_TRACE() << "directory:" << leftPaneFolder;
@@ -117,7 +117,7 @@ void EditWidget::rightPaneItemActivated(const QModelIndex &index) {
 	rightPaneUpdate(leftPaneFolder);
 }
 
-void EditWidget::leftPaneUpdate(const QString &dir) {
+void TwoPaneExplorer::leftPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::leftPaneUpdate()";
 
 	disconnect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
@@ -125,11 +125,11 @@ void EditWidget::leftPaneUpdate(const QString &dir) {
 	connect(leftPane->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(leftPaneItemSelected(const QModelIndex &)));
 }
 
-void EditWidget::rightPaneUpdate() {
+void TwoPaneExplorer::rightPaneUpdate() {
 	rightPaneUpdate(leftPaneFolder);
 }
 
-void EditWidget::rightPaneUpdate(const QString &dir) {
+void TwoPaneExplorer::rightPaneUpdate(const QString &dir) {
 	QLOG_TRACE() << "EditWidget::rightPaneUpdate()";
 
 	bool populatedAndNotEmpty = true;
@@ -141,7 +141,11 @@ void EditWidget::rightPaneUpdate(const QString &dir) {
 	}
 	// make sure that all folders are collapsed whenever the view changes folder
 	rightPane->collapseAll();
+
+	// todo: this line should maybe be changed into:
+	// rightPane->setRootIndex(fileModel->index(dir));
 	rightPane->setRootIndex(fileModel->setRootPath(dir));
+
 	// if the folder contents have already been populated
 	// the directoryLoaded() signal will not come, so we call
 	// rightPaneUpdated() directly
@@ -151,13 +155,13 @@ void EditWidget::rightPaneUpdate(const QString &dir) {
 	}
 }
 
-void EditWidget::rightPaneUpdated() {
+void TwoPaneExplorer::rightPaneUpdated() {
 	QLOG_TRACE() << "EditWidget::rightPaneUpdated()";
 	disconnect(fileModel, SIGNAL(directoryLoaded(const QString &)), 0, 0);
 	rightPaneSelectFirstRow();
 }
 
-void EditWidget::rightPaneSelectFirstRow() {
+void TwoPaneExplorer::rightPaneSelectFirstRow() {
 	QLOG_TRACE() << "EditWidget::rightPaneSelectFirstRow()";
 
 	// the model is not sorted by default, meaning the first child is not the first entry in the view.
@@ -168,7 +172,7 @@ void EditWidget::rightPaneSelectFirstRow() {
 	}
 }
 
-void EditWidget::navigateUp() {
+void TwoPaneExplorer::navigateUp() {
 	QLOG_TRACE() << "EditWidget::navigateUp()";
 	if (leftPane->currentIndex().parent().isValid()) {
 		QModelIndex childIndex = rightPane->rootIndex();
@@ -181,7 +185,7 @@ void EditWidget::navigateUp() {
 	}
 }
 
-void EditWidget::navigateBack() {
+void TwoPaneExplorer::navigateBack() {
 	QLOG_TRACE() << "EditWidget::navigateBack()";
 	if (history.canGoBack()) {
 		// store the folder we are coming from
@@ -198,7 +202,7 @@ void EditWidget::navigateBack() {
 	}
 }
 
-void EditWidget::navigateForward() {
+void TwoPaneExplorer::navigateForward() {
 	QLOG_TRACE() << "EditWidget::navigateForward()";
 	leftPaneFolder = history.forward();
 	leftPaneUpdate(leftPaneFolder);
