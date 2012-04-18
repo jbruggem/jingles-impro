@@ -23,6 +23,7 @@ class TwoPaneExplorer : public QWidget {
 		int  getRefreshDelay() const;
 		void setBackspaceToHistoryBack(bool);
 		bool isBackspaceHistoryBack() const;
+		QStringList getSelection() const;
 	public slots:
 		void leftPaneUpdate(const QString &);
 		void rightPaneUpdate(const QString &);

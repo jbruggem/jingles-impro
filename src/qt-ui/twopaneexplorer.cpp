@@ -208,3 +208,14 @@ void TwoPaneExplorer::navigateForward() {
 	leftPaneUpdate(leftPaneFolder);
 	rightPaneUpdate(leftPaneFolder);
 }
+
+QStringList TwoPaneExplorer::getSelection() const {
+	QLOG_TRACE() << "TwoPaneExplorer::getSelection()";
+	QStringList selectedItems;
+	QModelIndexList indexList = rightPane->selectionModel()->selectedRows();
+	for (int i = 0; i < indexList.length(); i++) {
+		selectedItems.append(fileModel->fileInfo(indexList.at(i)).absoluteFilePath());
+		QLOG_TRACE() << "selected:" << selectedItems.at(i);
+	}
+	return selectedItems;
+}
