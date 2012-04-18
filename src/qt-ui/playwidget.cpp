@@ -2,6 +2,7 @@
 #include "playwidget.h"
 
 #include <QGridLayout>
+#include <QVBoxLayout>
 #include "QsLog.h"
 #include "playwidgetentry.h"
 #include "tracklist.h"
@@ -14,7 +15,10 @@ PlayWidget::PlayWidget(int rowSize, QWidget *parent)
 	QLOG_TRACE() << "PlayWidget::PlayWidget()";
 
 	layout    = new QGridLayout;
-	setLayout(layout);
+	QVBoxLayout *layoutWithStretch = new QVBoxLayout;
+	layoutWithStretch->addLayout(layout);
+	layoutWithStretch->addStretch();
+	setLayout(layoutWithStretch);
 }
 
 void PlayWidget::clear() {

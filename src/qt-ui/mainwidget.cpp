@@ -10,7 +10,7 @@
 #include "workspace.h"
 #include "nullptr.h"
 #include "playwidget.h"
-#include "twopaneexplorer.h"
+#include "editwidget.h"
 
 MainWidget::MainWidget(QWidget *parent)
 	: QWidget(parent),
@@ -24,7 +24,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 	// initialise play and edit widgets
 	playWidget = new PlayWidget(3);
-	editWidget = new TwoPaneExplorer;
+	editWidget = new EditWidget;
 	stackedWidget = new QStackedWidget;
 	stackedWidget->addWidget(playWidget);
 	stackedWidget->addWidget(editWidget);
@@ -35,7 +35,7 @@ MainWidget::MainWidget(QWidget *parent)
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
 	layout->addWidget(stackedWidget);
-	layout->addStretch();
+	// layout->addStretch();
 
 	setLayout(layout);
 

@@ -1,6 +1,6 @@
 
-#ifndef EDITWIDGET_H_
-#define EDITWIDGET_H_
+#ifndef TWOPANEEXPLORER_H_
+#define TWOPANEEXPLORER_H_
 
 #include <QWidget>
 

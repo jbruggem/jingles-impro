@@ -51,6 +51,12 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	fileModel->setRootPath(leftPaneFolder);
 	rightPane = new QTreeView;
 	rightPane->setModel(fileModel);
+	// only show first column (folder names)
+	for (int i = 1; i < fileModel->columnCount(); i++) {
+		rightPane->hideColumn(i);
+	}
+	// hide the column headers
+	rightPane->setHeaderHidden(true);
 	rightPane->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	rightPaneUpdate(fileModel->rootPath());
 

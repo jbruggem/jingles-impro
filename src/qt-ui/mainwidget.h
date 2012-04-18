@@ -6,7 +6,7 @@
 
 class Workspace;
 class PlayWidget;
-class TwoPaneExplorer;
+class EditWidget;
 class QVBoxLayout;
 class QHBoxLayout;
 class QPushButton;
@@ -29,7 +29,7 @@ class MainWidget : public QWidget {
 		QHBoxLayout *modeButtonLayout;
 		QPushButton *modeButton;
 		PlayWidget  *playWidget;
-		TwoPaneExplorer  *editWidget;
+		EditWidget  *editWidget;
 		QStackedWidget *stackedWidget;
 };
 
