@@ -2,38 +2,40 @@
 #include "editwidget.h"
 
 #include <QGridLayout>
-#include <QVBoxLayout>
-#include <QLabel>
+#include <QGroupBox>
+#include <QSplitter>
 #include <QTreeView>
-#include "twopaneexplorer.h"
 #include "testmodel.h"
 #include "tracklist.h"
+#include "twopaneexplorer.h"
 
 EditWidget::EditWidget(QWidget *parent)
 	: QWidget(parent) {
 
-	explorerLabel = new QLabel(tr("FileExplorer"));
-	explorer = new TwoPaneExplorer;
-	QVBoxLayout *explorerLayout = new QVBoxLayout;
-	explorerLayout->addWidget(explorerLabel);
-	explorerLayout->addWidget(explorer);
+	// set up the file explorer
+	explorer         = new TwoPaneExplorer;
+	explorerGroupBox = new QGroupBox(tr("FileExplorer"));
+	explorerGroupBox->setLayout(new QGridLayout);
+	explorerGroupBox->layout()->addWidget(explorer);
 
-	stockListLabel = new QLabel(tr("Stock List"));
+	// set up the StockList
+	stockListView     = new QTreeView;
+	stockListGroupBox = new QGroupBox(tr("Stock List"));
+	stockListGroupBox->setLayout(new QGridLayout);
+	stockListGroupBox->layout()->addWidget(stockListView);
 	testModel = new TestModel;
-	stockListView = new QTreeView;
 	stockListView->setModel(testModel);
-	QVBoxLayout *stockListLayout = new QVBoxLayout;
-	stockListLayout->addWidget(stockListLabel);
-	stockListLayout->addSpacing(9);
-	stockListLayout->addWidget(stockListView);
-	stockListLayout->addSpacing(9);
 
-	layout = new QGridLayout;
-	layout->addLayout(explorerLayout, 0, 0);
-	layout->setColumnStretch(0, 2);
-	layout->addLayout(stockListLayout, 0, 1);
-	layout->setColumnStretch(1, 1);
-	setLayout(layout);
+	// set up the splitter
+	splitter = new QSplitter;
+	splitter->addWidget(explorerGroupBox);
+	splitter->setStretchFactor(0, 2);
+	splitter->addWidget(stockListGroupBox);
+	splitter->setStretchFactor(1, 1);
+
+	// set up the layout
+	setLayout(new QGridLayout);
+	layout()->addWidget(splitter);
 }
 
 void EditWidget::update(const TrackList *list) {

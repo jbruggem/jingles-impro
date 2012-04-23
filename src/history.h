@@ -4,6 +4,8 @@
 
 #include <QStringList>
 
+// todo limit number of items in history
+
 class History {
 	public:
 		History();

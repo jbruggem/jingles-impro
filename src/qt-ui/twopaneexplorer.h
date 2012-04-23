@@ -4,8 +4,8 @@
 
 #include <QWidget>
 
-class QGridLayout;
 class QFileSystemModel;
+class QSplitter;
 class QTreeView;
 class QModelIndex;
 class QTimer;
@@ -37,14 +37,14 @@ class TwoPaneExplorer : public QWidget {
 		void rightPaneUpdated();
 		void rightPaneSelectFirstRow();
 	private:
-		QGridLayout      *layout;
+		QSplitter        *paneSplitter;
 		QFileSystemModel *dirsOnlyModel;
 		QFileSystemModel *fileModel;
-		QTreeView *leftPane;
-		QTreeView *rightPane;
-		QTimer    *refreshDelayTimer;
-		int        refreshDelay;
-		QString    leftPaneFolder;
+		QTreeView   *leftPane;
+		QTreeView   *rightPane;
+		QTimer      *refreshDelayTimer;
+		int          refreshDelay;
+		QString      leftPaneFolder;
 		QShortcut   *shortcut_backspace;
 		QShortcut   *shortcut_altLeft;
 		QShortcut   *shortcut_altRight;

@@ -3,6 +3,7 @@
 
 #include <QGridLayout>
 #include <QFileSystemModel>
+#include <QSplitter>
 #include <QTreeView>
 #include <QModelIndex>
 #include <QTimer>
@@ -60,11 +61,15 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	rightPane->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	rightPaneUpdate(fileModel->rootPath());
 
+	// set up the splitter
+	paneSplitter = new QSplitter;
+	paneSplitter->addWidget(leftPane);
+	paneSplitter->addWidget(rightPane);
+
 	// set up the layout
-	layout = new QGridLayout;
-	layout->addWidget(leftPane, 0, 0);
-	layout->addWidget(rightPane, 0, 1);
-	setLayout(layout);
+	setLayout(new QGridLayout);
+	layout()->setContentsMargins(0, 0, 0, 0);
+	layout()->addWidget(paneSplitter);
 
 	// set up keyboard shortcuts
 	shortcut_backspace = new QShortcut(QKeySequence("Backspace"), this);

@@ -4,12 +4,13 @@
 
 #include <QWidget>
 
-class TwoPaneExplorer;
-class QGridLayout;
+class QGroupBox;
 class QLabel;
+class QSplitter;
 class QTreeView;
 class TestModel;
 class TrackList;
+class TwoPaneExplorer;
 
 class EditWidget : public QWidget {
 
@@ -19,12 +20,12 @@ class EditWidget : public QWidget {
 		EditWidget(QWidget *parent = 0);
 		void update(const TrackList *);
 	private:
-		QGridLayout     *layout;
-		QLabel          *explorerLabel;
-		TwoPaneExplorer *explorer;
-		QLabel          *stockListLabel;
+		QGroupBox       *explorerGroupBox;
+		QGroupBox       *stockListGroupBox;
+		QSplitter       *splitter;
 		QTreeView       *stockListView;
 		TestModel       *testModel;
+		TwoPaneExplorer *explorer;
 };
 
 #endif
