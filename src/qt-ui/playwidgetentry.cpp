@@ -18,7 +18,7 @@ PlayWidgetEntry::PlayWidgetEntry(const Track &t, QWidget *parent)
 	track = &t;
 
 	// groupBox = new QGroupBox(title);
-	groupBox     = new QGroupBox(QFileInfo(*(t.getPath())).baseName());
+	groupBox     = new QGroupBox(QFileInfo(t.getPath()).baseName());
 	outerLayout  = new QGridLayout;
 	innerLayout  = new QGridLayout;
 	buttonLayout = new QHBoxLayout;

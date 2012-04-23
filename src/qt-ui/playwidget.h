@@ -16,10 +16,8 @@ class PlayWidget : public QWidget {
 	public:
 		PlayWidget(int, QWidget *parent = 0);
 		void clear();
-		// void update(const QStringList &);
-		// void append(const QStringList &);
-		void update(const TrackList &);
-		void append(const TrackList &);
+		void update(const TrackList *);
+		void append(const TrackList *);
 	private:
 		int rowSize;
 		int currentRow;

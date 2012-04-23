@@ -2,14 +2,13 @@
 
 Track::Track(const Track& track):
     QObject(track.parent()),
-    path(*track.getPath()),
+    path(track.getPath()),
     loopEnabled(track.isLoopEnabled()),
     startTime(track.getStartTime()),
     endTime(track.getEndTime()),
     fadeInDuration(track.getFadeInDuration()),
     fadeOutDuration(track.getFadeOutDuration())
 {
-    this->path = *track.getPath();
      QLOG_TRACE() << "Building Track from other track";
 }
 

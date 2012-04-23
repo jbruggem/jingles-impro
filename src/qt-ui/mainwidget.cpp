@@ -46,7 +46,8 @@ MainWidget::MainWidget(QWidget *parent)
 void MainWidget::setWorkspace(Workspace *wsp) {
 	QLOG_TRACE() << "MainWidget::setWorkspace()";
 	this->wsp = wsp;
-	playWidget->update(*(wsp->getPlaylist()));
+	playWidget->update(wsp->getPlaylist());
+	editWidget->update(wsp->getStock());
 }
 
 void MainWidget::modeButtonClicked(bool checked) {

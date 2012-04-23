@@ -7,7 +7,9 @@
 class TwoPaneExplorer;
 class QGridLayout;
 class QLabel;
-class QListWidget;
+class QTreeView;
+class TestModel;
+class TrackList;
 
 class EditWidget : public QWidget {
 
@@ -15,12 +17,14 @@ class EditWidget : public QWidget {
 
 	public:
 		EditWidget(QWidget *parent = 0);
+		void update(const TrackList *);
 	private:
 		QGridLayout     *layout;
 		QLabel          *explorerLabel;
 		TwoPaneExplorer *explorer;
 		QLabel          *stockListLabel;
-		QListWidget     *stockListView;
+		QTreeView       *stockListView;
+		TestModel       *testModel;
 };
 
 #endif

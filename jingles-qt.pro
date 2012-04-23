@@ -30,6 +30,7 @@ HEADERS += \
     src/qt-ui/mainwidget.h \
     src/qt-ui/playwidget.h \
     src/qt-ui/playwidgetentry.h \
+    src/qt-ui/testmodel.h \
     src/qt-ui/twopaneexplorer.h \
     src/workspace/workspace.h \
     src/workspace/trackstock.h \
@@ -59,6 +60,7 @@ SOURCES += \
     src/qt-ui/mainwidget.cpp \
     src/qt-ui/playwidget.cpp \
     src/qt-ui/playwidgetentry.cpp \
+    src/qt-ui/testmodel.cpp \
     src/qt-ui/twopaneexplorer.cpp \
     src/workspace/workspace.cpp \
     src/workspace/trackstock.cpp \

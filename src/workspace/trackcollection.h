@@ -24,7 +24,7 @@ public:
         Track * t;
         for(int i=0; i<coll.m_tracks->size(); i++){
             t = coll.m_tracks->value(i);
-            out << "\n   Track[" << t->getPath()->toStdString() << "|"
+            out << "\n   Track[" << t->getPath().toStdString() << "|"
                                  << t->getStartTime()
                                  << "-"
                                  << t->getEndTime()

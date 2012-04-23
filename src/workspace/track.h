@@ -10,7 +10,7 @@ class Track : public QObject
 {
 
     Q_OBJECT
-    Q_PROPERTY(const QString * path READ getPath)
+    Q_PROPERTY(const QString path READ getPath)
     Q_PROPERTY(bool loopEnabled READ isLoopEnabled)
     Q_PROPERTY(int startTime READ getStartTime)
     Q_PROPERTY(int endTime READ getEndTime)
@@ -40,7 +40,7 @@ public:
     explicit Track(QObject *parent = 0);
 
 
-    const QString * getPath() const{return &path;}
+    QString getPath() const{return path;}
     bool isLoopEnabled() const{return loopEnabled;}
     int getStartTime() const{return startTime;}
     int getEndTime() const{return endTime;}
