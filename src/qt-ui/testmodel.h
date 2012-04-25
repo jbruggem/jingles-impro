@@ -18,7 +18,6 @@ class TestModel : public QStandardItemModel {
 		TestModel(QObject *parent = 0);
 		void populate(const TrackList *);
 		void setSortingMode(SortingMode);
-		void clear();
 	private:
 		TrackList *trackList;
 		SortingMode sortingMode;

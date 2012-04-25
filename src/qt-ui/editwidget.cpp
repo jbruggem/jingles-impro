@@ -25,6 +25,7 @@ EditWidget::EditWidget(QWidget *parent)
 	stockListGroupBox->layout()->addWidget(stockListView);
 	testModel = new TestModel;
 	stockListView->setModel(testModel);
+	stockListView->setHeaderHidden(true);
 
 	// set up the splitter
 	splitter = new QSplitter;

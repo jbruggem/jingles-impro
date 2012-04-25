@@ -12,17 +12,13 @@ TestModel::TestModel(QObject *parent)
 
 	trackList   = nullptr;
 	sortingMode = SortByFolder;
-
-//	QStandardItem *parentItem = invisibleRootItem();
-//	for (int i = 0; i < 4; ++i) {
-//		QStandardItem *item = new QStandardItem(QString("item %0").arg(i));
-//		parentItem->appendRow(item);
-//		parentItem = item;
-//	}
 }
 
 void TestModel::populate(const TrackList *tl) {
 	QLOG_TRACE() << "TestModel::populate()";
+
+	clear();
+
 	if (not tl) {
 		QLOG_TRACE() << "TrackList is nullptr";
 		return;
@@ -38,11 +34,6 @@ void TestModel::populate(const TrackList *tl) {
 		QLOG_TRACE() << "Directory:" << folder;
 
 		QList<QStandardItem *> l = findItems(folder);
-		QLOG_TRACE() << l.length() << "items in model that match" << folder;
-		for (int i = 0; i < l.length(); i++) {
-			QLOG_TRACE() << l.at(i)->text();
-			QLOG_TRACE() << "l.at(i)->parent()?" << (l.at(i)->parent() ? "yes": "no");
-		}
 		QStandardItem *parentItemPtr = nullptr;
 		bool folderAlreadyInModel = false;
 
@@ -62,9 +53,10 @@ void TestModel::populate(const TrackList *tl) {
 }
 
 void TestModel::setSortingMode(SortingMode mode) {
+	QLOG_TRACE() << "TestModel::setSortingMode()";
+	if (mode == sortingMode) {
+		return;
+	}
 	sortingMode = mode;
-}
-
-void TestModel::clear() {
-
+	populate(trackList);
 }
