@@ -1,13 +1,13 @@
 
-#ifndef TESTMODEL_H_
-#define TESTMODEL_H_
+#ifndef TRACKLISTTREEMODEL_H_
+#define TRACKLISTTREEMODEL_H_
 
 #include <QStandardItemModel>
 #include <QStringList>
 
 class TrackList;
 
-class TestModel : public QStandardItemModel {
+class TrackListTreeModel : public QStandardItemModel {
 
 	Q_OBJECT
 
@@ -17,7 +17,7 @@ class TestModel : public QStandardItemModel {
 			SortByFolder,
 			NbSortingModes,
 		};
-		TestModel(QObject *parent = 0);
+		TrackListTreeModel(QObject *parent = 0);
 		void populate(const TrackList *);
 		static QString getSortingModeText(SortingMode);
 		void setSortingMode(SortingMode);

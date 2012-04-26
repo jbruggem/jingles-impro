@@ -6,7 +6,7 @@
 #include <QGroupBox>
 #include <QSplitter>
 #include <QTreeView>
-#include "testmodel.h"
+#include "tracklisttreemodel.h"
 #include "tracklist.h"
 #include "twopaneexplorer.h"
 
@@ -20,13 +20,13 @@ EditWidget::EditWidget(QWidget *parent)
 	explorerGroupBox->layout()->addWidget(explorer);
 
 	// set up the StockList
-	testModel         = new TestModel;
+	testModel         = new TrackListTreeModel;
 	stockListView     = new QTreeView;
 	stockListView->setModel(testModel);
 	stockListView->setHeaderHidden(true);
 	stockListCBox     = new QComboBox;
-	for (int i = 0; i < TestModel::NbSortingModes; i++) {
-		stockListCBox->addItem(TestModel::getSortingModeText(TestModel::SortingMode(i)));
+	for (int i = 0; i < TrackListTreeModel::NbSortingModes; i++) {
+		stockListCBox->addItem(TrackListTreeModel::getSortingModeText(TrackListTreeModel::SortingMode(i)));
 	}
 	stockListGroupBox = new QGroupBox(tr("Stock List"));
 	stockListGroupBox->setLayout(new QGridLayout);

@@ -1,5 +1,5 @@
 
-#include "testmodel.h"
+#include "tracklisttreemodel.h"
 
 #include <QString>
 #include <QFileInfo>
@@ -13,19 +13,19 @@
 // 	NbSortingModes,
 // };
 
-QStringList TestModel::sortingModeTexts =
+QStringList TrackListTreeModel::sortingModeTexts =
 		(QStringList()
 		<< "Sort by Artist"
 		<< "Sort by Folder");
 
-TestModel::TestModel(QObject *parent)
+TrackListTreeModel::TrackListTreeModel(QObject *parent)
 	: QStandardItemModel(parent) {
 
 	trackList   = nullptr;
 	sortingMode = SortingMode(0);
 }
 
-void TestModel::populate(const TrackList *tl) {
+void TrackListTreeModel::populate(const TrackList *tl) {
 	QLOG_TRACE() << "TestModel::populate()";
 
 	clear();
@@ -77,10 +77,10 @@ void TestModel::populate(const TrackList *tl) {
 	}
 }
 
-void TestModel::setSortingMode(int m) {
+void TrackListTreeModel::setSortingMode(int m) {
 	setSortingMode(SortingMode(m));
 }
-void TestModel::setSortingMode(SortingMode mode) {
+void TrackListTreeModel::setSortingMode(SortingMode mode) {
 	QLOG_TRACE() << "TestModel::setSortingMode()";
 	if (mode == sortingMode) {
 		return;
@@ -89,6 +89,6 @@ void TestModel::setSortingMode(SortingMode mode) {
 	populate(trackList);
 }
 
-QString TestModel::getSortingModeText(SortingMode mode) {
+QString TrackListTreeModel::getSortingModeText(SortingMode mode) {
 	return sortingModeTexts.at(mode);
 }

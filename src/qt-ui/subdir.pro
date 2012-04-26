@@ -14,7 +14,7 @@ HEADERS += \
 	$${currentDir}/mainwidget.h \
 	$${currentDir}/playwidget.h \
 	$${currentDir}/playwidgetentry.h \
-	$${currentDir}/testmodel.h \
+	$${currentDir}/tracklisttreemodel.h \
 	$${currentDir}/twopaneexplorer.h \
 
 SOURCES += \
@@ -24,5 +24,5 @@ SOURCES += \
 	$${currentDir}/mainwidget.cpp \
 	$${currentDir}/playwidget.cpp \
 	$${currentDir}/playwidgetentry.cpp \
-	$${currentDir}/testmodel.cpp \
+	$${currentDir}/tracklisttreemodel.cpp \
 	$${currentDir}/twopaneexplorer.cpp \
