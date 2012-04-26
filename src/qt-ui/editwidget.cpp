@@ -4,6 +4,8 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QHBoxLayout>
+#include <QPushButton>
 #include <QSplitter>
 #include <QTreeView>
 #include "tracklisttreemodel.h"
@@ -15,15 +17,18 @@ EditWidget::EditWidget(QWidget *parent)
 
 	// set up the file explorer
 	explorer         = new TwoPaneExplorer;
+	addButton        = new QPushButton("-->");
 	explorerGroupBox = new QGroupBox(tr("FileExplorer"));
-	explorerGroupBox->setLayout(new QGridLayout);
+	explorerGroupBox->setLayout(new QHBoxLayout);
 	explorerGroupBox->layout()->addWidget(explorer);
+	explorerGroupBox->layout()->addWidget(addButton);
 
 	// set up the StockList
-	testModel         = new TrackListTreeModel;
-	stockListView     = new QTreeView;
-	stockListView->setModel(testModel);
+	trackListModel = new TrackListTreeModel;
+	stockListView  = new QTreeView;
+	stockListView->setModel(trackListModel);
 	stockListView->setHeaderHidden(true);
+	stockListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	stockListCBox     = new QComboBox;
 	for (int i = 0; i < TrackListTreeModel::NbSortingModes; i++) {
 		stockListCBox->addItem(TrackListTreeModel::getSortingModeText(TrackListTreeModel::SortingMode(i)));
@@ -32,7 +37,7 @@ EditWidget::EditWidget(QWidget *parent)
 	stockListGroupBox->setLayout(new QGridLayout);
 	stockListGroupBox->layout()->addWidget(stockListView);
 	stockListGroupBox->layout()->addWidget(stockListCBox);
-	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), testModel, SLOT(setSortingMode(int)));
+	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), trackListModel, SLOT(setSortingMode(int)));
 
 	// set up the splitter
 	splitter = new QSplitter;
@@ -47,5 +52,5 @@ EditWidget::EditWidget(QWidget *parent)
 }
 
 void EditWidget::update(const TrackList *list) {
-	testModel->populate(list);
+	trackListModel->populate(list);
 }

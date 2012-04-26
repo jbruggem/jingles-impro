@@ -2,6 +2,7 @@
 #include "mainwidget.h"
 
 #include <QVBoxLayout>
+#include <QLabel>
 #include <QPushButton>
 #include <QStringList>
 #include <QTimer>
@@ -17,9 +18,11 @@ MainWidget::MainWidget(QWidget *parent)
 	  wsp(nullptr) {
 	QLOG_TRACE() << "MainWidget::MainWidget()";
 
-	// initialise mode button
-	modeButton = new QPushButton(tr("Play Mode"));
-	modeButton->setCheckable(true);
+	playMode = true;
+
+	// initialise mode label and button
+	modeLabel  = new QLabel(tr("Play Mode"));
+	modeButton = new QPushButton(tr("Change"));
 	connect(modeButton, SIGNAL(clicked(bool)), this, SLOT(modeButtonClicked(bool)));
 
 	// initialise play and edit widgets
@@ -32,6 +35,8 @@ MainWidget::MainWidget(QWidget *parent)
 	// set up the layout
 	layout           = new QVBoxLayout;
 	modeButtonLayout = new QHBoxLayout;
+	modeButtonLayout->addStretch();
+	modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
 	layout->addWidget(stackedWidget);
@@ -51,13 +56,15 @@ void MainWidget::setWorkspace(Workspace *wsp) {
 }
 
 void MainWidget::modeButtonClicked(bool checked) {
-	QLOG_TRACE() << "MainWidget::modeButtonClicked() " << "checked: " << (checked ? "true" : "false");
-	if (checked) {
-		modeButton->setText(tr("Edit Mode"));
-		stackedWidget->setCurrentWidget(editWidget);
-	} else {
-		modeButton->setText(tr("Play Mode"));
+	QLOG_TRACE() << "MainWidget::modeButtonClicked()";
+
+	playMode = not playMode;
+	if (playMode) {
+		modeLabel->setText(tr("Play Mode"));
 		stackedWidget->setCurrentWidget(playWidget);
+	} else {
+		modeLabel->setText(tr("Edit Mode"));
+		stackedWidget->setCurrentWidget(editWidget);
 	}
 }
 

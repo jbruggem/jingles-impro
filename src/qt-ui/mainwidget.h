@@ -9,6 +9,7 @@ class PlayWidget;
 class EditWidget;
 class QVBoxLayout;
 class QHBoxLayout;
+class QLabel;
 class QPushButton;
 class QStackedWidget;
 
@@ -24,9 +25,11 @@ class MainWidget : public QWidget {
 		void doSth();
 		void doSthElse();
 	private:
+		bool playMode;
 		Workspace   *wsp;
 		QVBoxLayout *layout;
 		QHBoxLayout *modeButtonLayout;
+		QLabel      *modeLabel;
 		QPushButton *modeButton;
 		PlayWidget  *playWidget;
 		EditWidget  *editWidget;

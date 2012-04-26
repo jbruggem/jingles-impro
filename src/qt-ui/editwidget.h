@@ -6,7 +6,7 @@
 
 class QComboBox;
 class QGroupBox;
-class QLabel;
+class QPushButton;
 class QSplitter;
 class QTreeView;
 class TrackListTreeModel;
@@ -24,9 +24,10 @@ class EditWidget : public QWidget {
 		QGroupBox       *explorerGroupBox;
 		QGroupBox       *stockListGroupBox;
 		QSplitter       *splitter;
+		QPushButton     *addButton;
 		QTreeView       *stockListView;
 		QComboBox       *stockListCBox;
-		TrackListTreeModel       *testModel;
+		TrackListTreeModel       *trackListModel;
 		TwoPaneExplorer *explorer;
 };
 

@@ -15,8 +15,8 @@
 
 QStringList TrackListTreeModel::sortingModeTexts =
 		(QStringList()
-		<< "Sort by Artist"
-		<< "Sort by Folder");
+		<< tr("Sort by Artist")
+		<< tr("Sort by Folder"));
 
 TrackListTreeModel::TrackListTreeModel(QObject *parent)
 	: QStandardItemModel(parent) {
