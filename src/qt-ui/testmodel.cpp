@@ -7,11 +7,22 @@
 #include "tracklist.h"
 #include "nullptr.h"
 
+// enum SortingMode {
+// 	SortByArtist,
+// 	SortByFolder,
+// 	NbSortingModes,
+// };
+
+QStringList TestModel::sortingModeTexts =
+		(QStringList()
+		<< "Sort by Artist"
+		<< "Sort by Folder");
+
 TestModel::TestModel(QObject *parent)
 	: QStandardItemModel(parent) {
 
 	trackList   = nullptr;
-	sortingMode = SortByFolder;
+	sortingMode = SortingMode(0);
 }
 
 void TestModel::populate(const TrackList *tl) {
@@ -25,33 +36,50 @@ void TestModel::populate(const TrackList *tl) {
 	}
 	trackList = const_cast<TrackList *>(tl);
 
-	// QStringList tempList;
 	for (int i = 0; i < trackList->length(); i++) {
 		Track *t = trackList->at(i);
 		QString folder = QFileInfo(t->getPath()).absolutePath();
+		QString artist = t->exists() ? t->getTag()->artist().toCString() : "missing files";
+
+		QString parent;
+		switch (sortingMode) {
+			case SortByFolder:
+				parent = folder;
+				break;
+			case SortByArtist:
+				parent = artist;
+				break;
+			default:
+				parent = folder;
+				break;
+		}
 
 		QLOG_TRACE() << "Track" << i << t->getPath();
 		QLOG_TRACE() << "Directory:" << folder;
+		QLOG_TRACE() << "Artist   :" << artist;
 
-		QList<QStandardItem *> l = findItems(folder);
+		QList<QStandardItem *> l = findItems(parent);
 		QStandardItem *parentItemPtr = nullptr;
-		bool folderAlreadyInModel = false;
+		bool parentAlreadyInModel = false;
 
 		for (int i = 0; i < l.length(); i++) {
 			if (not l.at(i)->parent()) {
-				folderAlreadyInModel = true;
+				parentAlreadyInModel = true;
 				parentItemPtr = l.at(i);
 				break;
 			}
 		}
-		if (not folderAlreadyInModel) {
-			parentItemPtr = new QStandardItem(folder);
+		if (not parentAlreadyInModel) {
+			parentItemPtr = new QStandardItem(parent);
 			appendRow(parentItemPtr);
 		}
 		parentItemPtr->appendRow(new QStandardItem(QFileInfo(t->getPath()).fileName()));
 	}
 }
 
+void TestModel::setSortingMode(int m) {
+	setSortingMode(SortingMode(m));
+}
 void TestModel::setSortingMode(SortingMode mode) {
 	QLOG_TRACE() << "TestModel::setSortingMode()";
 	if (mode == sortingMode) {
@@ -59,4 +87,8 @@ void TestModel::setSortingMode(SortingMode mode) {
 	}
 	sortingMode = mode;
 	populate(trackList);
+}
+
+QString TestModel::getSortingModeText(SortingMode mode) {
+	return sortingModeTexts.at(mode);
 }

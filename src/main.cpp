@@ -52,10 +52,22 @@ int newmain(int argc, char ** argv){
     t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 03 Sueurs froides.mp3",false,8000,25000,0,0,activeWorkspace);
     activeWorkspace->addTrack(t);
 
+    t = new Track("res/one.mp3",false,0,-1,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
+
+    t = new Track("res/two.mp3",false,0,-1,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
+
+    t = new Track("res/three.mp3",false,0,-1,0,0,activeWorkspace);
+    activeWorkspace->addTrack(t);
+
     // add some elements of the stocklist to the playlist using the workspace API
     activeWorkspace->stockToList(0);
     activeWorkspace->stockToList(1);
     activeWorkspace->stockToList(2);
+    activeWorkspace->stockToList(3);
+    activeWorkspace->stockToList(4);
+    activeWorkspace->stockToList(5);
 
     // give the workspace to the media player (or use the controller as a broker between them?)
     // the media player should register to the signals triggered when a track is added or remove from the playlist

@@ -5,6 +5,8 @@
 #include <string>
 #include <QObject>
 #include "common.h"
+#include "TagLibAmalgam.h"
+
 
 class Track : public QObject
 {
@@ -46,6 +48,8 @@ public:
     int getEndTime() const{return endTime;}
     int getFadeInDuration() const{return fadeInDuration;}
     int getFadeOutDuration() const{return fadeOutDuration;}
+    bool exists() const {return not fileRef->isNull();}
+    TagLib::Tag *getTag() const {return fileRef->tag();}
 
 private:
     QString path;
@@ -54,6 +58,7 @@ private:
     int endTime;
     int fadeInDuration;
     int fadeOutDuration;
+    TagLib::FileRef *fileRef;
 
 signals:
     

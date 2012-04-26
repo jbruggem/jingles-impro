@@ -1,6 +1,7 @@
 
 #include "editwidget.h"
 
+#include <QComboBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QSplitter>
@@ -19,20 +20,26 @@ EditWidget::EditWidget(QWidget *parent)
 	explorerGroupBox->layout()->addWidget(explorer);
 
 	// set up the StockList
+	testModel         = new TestModel;
 	stockListView     = new QTreeView;
+	stockListView->setModel(testModel);
+	stockListView->setHeaderHidden(true);
+	stockListCBox     = new QComboBox;
+	for (int i = 0; i < TestModel::NbSortingModes; i++) {
+		stockListCBox->addItem(TestModel::getSortingModeText(TestModel::SortingMode(i)));
+	}
 	stockListGroupBox = new QGroupBox(tr("Stock List"));
 	stockListGroupBox->setLayout(new QGridLayout);
 	stockListGroupBox->layout()->addWidget(stockListView);
-	testModel = new TestModel;
-	stockListView->setModel(testModel);
-	stockListView->setHeaderHidden(true);
+	stockListGroupBox->layout()->addWidget(stockListCBox);
+	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), testModel, SLOT(setSortingMode(int)));
 
 	// set up the splitter
 	splitter = new QSplitter;
 	splitter->addWidget(explorerGroupBox);
-	splitter->setStretchFactor(0, 2);
+	splitter->setStretchFactor(0, 1);
 	splitter->addWidget(stockListGroupBox);
-	splitter->setStretchFactor(1, 1);
+	splitter->setStretchFactor(1, 2);
 
 	// set up the layout
 	setLayout(new QGridLayout);

@@ -4,6 +4,7 @@
 
 #include <QWidget>
 
+class QComboBox;
 class QGroupBox;
 class QLabel;
 class QSplitter;
@@ -24,6 +25,7 @@ class EditWidget : public QWidget {
 		QGroupBox       *stockListGroupBox;
 		QSplitter       *splitter;
 		QTreeView       *stockListView;
+		QComboBox       *stockListCBox;
 		TestModel       *testModel;
 		TwoPaneExplorer *explorer;
 };
