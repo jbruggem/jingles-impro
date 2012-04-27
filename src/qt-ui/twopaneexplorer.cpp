@@ -1,13 +1,17 @@
 
 #include "twopaneexplorer.h"
 
-#include <QGridLayout>
 #include <QFileSystemModel>
-#include <QSplitter>
-#include <QTreeView>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
 #include <QModelIndex>
-#include <QTimer>
 #include <QShortcut>
+#include <QSplitter>
+#include <QStringList>
+#include <QTimer>
+#include <QTreeView>
 #include "history.h"
 #include "QsLog.h"
 
@@ -25,6 +29,13 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 
 	// set default behaviour of the backspace key to Go To Parent Folder
 	backspaceIsHistoryBack = false;
+
+	// set up the filter editor
+	filterLabel  = new QLabel(tr("Filter"));
+	filterEditor = new QLineEdit("*.mp3, *.flac");
+	QHBoxLayout *filterLayout = new QHBoxLayout;
+	filterLayout->addWidget(filterLabel);
+	filterLayout->addWidget(filterEditor);
 
 	// initialize navigation history
 	history.add(QDir::rootPath());
@@ -50,6 +61,14 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	// set up the right pane
 	fileModel = new QFileSystemModel;
 	fileModel->setRootPath(leftPaneFolder);
+	QLOG_TRACE() << "filters:";
+	QStringList l = filterEditor->text().split(QRegExp("[,;\\s]+"), QString::SkipEmptyParts);
+	for (int i = 0; i < l.length(); i++) {
+		QLOG_TRACE() << l.at(i);
+	}
+	fileModel->setNameFilters(l);
+	// items that don't pass the filter are hidden rather than disabled
+	fileModel->setNameFilterDisables(false);
 	rightPane = new QTreeView;
 	rightPane->setModel(fileModel);
 	// only show first column (folder names)
@@ -67,9 +86,11 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	paneSplitter->addWidget(rightPane);
 
 	// set up the layout
-	setLayout(new QGridLayout);
-	layout()->setContentsMargins(0, 0, 0, 0);
-	layout()->addWidget(paneSplitter);
+	QGridLayout *widgetLayout = new QGridLayout;
+	setLayout(widgetLayout);
+	widgetLayout->setContentsMargins(0, 0, 0, 0);
+	widgetLayout->addWidget(paneSplitter, 0, 0);
+	widgetLayout->addLayout(filterLayout, 1, 0);
 
 	// set up keyboard shortcuts
 	shortcut_backspace = new QShortcut(QKeySequence("Backspace"), this);
@@ -85,6 +106,7 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	connect(shortcut_altUp, SIGNAL(activated()), this, SLOT(navigateUp()));
 	connect(shortcut_altLeft, SIGNAL(activated()), this, SLOT(navigateBack()));
 	connect(shortcut_altRight, SIGNAL(activated()), this, SLOT(navigateForward()));
+	connect(filterEditor, SIGNAL(textChanged(const QString &)), this, SLOT(filterChanged(const QString &)));
 }
 
 void TwoPaneExplorer::setRefreshDelay(int delay) {
@@ -229,4 +251,13 @@ QStringList TwoPaneExplorer::getSelection() const {
 		QLOG_TRACE() << "selected:" << selectedItems.at(i);
 	}
 	return selectedItems;
+}
+
+void TwoPaneExplorer::filterChanged(const QString &newString) {
+	QLOG_TRACE() << "TwoPaneExplorer::filterChanged()";
+	QStringList l = newString.split(QRegExp("[,;\\s]+"), QString::SkipEmptyParts);
+	for (int i = 0; i < l.length(); i++) {
+		QLOG_TRACE() << l.at(i);
+	}
+	fileModel->setNameFilters(l);
 }

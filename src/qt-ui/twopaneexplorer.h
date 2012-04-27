@@ -5,12 +5,14 @@
 #include <QWidget>
 
 class QFileSystemModel;
-class QSplitter;
-class QTreeView;
+class QLabel;
+class QLineEdit;
 class QModelIndex;
-class QTimer;
-class QString;
 class QShortcut;
+class QSplitter;
+class QString;
+class QTimer;
+class QTreeView;
 #include "history.h"
 
 class TwoPaneExplorer : public QWidget {
@@ -36,12 +38,15 @@ class TwoPaneExplorer : public QWidget {
 		void rightPaneUpdate();
 		void rightPaneUpdated();
 		void rightPaneSelectFirstRow();
+		void filterChanged(const QString &);
 	private:
 		QSplitter        *paneSplitter;
 		QFileSystemModel *dirsOnlyModel;
 		QFileSystemModel *fileModel;
 		QTreeView   *leftPane;
 		QTreeView   *rightPane;
+		QLabel      *filterLabel;
+		QLineEdit   *filterEditor;
 		QTimer      *refreshDelayTimer;
 		int          refreshDelay;
 		QString      leftPaneFolder;
