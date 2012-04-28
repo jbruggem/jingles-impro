@@ -37,7 +37,6 @@ EditWidget::EditWidget(QWidget *parent)
 	stockListGroupBox->setLayout(new QGridLayout);
 	stockListGroupBox->layout()->addWidget(stockListView);
 	stockListGroupBox->layout()->addWidget(stockListCBox);
-	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), trackListModel, SLOT(setSortingMode(int)));
 
 	// set up the splitter
 	splitter = new QSplitter;
@@ -49,8 +48,17 @@ EditWidget::EditWidget(QWidget *parent)
 	// set up the layout
 	setLayout(new QGridLayout);
 	layout()->addWidget(splitter);
+
+	// connect signals and slots
+	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), trackListModel, SLOT(setSortingMode(int)));
+	connect(addButton, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
 }
 
 void EditWidget::update(const TrackList *list) {
 	trackListModel->populate(list);
+}
+
+void EditWidget::addButtonClicked() {
+	QLOG_TRACE() << "EditWidget::addButtonClicked()";
+	trackListModel->addTracks(explorer->getSelection());
 }

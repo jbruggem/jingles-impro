@@ -23,7 +23,7 @@ MainWidget::MainWidget(QWidget *parent)
 	// initialise mode label and button
 	modeLabel  = new QLabel(tr("Play Mode"));
 	modeButton = new QPushButton(tr("Change"));
-	connect(modeButton, SIGNAL(clicked(bool)), this, SLOT(modeButtonClicked(bool)));
+	connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
 
 	// initialise play and edit widgets
 	playWidget = new PlayWidget(3);
@@ -55,7 +55,7 @@ void MainWidget::setWorkspace(Workspace *wsp) {
 	editWidget->update(wsp->getStock());
 }
 
-void MainWidget::modeButtonClicked(bool checked) {
+void MainWidget::modeButtonClicked() {
 	QLOG_TRACE() << "MainWidget::modeButtonClicked()";
 
 	playMode = not playMode;

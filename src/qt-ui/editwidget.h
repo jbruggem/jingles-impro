@@ -20,6 +20,8 @@ class EditWidget : public QWidget {
 	public:
 		EditWidget(QWidget *parent = 0);
 		void update(const TrackList *);
+	private slots:
+		void addButtonClicked();
 	private:
 		QGroupBox       *explorerGroupBox;
 		QGroupBox       *stockListGroupBox;

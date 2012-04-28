@@ -48,7 +48,7 @@ public:
     int getEndTime() const{return endTime;}
     int getFadeInDuration() const{return fadeInDuration;}
     int getFadeOutDuration() const{return fadeOutDuration;}
-    bool exists() const {return not fileRef->isNull();}
+    bool isValid() const {return not fileRef->isNull();}
     TagLib::Tag *getTag() const {return fileRef->tag();}
 
 private:

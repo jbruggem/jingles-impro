@@ -26,6 +26,7 @@ class TwoPaneExplorer : public QWidget {
 		void setBackspaceToHistoryBack(bool);
 		bool isBackspaceHistoryBack() const;
 		QStringList getSelection() const;
+		QStringList getFilterList() const;
 	public slots:
 		void leftPaneUpdate(const QString &);
 		void rightPaneUpdate(const QString &);
@@ -38,7 +39,7 @@ class TwoPaneExplorer : public QWidget {
 		void rightPaneUpdate();
 		void rightPaneUpdated();
 		void rightPaneSelectFirstRow();
-		void filterChanged(const QString &);
+		void filterChanged();
 	private:
 		QSplitter        *paneSplitter;
 		QFileSystemModel *dirsOnlyModel;

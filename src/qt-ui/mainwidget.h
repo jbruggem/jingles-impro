@@ -21,7 +21,7 @@ class MainWidget : public QWidget {
 		MainWidget(QWidget *parent = 0);
 		void setWorkspace(Workspace *wsp);
 	private slots:
-		void modeButtonClicked(bool);
+		void modeButtonClicked();
 		void doSth();
 		void doSthElse();
 	private:

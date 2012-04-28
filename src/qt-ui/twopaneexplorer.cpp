@@ -17,7 +17,6 @@
 
 // todo clean up code, because it is a mess. No idea why it even works.
 // todo add navigation buttons
-// todo add filter
 
 TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	: QWidget(parent) {
@@ -62,7 +61,7 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	fileModel = new QFileSystemModel;
 	fileModel->setRootPath(leftPaneFolder);
 	QLOG_TRACE() << "filters:";
-	QStringList l = filterEditor->text().split(QRegExp("[,;\\s]+"), QString::SkipEmptyParts);
+	QStringList l = getFilterList();
 	for (int i = 0; i < l.length(); i++) {
 		QLOG_TRACE() << l.at(i);
 	}
@@ -106,7 +105,7 @@ TwoPaneExplorer::TwoPaneExplorer(QWidget *parent)
 	connect(shortcut_altUp, SIGNAL(activated()), this, SLOT(navigateUp()));
 	connect(shortcut_altLeft, SIGNAL(activated()), this, SLOT(navigateBack()));
 	connect(shortcut_altRight, SIGNAL(activated()), this, SLOT(navigateForward()));
-	connect(filterEditor, SIGNAL(textChanged(const QString &)), this, SLOT(filterChanged(const QString &)));
+	connect(filterEditor, SIGNAL(textChanged(const QString &)), this, SLOT(filterChanged()));
 }
 
 void TwoPaneExplorer::setRefreshDelay(int delay) {
@@ -134,7 +133,7 @@ bool TwoPaneExplorer::isBackspaceHistoryBack() const {
 
 void TwoPaneExplorer::leftPaneItemSelected(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::leftPaneItemSelected()";
-	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
+	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->filePath(index);
 	QLOG_TRACE() << "directory:" << leftPaneFolder;
 	history.add(leftPaneFolder);
 
@@ -143,7 +142,7 @@ void TwoPaneExplorer::leftPaneItemSelected(const QModelIndex &index) {
 
 void TwoPaneExplorer::rightPaneItemActivated(const QModelIndex &index) {
 	QLOG_TRACE() << "EditWidget::rightPaneItemActivated()";
-	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->fileInfo(index).absoluteFilePath();
+	leftPaneFolder = reinterpret_cast<const QFileSystemModel *>(index.model())->filePath(index);
 	QLOG_TRACE() << "directory:" << leftPaneFolder;
 	history.add(leftPaneFolder);
 	leftPaneUpdate(leftPaneFolder);
@@ -209,7 +208,7 @@ void TwoPaneExplorer::navigateUp() {
 	QLOG_TRACE() << "EditWidget::navigateUp()";
 	if (leftPane->currentIndex().parent().isValid()) {
 		QModelIndex childIndex = rightPane->rootIndex();
-		leftPaneFolder = dirsOnlyModel->fileInfo(leftPane->currentIndex().parent()).absoluteFilePath();
+		leftPaneFolder = dirsOnlyModel->filePath(leftPane->currentIndex().parent());
 		history.add(leftPaneFolder);
 		leftPaneUpdate(leftPaneFolder);
 		rightPaneUpdate(leftPaneFolder);
@@ -247,17 +246,21 @@ QStringList TwoPaneExplorer::getSelection() const {
 	QStringList selectedItems;
 	QModelIndexList indexList = rightPane->selectionModel()->selectedRows();
 	for (int i = 0; i < indexList.length(); i++) {
-		selectedItems.append(fileModel->fileInfo(indexList.at(i)).absoluteFilePath());
+		selectedItems.append(fileModel->filePath(indexList.at(i)));
 		QLOG_TRACE() << "selected:" << selectedItems.at(i);
 	}
 	return selectedItems;
 }
 
-void TwoPaneExplorer::filterChanged(const QString &newString) {
+void TwoPaneExplorer::filterChanged() {
 	QLOG_TRACE() << "TwoPaneExplorer::filterChanged()";
-	QStringList l = newString.split(QRegExp("[,;\\s]+"), QString::SkipEmptyParts);
+	QStringList l = getFilterList();
 	for (int i = 0; i < l.length(); i++) {
 		QLOG_TRACE() << l.at(i);
 	}
 	fileModel->setNameFilters(l);
+}
+
+QStringList TwoPaneExplorer::getFilterList() const {
+	return filterEditor->text().split(QRegExp("[,;\\s]+"), QString::SkipEmptyParts);
 }

@@ -18,12 +18,15 @@ class TrackListTreeModel : public QStandardItemModel {
 			NbSortingModes,
 		};
 		TrackListTreeModel(QObject *parent = 0);
+		void addTrack(const QString &path, bool refreshAfterAdd = true);
+		void addTracks(const QStringList &);
 		void populate(const TrackList *);
 		static QString getSortingModeText(SortingMode);
 		void setSortingMode(SortingMode);
 	public slots:
 		void setSortingMode(int);
 	private:
+		void refresh();
 		TrackList *trackList;
 		SortingMode sortingMode;
 		static QStringList sortingModeTexts;
