@@ -6,20 +6,22 @@
 #include "common.h"
 #include "trackplayer.h"
 
-class PlayerWrapper : public QObject
+class Players : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayerWrapper(MediaPlayerFactory * playerFactory,QObject *parent = 0);
-    void load(Track * t);
-    void play(Track * t);
+    explicit Players(MediaPlayerFactory * playerFactory,QObject *parent = 0);
+    int load(Track * t);
+    int play(int trackId);
+    void stop(int trackId);
     void stopAll(Track * t);
 
-    ~PlayerWrapper(){
+    ~Players(){
     }
 
 private:
-    QMap<Track *,TrackPlayer *> players;
+    QMap<Track *,int> playersByTrack;
+    QMap<int,TrackPlayer *> players;
     MediaPlayerFactory * playerFactory;
 
 signals:

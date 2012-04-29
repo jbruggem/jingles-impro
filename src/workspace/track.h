@@ -28,9 +28,9 @@ public:
     }
 
 
-    explicit Track(const Track& track);
+    Track(const Track& track);
 
-    explicit Track(
+   Track(
             const QString &url,
             bool loop,
             int startTime, // milliseconds
@@ -38,8 +38,8 @@ public:
             int fadeInDuration,
             int fadeOutDuration,
             QObject *parent = 0);
-    explicit Track(const QString &url,QObject *parent = 0);
-    explicit Track(QObject *parent = 0);
+     Track(const QString &url,QObject *parent = 0);
+     Track(QObject *parent = 0);
 
 
     QString getPath() const{return path;}

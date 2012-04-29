@@ -1,6 +1,6 @@
 #include "playerwrapper.h"
 
-PlayerWrapper::PlayerWrapper(MediaPlayerFactory * playerFactory,QObject *parent) :
+Players::Players(MediaPlayerFactory * playerFactory,QObject *parent) :
     QObject(parent),
     playerFactory(playerFactory)
 {
@@ -8,13 +8,13 @@ PlayerWrapper::PlayerWrapper(MediaPlayerFactory * playerFactory,QObject *parent)
 }
 
 
-void PlayerWrapper::load(Track *t){
+void Players::load(Track *t){
     if(!players.contains(t)){
         players.insert(t,new TrackPlayer(t,playerFactory, this));
     }
 }
 
-void PlayerWrapper::stopAll(Track *t){
+void Players::stopAll(Track *t){
     if(!players.contains(t)){
         QLOG_FATAL() << "Can't stop track: not loaded.";
         return;
@@ -24,7 +24,7 @@ void PlayerWrapper::stopAll(Track *t){
 }
 
 
-void PlayerWrapper::play(Track *t){
+void Players::play(Track *t){
     if(!players.contains(t)){
         this->load(t);
     }

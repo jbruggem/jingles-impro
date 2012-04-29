@@ -1,35 +1,28 @@
 #include "trackplayer.h"
 
-TrackPlayer::TrackPlayer(Track * track,MediaPlayerFactory * factory,QObject *parent) :
+TrackPlayer::TrackPlayer(Track * track,MediaPlayerInterface * players,QObject *parent) :
     QObject(parent),
     track(track),
-    playerFactory(factory)
+    mediaplayer(player)
 {
     this->provisionPlayer();
 }
 
 void TrackPlayer::provisionPlayer(){
     QLOG_TRACE() << "Provisionning media player";
-    MediaPlayerInterface * player = playerFactory->getMediaPlayerInstance();
-    player->setFileName(this->track->getPath()->toStdString().c_str());
-    mediaplayers.append(player);
+
+    mediaplayer->setFileName(this->track->getPath()->toStdString().c_str());
+
 
 }
 
-void TrackPlayer::playNew(){
+void TrackPlayer::play(){
     QLOG_TRACE() << "TrackPlayer playNew";
-    mediaplayers.last()->play();
-    this->provisionPlayer();
+    mediaplayer->play();
 }
 
-void TrackPlayer::stopAll(){
-    QLOG_TRACE() << "TrackPlayer stopAll";
+void TrackPlayer::stop(){
+    QLOG_TRACE() << "TrackPlayer stop";
 
-    for(int i=0;i<mediaplayers.size();i++){
-        mediaplayers.at(i)->stop();
-        delete mediaplayers.at(i);
-    }
-    mediaplayers.clear();
-
-    this->provisionPlayer();
+    mediaplayer->stop();
 }

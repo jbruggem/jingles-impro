@@ -29,7 +29,9 @@ int main(int argc, char ** argv){
     logger.addDestination(debugDestination.get());
     logger.addDestination(fileDestination.get());
 
+
     QLOG_TRACE() << "Logging initiated";
+
 
     // manually set some file paths for scaffolding
     // load it in the workspace using the workspace API
@@ -37,6 +39,8 @@ int main(int argc, char ** argv){
     Workspace * activeWorkspace = new Workspace(0);
 
     Track * t;
+
+
 
     t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,3000,20000,0,0,activeWorkspace);
 
@@ -58,6 +62,7 @@ int main(int argc, char ** argv){
 
     activeWorkspace->addTrack(t);
 
+
     // add some elements of the stocklist to the playlist using the workspace API
     activeWorkspace->stockToList(0);
     activeWorkspace->stockToList(1);
@@ -78,10 +83,9 @@ int main(int argc, char ** argv){
 
 
     delete activeWorkspace;
-    delete mediaPlayerFactory;
+    delete player;
     QLOG_TRACE() << "Workspace deleted";
 
     return 0;
 }
-
 

@@ -133,7 +133,7 @@ int LibvlcMediaPlayer::play() {
     // Play/resume the media_player
     QLOG_TRACE() << "state" << libvlc_media_player_get_state(libvlcMediaPlayer);
 
-    //*
+    /*
     libvlc_media_player_play (libvlcMediaPlayer);
     libvlc_media_player_pause (libvlcMediaPlayer);
     libvlc_media_player_set_time(libvlcMediaPlayer,5000);
@@ -146,7 +146,7 @@ int LibvlcMediaPlayer::play() {
 		state = PLAYBACK_STARTED;
 	}
 
-
+/*
     int fadeDuration = 10000; // milliseconds
     int startVolume = 0; //libvlc_audio_get_volume(libvlcMediaPlayer);
     int endVolume = 120;
@@ -162,7 +162,7 @@ int LibvlcMediaPlayer::play() {
     libvlc_audio_set_volume(libvlcMediaPlayer,endVolume);
 
 
-    QLOG_TRACE() << "volue " << libvlc_audio_get_volume (libvlcMediaPlayer);
+    QLOG_TRACE() << "volue " << libvlc_audio_get_volume (libvlcMediaPlayer);*/
     //for(int i)
 
 	return error;

@@ -28,13 +28,15 @@ HEADERS += \
         src/workspace/trackplaylist.h \
         src/workspace/track.h \
         src/workspace/trackcollection.h \
-        src/player/playerwrapper.h \
         src/player/trackplayer.h \
         src/player/mediaplayerinterface.h \
         src/player/mediaplayerfactory.h \
         src/player/vlc/libvlcmediaplayer.h \
         src/player/vlc/vlcmediaplayerfactory.h \
-        src/common.h
+        src/common.h \
+    src/maintests.h \
+    src/player/players.h \
+    src/player/gst/gstplayer.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -53,10 +55,11 @@ SOURCES += \
         src/workspace/trackplaylist.cpp \
         src/workspace/track.cpp \
         src/workspace/trackcollection.cpp \
-        src/player/playerwrapper.cpp \
         src/player/trackplayer.cpp \
         src/player/vlc/vlcmediaplayerfactory.cpp \
-        src/player/vlc/libvlcmediaplayer.cpp
+        src/player/vlc/libvlcmediaplayer.cpp \
+    src/player/players.cpp \
+    src/player/gst/gstplayer.cpp
 
 
 CONFIG(debug, debug|release) {
@@ -79,4 +82,4 @@ CONFIG(release, debug|release) {
 unix:!macx:!symbian: LIBS += -lX11
 
 unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += gstreamer-0.10
+unix: PKGCONFIG += gstreamer-0.10 gstreamer-plugins-base-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10 glibmm-2.4 gstreamermm-0.10
