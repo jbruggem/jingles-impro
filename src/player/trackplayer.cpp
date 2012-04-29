@@ -1,6 +1,6 @@
 #include "trackplayer.h"
 
-TrackPlayer::TrackPlayer(Track * track,MediaPlayerInterface * players,QObject *parent) :
+TrackPlayer::TrackPlayer(Track * track,MediaPlayerInterface * player,QObject *parent) :
     QObject(parent),
     track(track),
     mediaplayer(player)

@@ -5,7 +5,6 @@
 #include "QsLog.h"
 #include "QsLogDest.h"
 #include "mainwindow.h"
-
 #include "testui.h"
 
 #ifdef Q_WS_X11

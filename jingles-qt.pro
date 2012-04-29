@@ -4,8 +4,9 @@ CONFIG += debug_and_release
 TEMPLATE = app
 TARGET = 
 
-DEPENDPATH  += . src src/player src/player/vlc src/workspace src/externals/qslog
-INCLUDEPATH += . src src/player src/player/vlc src/workspace src/externals/qslog
+DEPENDPATH  += . src src/player src/player/vlc src/player/gst src/workspace src/externals/qslog
+INCLUDEPATH += . src src/player src/player/vlc src/player/gst src/workspace src/externals/qslog
+
 LIBS += -lvlc
 
 
@@ -28,15 +29,15 @@ HEADERS += \
         src/workspace/trackplaylist.h \
         src/workspace/track.h \
         src/workspace/trackcollection.h \
-        src/player/trackplayer.h \
-        src/player/mediaplayerinterface.h \
-        src/player/mediaplayerfactory.h \
+        #src/player/trackplayer.h \
+        #src/player/mediaplayerinterface.h \
+        #src/player/mediaplayerfactory.h \
         src/player/vlc/libvlcmediaplayer.h \
         src/player/vlc/vlcmediaplayerfactory.h \
         src/common.h \
-    src/maintests.h \
-    src/player/players.h \
-    src/player/gst/gstplayer.h
+        src/maintests.h \
+        #src/player/players.h \
+        src/player/gst/gstplayer.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -55,10 +56,10 @@ SOURCES += \
         src/workspace/trackplaylist.cpp \
         src/workspace/track.cpp \
         src/workspace/trackcollection.cpp \
-        src/player/trackplayer.cpp \
+        #src/player/trackplayer.cpp \
         src/player/vlc/vlcmediaplayerfactory.cpp \
         src/player/vlc/libvlcmediaplayer.cpp \
-    src/player/players.cpp \
+    #src/player/players.cpp \
     src/player/gst/gstplayer.cpp
 
 

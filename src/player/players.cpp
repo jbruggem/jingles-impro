@@ -1,4 +1,4 @@
-#include "playerwrapper.h"
+//#include "playerwrapper.h"
 
 Players::Players(MediaPlayerFactory * playerFactory,QObject *parent) :
     QObject(parent),
