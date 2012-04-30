@@ -62,4 +62,32 @@ Track::Track(const QString &url,QObject *parent) :
     fileRef = new TagLib::FileRef(temp.data());
 }
 
+int Track::compare(const Track &a, const Track &b) {
+	int returnValue = QString::localeAwareCompare(a.path, b.path);
+	// if the strings are different, we stop the comparison
+	if (returnValue) {return returnValue;}
 
+	returnValue = a.startTime - b.startTime;
+	// if the times are different, we stop the comparison
+	if (returnValue) {return returnValue;}
+
+	returnValue = a.endTime - b.endTime;
+	if (returnValue) {return returnValue;}
+
+	returnValue = a.fadeInDuration - b.fadeInDuration;
+	if (returnValue) {return returnValue;}
+
+	returnValue = a.fadeOutDuration - b.fadeOutDuration;
+	if (returnValue) {return returnValue;}
+
+	returnValue = a.loopEnabled - b.loopEnabled;
+	if (returnValue) {return returnValue;}
+
+	// additional checks can be added here
+
+	return 0;
+}
+
+bool Track::operator<(const Track &other) const {
+	return compare(*this, other) < 0;
+}

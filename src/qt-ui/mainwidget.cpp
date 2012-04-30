@@ -22,7 +22,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 	// initialise mode label and button
 	modeLabel  = new QLabel(tr("Play Mode"));
-	modeButton = new QPushButton(tr("Change"));
+	modeButton = new QPushButton(tr("Switch"));
 	connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
 
 	// initialise play and edit widgets

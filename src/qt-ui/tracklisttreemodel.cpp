@@ -8,16 +8,14 @@
 #include "tracklist.h"
 #include "nullptr.h"
 
-// enum SortingMode {
-// 	SortByArtist,
-// 	SortByFolder,
-// 	NbSortingModes,
-// };
+QMap<TrackListTreeModel::SortingMode, QString> TrackListTreeModel::sortingModeTexts = getSortingModeTexts();
 
-QStringList TrackListTreeModel::sortingModeTexts =
-		(QStringList()
-		<< tr("Sort by Artist")
-		<< tr("Sort by Folder"));
+QMap<TrackListTreeModel::SortingMode, QString> TrackListTreeModel::getSortingModeTexts() {
+	QMap<SortingMode, QString> map;
+	map[SortByArtist] = "Sort by Artist";
+	map[SortByFolder] = "Sort by Folder";
+	return map;
+}
 
 TrackListTreeModel::TrackListTreeModel(QObject *parent)
 	: QStandardItemModel(parent) {
@@ -41,44 +39,53 @@ void TrackListTreeModel::populate(const TrackList *tl) {
 	}
 	trackList = const_cast<TrackList *>(tl);
 
-	for (int i = 0; i < trackList->length(); i++) {
-		Track *t = trackList->at(i);
-		QString folder = QFileInfo(t->getPath()).absolutePath();
-		QString artist = t->isValid() ? t->getTag()->artist().toCString() : "missing files";
+	// map used for sorting items
+	// first field is the one we are sorting by
+	// second field is the file name
+	// third field is the number of times the same file name appears
+	QMap<QString, QMap<QString, int> > map;
 
-		QString parent;
-		switch (sortingMode) {
-			case SortByFolder:
-				parent = folder;
-				break;
-			case SortByArtist:
-				parent = artist;
-				break;
-			default:
-				parent = folder;
-				break;
-		}
+	// fill the sorting map
+	switch(sortingMode) {
+		case SortByArtist:
+			for (int i = 0; i < trackList->length(); i++) {
+				Track *t = trackList->at(i);
+				QString fileName = QFileInfo(t->getPath()).fileName();
+				QString artist = t->isValid() ? t->getTag()->artist().toCString() : ".missing files";
+				if (artist.isEmpty()) {
+					artist = ".unknown";
+				}
+				if (not map[artist].contains(fileName)) {
+					map[artist][fileName] = 1;
+				} else {
+					map[artist][fileName]++;
+				}
+			}
+			break;
+		case SortByFolder:
+			for (int i = 0; i < trackList->length(); i++) {
+				Track *t = trackList->at(i);
+				QString fileName = QFileInfo(t->getPath()).fileName();
+				QString folder = QFileInfo(t->getPath()).absolutePath();
+				if (not map[folder].contains(fileName)) {
+					map[folder][fileName] = 1;
+				} else {
+					map[folder][fileName]++;
+				}
+			}
+			break;
+	}
 
-		QLOG_TRACE() << "Track" << i << t->getPath();
-		QLOG_TRACE() << "Directory:" << folder;
-		QLOG_TRACE() << "Artist   :" << artist;
+	// populate the model
+	foreach(QString key, map.keys()) {
+		QStandardItem *parent = new QStandardItem(key);
+		appendRow(parent);
 
-		QList<QStandardItem *> l = findItems(parent);
-		QStandardItem *parentItemPtr = nullptr;
-		bool parentAlreadyInModel = false;
-
-		for (int i = 0; i < l.length(); i++) {
-			if (not l.at(i)->parent()) {
-				parentAlreadyInModel = true;
-				parentItemPtr = l.at(i);
-				break;
+		foreach(QString fileName, map[key].keys()) {
+			for (int i = 0; i < map[key][fileName]; i++) {
+				parent->appendRow(new QStandardItem(fileName));
 			}
 		}
-		if (not parentAlreadyInModel) {
-			parentItemPtr = new QStandardItem(parent);
-			appendRow(parentItemPtr);
-		}
-		parentItemPtr->appendRow(new QStandardItem(QFileInfo(t->getPath()).fileName()));
 	}
 }
 
@@ -95,7 +102,7 @@ void TrackListTreeModel::setSortingMode(SortingMode mode) {
 }
 
 QString TrackListTreeModel::getSortingModeText(SortingMode mode) {
-	return sortingModeTexts.at(mode);
+	return sortingModeTexts[mode];
 }
 
 void TrackListTreeModel::addTrack(const QString &path, bool refreshAfterAdd) {

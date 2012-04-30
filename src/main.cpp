@@ -8,6 +8,8 @@
 #include "mediaplaylist.h"
 #include "mediaplayerhandler.h"
 
+#include "testui.h"
+
 #ifdef Q_WS_X11
     #include <X11/Xlib.h>
 #endif
@@ -85,6 +87,7 @@ int newmain(int argc, char ** argv){
 
     BasicUi ui;
     ui.setWorkspace(activeWorkspace);
+//    TestUi ui;
     ui.show();
     app.exec();
 

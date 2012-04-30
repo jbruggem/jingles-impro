@@ -3,7 +3,7 @@
 #define TRACKLISTTREEMODEL_H_
 
 #include <QStandardItemModel>
-#include <QStringList>
+#include <QMap>
 
 class TrackList;
 
@@ -29,7 +29,8 @@ class TrackListTreeModel : public QStandardItemModel {
 		void refresh();
 		TrackList *trackList;
 		SortingMode sortingMode;
-		static QStringList sortingModeTexts;
+		static QMap<SortingMode, QString> sortingModeTexts;
+		static QMap<SortingMode, QString> getSortingModeTexts();
 };
 
 #endif

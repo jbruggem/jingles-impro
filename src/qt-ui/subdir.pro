@@ -16,6 +16,7 @@ HEADERS += \
 	$${currentDir}/playwidgetentry.h \
 	$${currentDir}/tracklisttreemodel.h \
 	$${currentDir}/twopaneexplorer.h \
+	$${currentDir}/testui.h 
 
 SOURCES += \
 	$${currentDir}/autoscrollarea.cpp \
@@ -26,3 +27,4 @@ SOURCES += \
 	$${currentDir}/playwidgetentry.cpp \
 	$${currentDir}/tracklisttreemodel.cpp \
 	$${currentDir}/twopaneexplorer.cpp \
+	$${currentDir}/testui.cpp

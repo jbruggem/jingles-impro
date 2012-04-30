@@ -51,6 +51,9 @@ public:
     bool isValid() const {return not fileRef->isNull();}
     TagLib::Tag *getTag() const {return fileRef->tag();}
 
+    static int compare(const Track &a, const Track &b);
+    bool operator< (const Track &other) const;
+
 private:
     QString path;
     bool loopEnabled;
