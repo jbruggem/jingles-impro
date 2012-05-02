@@ -30,14 +30,15 @@ HEADERS += \
         src/workspace/track.h \
         src/workspace/trackcollection.h \
         #src/player/trackplayer.h \
-        #src/player/mediaplayerinterface.h \
-        #src/player/mediaplayerfactory.h \
-        src/player/vlc/libvlcmediaplayer.h \
-        src/player/vlc/vlcmediaplayerfactory.h \
+        src/player/mediaplayerfactory.h \
+        #src/player/vlc/libvlcmediaplayer.h \
+        #src/player/vlc/vlcmediaplayerfactory.h \
         src/common.h \
         src/maintests.h \
-        #src/player/players.h \
-        src/player/gst/gstplayer.h
+        src/player/players.h \
+        src/player/gst/gstplayer.h \
+    src/player/gst/gstmediaplayerfactory.h \
+    src/player/imediaplayer.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -57,10 +58,11 @@ SOURCES += \
         src/workspace/track.cpp \
         src/workspace/trackcollection.cpp \
         #src/player/trackplayer.cpp \
-        src/player/vlc/vlcmediaplayerfactory.cpp \
-        src/player/vlc/libvlcmediaplayer.cpp \
-    #src/player/players.cpp \
-    src/player/gst/gstplayer.cpp
+        #src/player/vlc/vlcmediaplayerfactory.cpp \
+        #src/player/vlc/libvlcmediaplayer.cpp \
+    src/player/players.cpp \
+    src/player/gst/gstplayer.cpp \
+    src/player/gst/gstmediaplayerfactory.cpp
 
 
 CONFIG(debug, debug|release) {

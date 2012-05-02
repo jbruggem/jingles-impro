@@ -6,13 +6,18 @@ GstPlayer::GstPlayer(){
     pipeline = gst_element_factory_make("playbin2", "player");
 }
 
-
+/*
 void GstPlayer::run(){
     QLOG_TRACE() << "PlayThread Start play";
     play();
+}*/
+
+void GstPlayer::setTrack(Track * track){
+    this->track = track;
 }
 
-void GstPlayer::load(Track * track){
+
+void GstPlayer::load(){
     QLOG_TRACE() << "LOAD";
     GstBus *bus;
 
@@ -25,8 +30,8 @@ void GstPlayer::load(Track * track){
         g_object_set(G_OBJECT(pipeline), "uri", uri, NULL);
 
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
-    gst_bus_add_watch(bus, GstPlayer::BusCallAsync, NULL);
-    gst_bus_set_sync_handler(bus, GstPlayer::BusCallSync, NULL);
+    gst_bus_add_watch(bus, GstPlayer::BusCallAsync, this);
+    gst_bus_set_sync_handler(bus, GstPlayer::BusCallSync, this);
 
     gst_object_unref(bus);
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
@@ -37,16 +42,30 @@ void GstPlayer::load(Track * track){
 bool GstPlayer::gstIsInit = false;
 
 
-void GstPlayer::play()
+int GstPlayer::play()
 {
     QLOG_TRACE() << "PLAY";
 
     if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't play";
-        return;
+        return 1;
     }
 
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+    return 0;
+}
+
+void GstPlayer::pause()
+{
+    QLOG_TRACE() << "PAUSE";
+
+    if(!isLoaded){
+        QLOG_TRACE() << "Nothing loaded - can't pause";
+        return;
+    }
+
+    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
+    return;
 }
 
 void GstPlayer::stop()
@@ -73,36 +92,54 @@ void GstPlayer::ensureInitGst(){
     }
 }
 
-GstBusSyncReply GstPlayer::BusCallSync(GstBus *bus, GstMessage *msg, void *user_data)
+GstBusSyncReply GstPlayer::BusCallSync(GstBus *, GstMessage *msg, void *userData)
 {
-    QLOG_TRACE() << "Sync bus message" << GST_MESSAGE_TYPE_NAME(msg);
-    parseMessage(msg);
+    //QLOG_TRACE() << "Sync bus message" << GST_MESSAGE_TYPE_NAME(msg);
+    ((GstPlayer *)userData)->parseMessage(msg);
 
     return GST_BUS_PASS;
 
 }
 
-gboolean GstPlayer::BusCallAsync(GstBus *bus, GstMessage *msg, void *user_data)
+gboolean GstPlayer::BusCallAsync(GstBus *, GstMessage *msg, void *userData)
 {
-    QLOG_TRACE() << "Async bus message" << GST_MESSAGE_TYPE_NAME(msg);
-    parseMessage(msg);
+    //QLOG_TRACE() << "Async bus message" << GST_MESSAGE_TYPE_NAME(msg);
+    ((GstPlayer *)userData)->parseMessage(msg);
 
 
     return true;
 }
 
-void parseMessage(GstMessage *msg){
 
+void foreachFunc(const GstTagList * list, const gchar * tag, void * user_data){
+    gchar * val;
+    // useful to make sure it's actually a string we want.
+    //gst_tag_list_get_type();
+
+    gst_tag_list_get_string(list,tag,&val);
+    QLOG_TRACE() << " --TAG-- " << tag << " => " << val;
+}
+
+void GstPlayer::parseMessage(GstMessage *msg){
     switch (GST_MESSAGE_TYPE(msg)) {
     case GST_MESSAGE_STATE_CHANGED: {
         GstState old_state, new_state;
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
-        QLOG_TRACE() << "Element"<< GST_OBJECT_NAME (msg->src) <<" changed state from " <<  gst_element_state_get_name (old_state) <<" to "<<  gst_element_state_get_name (new_state) << ".\n";
+        QLOG_TRACE() << "[GST] "<< GST_OBJECT_NAME (msg->src) <<": " <<  gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
 
          break;
     }
-
+    case GST_MESSAGE_TAG: {
+        QLOG_TRACE() << "[GST]" << GST_MESSAGE_TYPE_NAME(msg);
+        GstTagList * tagList;
+        // We should merge & store the list each time we get a new tag
+        // We should also send a signal for every new tag that is defined
+        gst_message_parse_tag(msg,&tagList);
+        gst_tag_list_foreach(tagList,foreachFunc,this);
+        gst_tag_list_free(tagList);
+        break;
+   }
     case GST_MESSAGE_EOS: {
         g_message("End-of-stream");
         //g_main_loop_quit(loop);
@@ -118,6 +155,7 @@ void parseMessage(GstMessage *msg){
         break;
     }
     default:
+        QLOG_TRACE() << "[GST]" << GST_MESSAGE_TYPE_NAME(msg);
         break;
     }
 }

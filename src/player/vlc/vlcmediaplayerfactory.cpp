@@ -6,6 +6,6 @@ VLCMediaPlayerFactory::VLCMediaPlayerFactory()
 
 
 
-MediaPlayerInterface * VLCMediaPlayerFactory::getMediaPlayerInstance(){
+IMediaPlayer * VLCMediaPlayerFactory::getMediaPlayerInstance(){
     return new LibvlcMediaPlayer();
 }

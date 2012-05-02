@@ -4,10 +4,10 @@
 
 #include <vlc/vlc.h>
 #include <time.h>
-#include "mediaplayerinterface.h"
+#include "imediaplayer.h"
 #include "nullptr.h"
 
-class LibvlcMediaPlayer : public MediaPlayerInterface {
+class LibvlcMediaPlayer : public IMediaPlayer {
 	
 	public:
 		LibvlcMediaPlayer(const char * = nullptr);

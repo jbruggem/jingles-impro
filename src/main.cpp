@@ -6,6 +6,11 @@
 #include "QsLogDest.h"
 #include "mainwindow.h"
 #include "testui.h"
+#include "mediaplaylist.h"
+#include "mediaplayerhandler.h"
+#include "vlcmediaplayerfactory.h"
+#include "gstplayer.h"
+#include "players.h"
 
 #ifdef Q_WS_X11
     #include <X11/Xlib.h>
@@ -13,7 +18,6 @@
 
 #include "workspace.h"
 #include "basicui.h"
-
 
 
 int main(int argc, char ** argv){
@@ -79,10 +83,11 @@ int main(int argc, char ** argv){
 //    TestUi ui;
     ui.show();
     app.exec();
-
-
+    
+    delete players;
+    delete mediaPlayerFactory;
     delete activeWorkspace;
-    delete player;
+    //delete player;
     QLOG_TRACE() << "Workspace deleted";
 
     return 0;

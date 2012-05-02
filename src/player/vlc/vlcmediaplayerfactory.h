@@ -8,7 +8,7 @@ class VLCMediaPlayerFactory : public MediaPlayerFactory
 {
 public:
     VLCMediaPlayerFactory();
-    MediaPlayerInterface * getMediaPlayerInstance();
+    IMediaPlayer * getMediaPlayerInstance();
 
 };
 

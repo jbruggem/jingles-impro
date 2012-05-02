@@ -1,13 +1,15 @@
 #ifndef MEDIAPLAYERFACTORY_H
 #define MEDIAPLAYERFACTORY_H
 
-#include "mediaplayerinterface.h"
+#include "imediaplayer.h"
 
-class MediaPlayerFactory
+class MediaPlayerFactory //: public QObject
 {
+    //Q_OBJECT
     public:
+        //MediaPlayerFactory(); //QObject *parent = 0):QObject(parent){}
         virtual ~MediaPlayerFactory() {}
-        virtual MediaPlayerInterface * getMediaPlayerInstance() = 0;
+        virtual IMediaPlayer * getMediaPlayerInstance() = 0;
 };
 
 #endif // MEDIAPLAYERFACTORY_H

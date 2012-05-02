@@ -14,7 +14,7 @@ class MediaPlayerHandler {
 		void print();
 	private:
 		void cleanup();
-		QMap<QString, QList<MediaPlayerInterface *> > mpMap;
+		QMap<QString, QList<IMediaPlayer *> > mpMap;
 };
 
 #endif

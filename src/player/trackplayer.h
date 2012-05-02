@@ -11,14 +11,14 @@ class TrackPlayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit TrackPlayer(Track * track,MediaPlayerInterface * player,QObject *parent = 0);
+    explicit TrackPlayer(Track * track,IMediaPlayer * player,QObject *parent = 0);
     void play();
     void stop();
     void provisionPlayer();
 
 private:
     Track * track;
-    MediaPlayerInterface * mediaplayer;
+    IMediaPlayer * mediaplayer;
 
 signals:
     
