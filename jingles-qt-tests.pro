@@ -3,10 +3,8 @@ CONFIG += debug_and_release
 
 TEMPLATE = app
 TARGET = 
-
 DEPENDPATH  += . src src/player src/player/vlc src/player/gst src/workspace src/externals/qslog
 INCLUDEPATH += . src src/player src/player/vlc src/player/gst src/workspace src/externals/qslog
-
 LIBS += -lvlc
 
 
@@ -62,8 +60,7 @@ SOURCES += \
     src/player/players.cpp \
     src/player/gst/gstplayer.cpp \
     src/player/gst/gstmediaplayerfactory.cpp \
-    src/main.cpp
-
+    src/main_mediaplayer_testing.cpp
 
 CONFIG(debug, debug|release) {
 	message("debug")
@@ -83,6 +80,14 @@ CONFIG(release, debug|release) {
         UI_DIR = release/ui
 }
 
+CONFIG(mediaplayer-testing, debug|release) {
+        message("mediaplayer-testing")
+        DESTDIR = mediaplayer-testing
+        OBJECTS_DIR = mediaplayer-testing/obj
+        MOC_DIR = mediaplayer-testing/moc
+        RCC_DIR = mediaplayer-testing/rcc
+        UI_DIR = mediaplayer-testing/ui
+}
 
 unix:!macx:!symbian: LIBS += -lX11
 

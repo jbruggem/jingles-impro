@@ -8,9 +8,9 @@
 #include "testui.h"
 #include "mediaplaylist.h"
 #include "mediaplayerhandler.h"
-#include "vlcmediaplayerfactory.h"
 #include "gstplayer.h"
 #include "players.h"
+#include "vlcmediaplayerfactory.h"
 
 #ifdef Q_WS_X11
     #include <X11/Xlib.h>
