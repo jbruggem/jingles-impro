@@ -38,7 +38,8 @@ HEADERS += \
         src/player/players.h \
         src/player/gst/gstplayer.h \
     src/player/gst/gstmediaplayerfactory.h \
-    src/player/imediaplayer.h
+    src/player/imediaplayer.h \
+    src/player/gst/gstplayerwatcher.h
 SOURCES += \
 	src/avobject.cpp \
 	src/buttonpanel.cpp \
@@ -62,7 +63,8 @@ SOURCES += \
     src/player/players.cpp \
     src/player/gst/gstplayer.cpp \
     src/player/gst/gstmediaplayerfactory.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/player/gst/gstplayerwatcher.cpp
 
 
 CONFIG(debug, debug|release) {

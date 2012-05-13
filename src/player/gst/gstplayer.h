@@ -7,12 +7,14 @@
 #include <gst/gst.h>
 #include "track.h"
 #include "imediaplayer.h"
+#include "imediaplayerwatcher.h"
 
 
-class GstPlayer : /*public QThread, */public IMediaPlayer
+class GstPlayer : public QObject, public IMediaPlayer
 {
+    Q_OBJECT
 public:
-    GstPlayer();
+    GstPlayer(QObject *parent = 0);
     //void run();
 
 
@@ -31,6 +33,7 @@ public:
 
 
 private:
+   // IMediaPlayerWatcher * watcher;
     Track * track;
     //QString uri;
     GstElement *pipeline;

@@ -18,6 +18,9 @@ class Track : public QObject
     Q_PROPERTY(int endTime READ getEndTime)
     Q_PROPERTY(int fadeInDuration READ getFadeInDuration)
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
+    Q_PROPERTY(const QString * artist READ getArtist WRITE setArtist)
+    Q_PROPERTY(const QString * title READ getTitle WRITE setTitle)
+    Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
         //QLOG_TRACE() << "deleting Track[" << this->path << "|"
@@ -50,9 +53,13 @@ public:
     int getFadeOutDuration() const{return fadeOutDuration;}
     bool isValid() const {return not fileRef->isNull();}
     TagLib::Tag *getTag() const {return fileRef->tag();}
-
     static int compare(const Track &a, const Track &b);
     bool operator< (const Track &other) const;
+    const QString *  getArtist() const{return &artist;}
+    const QString *  getTitle() const{return &title;}
+    void  setArtist(const QString * artist) {this->artist = *artist;}
+    void  setTitle(const QString * title) {this->title = *title;}
+
 
 private:
     QString path;
@@ -62,6 +69,8 @@ private:
     int fadeInDuration;
     int fadeOutDuration;
     TagLib::FileRef *fileRef;
+    QString title;
+    QString artist;
 
 signals:
     
