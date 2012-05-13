@@ -24,7 +24,7 @@ void GstPlayer::load(){
     GstBus *bus;
 
     //const char uri = track->getPath();
-    QString realPath = "file://"+*track->getPath();
+    QString realPath = "file://"+track->getPath();
     QByteArray byteArray = realPath.toLocal8Bit();
     const gchar * uri = byteArray.data();
 

@@ -3,12 +3,13 @@
 #define PLAYWIDGETENTRY_H_
 
 #include <QWidget>
-
-class QGroupBox;
-class QGridLayout;
-class QHBoxLayout;
-class PushButtonWithExtras;
-class Track;
+#include <QGroupBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QDir>
+#include <QPushButton>
+#include "QsLog.h"
+#include "track.h"
 
 class PlayWidgetEntry : public QWidget {
 
@@ -22,8 +23,8 @@ class PlayWidgetEntry : public QWidget {
 		QGridLayout *outerLayout;
 		QGridLayout *innerLayout;
 		QHBoxLayout *buttonLayout;
-		PushButtonWithExtras *playButton;
-		PushButtonWithExtras *stopButton;
+        QPushButton *playButton;
+        QPushButton *stopButton;
 		const Track *track;
 };
 

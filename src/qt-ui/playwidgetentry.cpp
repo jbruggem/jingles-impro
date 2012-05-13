@@ -1,14 +1,4 @@
-
 #include "playwidgetentry.h"
-
-#include <QGroupBox>
-#include <QGridLayout>
-#include <QHBoxLayout>
-#include <QDir>
-#include "QsLog.h"
-#include "pushbuttonwithextras.h"
-#include "track.h"
-
 
 // PlayWidgetEntry::PlayWidgetEntry(const QString &title, QWidget *parent)
 PlayWidgetEntry::PlayWidgetEntry(const Track &t, QWidget *parent)
@@ -22,8 +12,8 @@ PlayWidgetEntry::PlayWidgetEntry(const Track &t, QWidget *parent)
 	outerLayout  = new QGridLayout;
 	innerLayout  = new QGridLayout;
 	buttonLayout = new QHBoxLayout;
-	playButton   = new PushButtonWithExtras(tr("Play"));
-	stopButton   = new PushButtonWithExtras(tr("Stop"));
+    playButton   = new QPushButton(tr("Play"));
+    stopButton   = new QPushButton(tr("Stop"));
 
 	buttonLayout->addWidget(playButton);
 	buttonLayout->addWidget(stopButton);

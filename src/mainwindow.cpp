@@ -7,7 +7,6 @@
 #include "QsLog.h"
 #include "buttonpanel.h"
 #include "mediaplaylist.h"
-#include "mediaplayerhandler.h"
 #include "nullptr.h"
 
 MainWindow::MainWindow(QWidget *parent)

@@ -83,9 +83,7 @@ int main(int argc, char ** argv){
 //    TestUi ui;
     ui.show();
     app.exec();
-    
-    delete players;
-    delete mediaPlayerFactory;
+
     delete activeWorkspace;
     //delete player;
     QLOG_TRACE() << "Workspace deleted";
