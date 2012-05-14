@@ -3,17 +3,19 @@
 #define BASICUI_H_
 
 #include <QMainWindow>
-
-class MainWidget;
-class Workspace;
+#include "QsLog.h"
+#include "mainwidget.h"
+#include "workspace.h"
+#include "uicontroller.h"
 
 class BasicUi: public QMainWindow {
 
     Q_OBJECT
 
     public:
-        BasicUi(QWidget *parent = 0);
+        BasicUi(UiController * controller, QWidget *parent = 0);
         void setWorkspace(Workspace *);
+        void setUiController(UiController *);
         ~BasicUi(){
             if(NULL != mainWidget)
                 delete mainWidget;

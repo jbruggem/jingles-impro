@@ -36,10 +36,14 @@ void GstPlayer::load(){
     gst_bus_set_sync_handler(bus, GstPlayer::BusCallSync, this);
 
     gst_object_unref(bus);
-    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
 
-
-    isLoaded = true;
+    GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
+    if(GST_STATE_PAUSED == ret){
+        QLOG_TRACE() << "Load finished. Set to pause successful.";
+        isLoaded = true;
+    }else{
+        QLOG_TRACE() << "Failed to change state to PAUSE: probably failed to load.";
+    }
 }
 
 bool GstPlayer::gstIsInit = false;
@@ -50,11 +54,13 @@ int GstPlayer::play()
     QLOG_TRACE() << "GstPlayer::play";
 
     if(!isLoaded){
-        QLOG_TRACE() << "Nothing loaded - can't play";
-        return 1;
+        GstState state, pending;
+        gst_element_get_state(pipeline,&state,&pending,0);
+        if(GST_STATE_PAUSED != state){
+            QLOG_TRACE() << "Nothing loaded - can't play";
+            return 1;
+        }
     }
-
-
 
     double start =  ((double)track->getStartTime())*GST_MSECOND;
     double end = ((double)track->getEndTime())*GST_MSECOND;
@@ -216,14 +222,14 @@ void GstPlayer::parseMessage(GstMessage *msg){
         break;
    }
     case GST_MESSAGE_EOS: {
-        g_message("End-of-stream");
+        QLOG_TRACE() << "[GST] End-of-stream";
         //g_main_loop_quit(loop);
         break;
     }
     case GST_MESSAGE_ERROR: {
         GError *err;
         gst_message_parse_error(msg, &err, NULL);
-        g_error("%s", err->message);
+        QLOG_TRACE() << "[GST] [ERROR] " << err->message;
         g_error_free(err);
 
        // g_main_loop_quit(loop);

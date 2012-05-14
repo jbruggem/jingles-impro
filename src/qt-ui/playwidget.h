@@ -4,17 +4,19 @@
 
 #include <QWidget>
 #include <QList>
-
-class QGridLayout;
-class PlayWidgetEntry;
-class TrackList;
+#include "uicontroller.h"
+#include <QGridLayout>
+#include <QVBoxLayout>
+#include "QsLog.h"
+#include "playwidgetentry.h"
+#include "tracklist.h"
 
 class PlayWidget : public QWidget {
 
 	Q_OBJECT
 
 	public:
-		PlayWidget(int, QWidget *parent = 0);
+        PlayWidget(UiController *, int, QWidget *parent = 0);
 		void clear();
 		void update(const TrackList *);
 		void append(const TrackList *);
@@ -24,6 +26,7 @@ class PlayWidget : public QWidget {
 		int currentColumn;
 		QGridLayout *layout;
 		QList<PlayWidgetEntry *> entryList;
+        UiController * controller;
 };
 
 #endif

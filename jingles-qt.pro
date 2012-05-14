@@ -20,26 +20,26 @@ HEADERS += \
 #	src/mainwindow.h \
 #	src/mediaplayerhandler.h \
 #	src/mediaplaylist.h \
-	src/nullptr.h \
 #	src/pushbuttonwithextras.h \
 #	src/tracklisthandler.h \
-	src/externals/qslog/QsDebugOutput.h \
-	src/externals/qslog/QsLog.h \
-	src/externals/qslog/QsLogDest.h \
-        src/workspace/workspace.h \
-        src/workspace/trackstock.h \
-        src/workspace/trackplaylist.h \
-        src/workspace/tracklist.h \
-        src/workspace/track.h \
-        src/workspace/trackcollection.h \
-        #src/player/trackplayer.h \
-        src/player/mediaplayerfactory.h \
-        #src/player/vlc/libvlcmediaplayer.h \
-        #src/player/vlc/vlcmediaplayerfactory.h \
-        src/common.h \
-        src/maintests.h \
-        src/player/players.h \
-        src/player/gst/gstplayer.h \
+    #src/player/vlc/libvlcmediaplayer.h \
+    #src/player/vlc/vlcmediaplayerfactory.h \
+    #src/player/trackplayer.h \
+    src/nullptr.h \
+    src/externals/qslog/QsDebugOutput.h \
+    src/externals/qslog/QsLog.h \
+    src/externals/qslog/QsLogDest.h \
+    src/workspace/workspace.h \
+    src/workspace/trackstock.h \
+    src/workspace/trackplaylist.h \
+    src/workspace/tracklist.h \
+    src/workspace/track.h \
+    src/workspace/trackcollection.h \
+    src/player/mediaplayerfactory.h \
+    src/common.h \
+    src/maintests.h \
+    src/player/players.h \
+    src/player/gst/gstplayer.h \
     src/player/gst/gstmediaplayerfactory.h \
     src/player/imediaplayer.h \
     src/qt-ui/twopaneexplorer.h \
@@ -52,7 +52,10 @@ HEADERS += \
     src/qt-ui/basicui.h \
     src/qt-ui/autoscrollarea.h \
     src/externals/taglib/TagLibAmalgam.h \
-    src/history.h
+    src/history.h \
+    src/playwidgetentrycontroller.h \
+    src/uicontroller.h
+
 SOURCES += \
 #	src/avobject.cpp \
 #	src/buttonpanel.cpp \
@@ -62,18 +65,18 @@ SOURCES += \
 #	src/mediaplaylist.cpp \
 #	src/pushbuttonwithextras.cpp \
 #	src/tracklisthandler.cpp \
-	src/externals/qslog/QsDebugOutput.cpp \
-	src/externals/qslog/QsLog.cpp \
-	src/externals/qslog/QsLogDest.cpp \
-        src/workspace/workspace.cpp \
-        src/workspace/trackstock.cpp \
-        src/workspace/tracklist.cpp \
-        src/workspace/trackplaylist.cpp \
-        src/workspace/track.cpp \
-        src/workspace/trackcollection.cpp \
         #src/player/trackplayer.cpp \
         #src/player/vlc/vlcmediaplayerfactory.cpp \
         #src/player/vlc/libvlcmediaplayer.cpp \
+    src/externals/qslog/QsDebugOutput.cpp \
+    src/externals/qslog/QsLog.cpp \
+    src/externals/qslog/QsLogDest.cpp \
+    src/workspace/workspace.cpp \
+    src/workspace/trackstock.cpp \
+    src/workspace/tracklist.cpp \
+    src/workspace/trackplaylist.cpp \
+    src/workspace/track.cpp \
+    src/workspace/trackcollection.cpp \
     src/player/players.cpp \
     src/player/gst/gstplayer.cpp \
     src/player/gst/gstmediaplayerfactory.cpp \
@@ -88,7 +91,9 @@ SOURCES += \
     src/qt-ui/basicui.cpp \
     src/qt-ui/autoscrollarea.cpp \
     src/externals/taglib/TagLibAmalgam.cpp \
-    src/history.cpp
+    src/history.cpp \
+    src/playwidgetentrycontroller.cpp \
+    src/uicontroller.cpp
 
 
 CONFIG(debug, debug|release) {

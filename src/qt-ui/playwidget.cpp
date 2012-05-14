@@ -1,17 +1,14 @@
 
 #include "playwidget.h"
 
-#include <QGridLayout>
-#include <QVBoxLayout>
-#include "QsLog.h"
-#include "playwidgetentry.h"
-#include "tracklist.h"
 
-PlayWidget::PlayWidget(int rowSize, QWidget *parent)
+
+PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
 	: QWidget (parent),
 	  rowSize (rowSize),
 	  currentRow (0),
-	  currentColumn (0) {
+      currentColumn (0),
+      controller(controller){
 	QLOG_TRACE() << "PlayWidget::PlayWidget()";
 
 	layout    = new QGridLayout;
@@ -35,7 +32,7 @@ void PlayWidget::update(const TrackList *list) {
 
 void PlayWidget::append(const TrackList *list) {
 	for(int i = 0; i < list->size(); i++) {
-		entryList.append(new PlayWidgetEntry(*list->at(i)));
+        entryList.append(new PlayWidgetEntry(controller->getPlayWidgetEntryController(),*list->at(i)));
 		layout->addWidget(entryList.last(), currentRow, currentColumn);
 
 		currentColumn = (currentColumn + 1) % rowSize;

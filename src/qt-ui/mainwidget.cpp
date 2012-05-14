@@ -1,20 +1,9 @@
 
 #include "mainwidget.h"
 
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QStringList>
-#include <QTimer>
-#include <QStackedWidget>
-#include "QsLog.h"
-#include "workspace.h"
-#include "nullptr.h"
-#include "playwidget.h"
-#include "editwidget.h"
-
-MainWidget::MainWidget(QWidget *parent)
+MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	: QWidget(parent),
+      controller(controller),
 	  wsp(nullptr) {
 	QLOG_TRACE() << "MainWidget::MainWidget()";
 
@@ -26,7 +15,7 @@ MainWidget::MainWidget(QWidget *parent)
 	connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
 
 	// initialise play and edit widgets
-	playWidget = new PlayWidget(3);
+    playWidget = new PlayWidget(controller,3);
 	editWidget = new EditWidget;
 	stackedWidget = new QStackedWidget;
 	stackedWidget->addWidget(playWidget);

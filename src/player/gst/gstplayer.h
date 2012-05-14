@@ -10,6 +10,7 @@
 #include "imediaplayerwatcher.h"
 
 
+
 class GstPlayer : public QObject, public IMediaPlayer
 {
     Q_OBJECT

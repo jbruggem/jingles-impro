@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include "QsLog.h"
 #include "track.h"
+#include "playwidgetentrycontroller.h"
 
 class PlayWidgetEntry : public QWidget {
 
@@ -17,7 +18,7 @@ class PlayWidgetEntry : public QWidget {
 
 	public:
 		// PlayWidgetEntry(const QString &, QWidget * = 0);
-		PlayWidgetEntry(const Track &, QWidget * = 0);
+        PlayWidgetEntry(PlayWidgetEntryController * c,Track &, QWidget * = 0);
 	private:
 		QGroupBox   *groupBox;
 		QGridLayout *outerLayout;
@@ -25,7 +26,8 @@ class PlayWidgetEntry : public QWidget {
 		QHBoxLayout *buttonLayout;
         QPushButton *playButton;
         QPushButton *stopButton;
-		const Track *track;
+        Track *track;
+        PlayWidgetEntryController * controller;
 };
 
 #endif
