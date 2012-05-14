@@ -38,7 +38,7 @@ private:
     Track * track;
     //QString uri;
     GstElement *pipeline;
-    bool isLoaded;
+    //bool isLoaded;
     void parseMessage(GstMessage *msg);
 
      // this does not belong to the player I think. Move to a GstEngine class?

@@ -44,10 +44,14 @@ void Players::stopAll(){
 }
 
 void Players::stopAllForTrack(Track *t){
+    QLOG_TRACE() << "stopAllForTrack " << t->getPath() ;
+
     foreach (int pid, *playersByTrack.value(t)) {
+        QLOG_TRACE() << "Stop player " << pid;
         IMediaPlayer * player = players.value(pid);
         player->stop();
         players.remove(pid);
+        playersByTrack.value(t)->removeOne(pid);
         delete player;
     }
 }

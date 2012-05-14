@@ -40,7 +40,7 @@ void GstPlayer::load(){
     GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
     if(GST_STATE_PAUSED == ret){
         QLOG_TRACE() << "Load finished. Set to pause successful.";
-        isLoaded = true;
+        //isLoaded = true;
     }else{
         QLOG_TRACE() << "Failed to change state to PAUSE: probably failed to load.";
     }
@@ -53,14 +53,14 @@ int GstPlayer::play()
 {
     QLOG_TRACE() << "GstPlayer::play";
 
-    if(!isLoaded){
+    //if(!isLoaded){
         GstState state, pending;
         gst_element_get_state(pipeline,&state,&pending,0);
         if(GST_STATE_PAUSED != state){
             QLOG_TRACE() << "Nothing loaded - can't play";
             return 1;
         }
-    }
+    //}
 
     double start =  ((double)track->getStartTime())*GST_MSECOND;
     double end = ((double)track->getEndTime())*GST_MSECOND;
@@ -122,10 +122,10 @@ void GstPlayer::pause()
 {
     QLOG_TRACE() << "PAUSE";
 
-    if(!isLoaded){
+    /*if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't pause";
         return;
-    }
+    }*/
 
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
     return;
@@ -134,11 +134,11 @@ void GstPlayer::pause()
 void GstPlayer::stop()
 {
     QLOG_TRACE() << "stop";
-
+/*
     if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't stop";
         return;
-    }
+    }*/
 
     /*if(watcher){
         watcher->terminate();
