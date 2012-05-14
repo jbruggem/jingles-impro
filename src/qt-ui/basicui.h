@@ -14,6 +14,10 @@ class BasicUi: public QMainWindow {
     public:
         BasicUi(QWidget *parent = 0);
         void setWorkspace(Workspace *);
+        ~BasicUi(){
+            if(NULL != mainWidget)
+                delete mainWidget;
+        }
 
     private:
         MainWidget *mainWidget;
