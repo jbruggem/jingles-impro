@@ -16,10 +16,6 @@ class BasicUi: public QMainWindow {
         BasicUi(UiController * controller, QWidget *parent = 0);
         void setWorkspace(Workspace *);
         void setUiController(UiController *);
-        ~BasicUi(){
-            if(NULL != mainWidget)
-                delete mainWidget;
-        }
 
     private:
         MainWidget *mainWidget;
