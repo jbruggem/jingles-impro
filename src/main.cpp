@@ -6,11 +6,9 @@
 #include "QsLogDest.h"
 #include "mainwindow.h"
 #include "testui.h"
-#include "mediaplaylist.h"
-#include "mediaplayerhandler.h"
 #include "gstplayer.h"
 #include "players.h"
-#include "vlcmediaplayerfactory.h"
+#include "gstmediaplayerfactory.h"
 
 #ifdef Q_WS_X11
     #include <X11/Xlib.h>
@@ -18,6 +16,7 @@
 
 #include "workspace.h"
 #include "basicui.h"
+#include "uicontroller.h"
 
 
 int main(int argc, char ** argv){
@@ -45,7 +44,7 @@ int main(int argc, char ** argv){
 
 
 
-    t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,3000,20000,0,0,activeWorkspace);
+    t = new Track("/home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3",false,3000,6000,0,0,activeWorkspace);
 
     activeWorkspace->addTrack(t);
 
@@ -78,8 +77,14 @@ int main(int argc, char ** argv){
     // the media player should register to the signals triggered when a track is added or remove from the playlist
     // ...
 
-    BasicUi ui;
+    // create a "Players" object to deal with controlling the players
+    MediaPlayerFactory * mediaPlayerFactory = new GstMediaPlayerFactory();
+    Players * players = new Players(mediaPlayerFactory);
+    UiController controller(players);
+
+    BasicUi ui(&controller);
     ui.setWorkspace(activeWorkspace);
+
 //    TestUi ui;
     ui.show();
     app.exec();

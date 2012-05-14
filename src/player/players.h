@@ -16,9 +16,9 @@ public:
     explicit Players(MediaPlayerFactory * playerFactory,QObject *parent = 0);
 
 
-    double createPlayer(Track * t);
-    IMediaPlayer * getPlayer(double playerId);
-    QList<double> * getPlayers(Track * t);
+    int createPlayer(Track * t);
+    IMediaPlayer * getPlayer(int playerId);
+    QList<int> * getPlayers(Track * t);
     void stopAll();
     void stopAllForTrack(Track * t);
 
@@ -28,14 +28,14 @@ public:
             delete player;
         }
 
-        foreach(QList<double> * list, playersByTrack.values()){
+        foreach(QList<int> * list, playersByTrack.values()){
             delete list;
         }
     }
 
 private:
-    QMap<Track *,QList<double> * > playersByTrack;
-    QMap<double,IMediaPlayer *> players;
+    QMap<Track *,QList<int> * > playersByTrack;
+    QMap<int,IMediaPlayer *> players;
     MediaPlayerFactory * playerFactory;
     double playerIdCounter;
 signals:

@@ -3,22 +3,25 @@
 #define MAINWIDGET_H_
 
 #include <QWidget>
-
-class Workspace;
-class PlayWidget;
-class EditWidget;
-class QVBoxLayout;
-class QHBoxLayout;
-class QLabel;
-class QPushButton;
-class QStackedWidget;
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QStringList>
+#include <QTimer>
+#include <QStackedWidget>
+#include "QsLog.h"
+#include "workspace.h"
+#include "nullptr.h"
+#include "playwidget.h"
+#include "editwidget.h"
+#include "uicontroller.h"
 
 class MainWidget : public QWidget {
 
 	Q_OBJECT
 
 	public:
-		MainWidget(QWidget *parent = 0);
+        MainWidget(UiController * controller, QWidget *parent = 0);
 		void setWorkspace(Workspace *wsp);
 	private slots:
 		void modeButtonClicked();
@@ -34,6 +37,7 @@ class MainWidget : public QWidget {
 		PlayWidget  *playWidget;
 		EditWidget  *editWidget;
 		QStackedWidget *stackedWidget;
+        UiController * controller;
 };
 
 #endif
