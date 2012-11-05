@@ -59,7 +59,7 @@ public:
     const QString *  getTitle() const{return &title;}
     void  setArtist(const QString * artist) {this->artist = *artist;}
     void  setTitle(const QString * title) {this->title = *title;}
-
+    void print() const;
 
 private:
     QString path;

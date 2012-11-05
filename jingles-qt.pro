@@ -44,6 +44,7 @@ HEADERS += \
     src/player/imediaplayer.h \
     src/qt-ui/twopaneexplorer.h \
     src/qt-ui/tracklisttreemodel.h \
+    src/qt-ui/tracklisttreeview.h \
     src/qt-ui/testui.h \
     src/qt-ui/playwidgetentry.h \
     src/qt-ui/playwidget.h \
@@ -83,6 +84,7 @@ SOURCES += \
     src/main.cpp \
     src/qt-ui/twopaneexplorer.cpp \
     src/qt-ui/tracklisttreemodel.cpp \
+    src/qt-ui/tracklisttreeview.cpp \
     src/qt-ui/testui.cpp \
     src/qt-ui/playwidgetentry.cpp \
     src/qt-ui/playwidget.cpp \
