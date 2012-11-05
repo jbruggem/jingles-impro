@@ -23,7 +23,7 @@ class PlayWidgetEntry : public QWidget {
 		QGroupBox   *groupBox;
 		QGridLayout *outerLayout;
 		QGridLayout *innerLayout;
-		QHBoxLayout *buttonLayout;
+        QVBoxLayout *buttonLayout;
         QPushButton *playButton;
         QPushButton *stopButton;
         Track *track;
