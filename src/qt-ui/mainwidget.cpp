@@ -9,6 +9,12 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 
 	playMode = true;
 
+    // debug layout
+//    QPalette p(palette());
+//    p.setColor(QPalette::Background, Qt::red);
+//    setPalette(p);
+//    setAutoFillBackground(true);
+
 	// initialise mode label and button
 	modeLabel  = new QLabel(tr("Play Mode"));
 	modeButton = new QPushButton(tr("Switch"));

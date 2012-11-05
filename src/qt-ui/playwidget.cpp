@@ -11,11 +11,18 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
       controller(controller){
 	QLOG_TRACE() << "PlayWidget::PlayWidget()";
 
+    // debug layout
+//    QPalette p(palette());
+//    p.setColor(QPalette::Background, Qt::blue);
+//    setPalette(p);
+//    setAutoFillBackground(true);
+
+
 	layout    = new QGridLayout;
-	QVBoxLayout *layoutWithStretch = new QVBoxLayout;
-	layoutWithStretch->addLayout(layout);
-	layoutWithStretch->addStretch();
-	setLayout(layoutWithStretch);
+    //QVBoxLayout *layoutWithStretch = new QVBoxLayout;
+    //layoutWithStretch->addLayout(layout);
+    //layoutWithStretch->addStretch();
+    setLayout(layout);
 }
 
 void PlayWidget::clear() {
