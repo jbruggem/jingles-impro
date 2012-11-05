@@ -26,27 +26,38 @@ TestUi::TestUi(QWidget *parent)
 void TestUi::refresh() {
 	m->clear();
 
-	QMap<QString, QMap<QString, QString> > map;
+	QMap<QString, QMap<QString, int> > map;
 
 	switch(sortingMode) {
 		case Item::SortById1:
 			foreach(Item i, l) {
-				map[i.id1].insert(i.id3, i.id3);
+				if (not map[i.id1].contains(i.id3)) {
+					map[i.id1][i.id3] = 1;
+				} else {
+					map[i.id1][i.id3]++;
+				}
 			}
 			break;
 		case Item::SortById2:
 			foreach(Item i, l) {
-				map[i.id2].insert(i.id3, i.id3);
+				if (not map[i.id2].contains(i.id3)) {
+					map[i.id2][i.id3] = 1;
+				} else {
+					map[i.id2][i.id3]++;
+				}
 			}
 			break;
 	}
 
+	// populate the model
 	foreach(QString key, map.keys()) {
 		QStandardItem *parent = new QStandardItem(key);
 		m->appendRow(parent);
-		QList<QString> values = map[key].keys();
-		foreach(QString value, values) {
-			parent->appendRow(new QStandardItem(value));
+
+		foreach(QString value, map[key].keys()) {
+			for (int i = 0; i < map[key][value]; i++) {
+				parent->appendRow(new QStandardItem(value));
+			}
 		}
 	}
 

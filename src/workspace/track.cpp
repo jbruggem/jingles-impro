@@ -91,3 +91,14 @@ int Track::compare(const Track &a, const Track &b) {
 bool Track::operator<(const Track &other) const {
 	return compare(*this, other) < 0;
 }
+
+void Track::print() const {
+	QLOG_INFO() << "Track::print()";
+	QLOG_INFO() << "path:           " << path;
+	QLOG_INFO() << "startTime:      " << startTime;
+	QLOG_INFO() << "endTime:        " << endTime;
+	QLOG_INFO() << "fadeInDuration: " << fadeInDuration;
+	QLOG_INFO() << "fadeOutDuration:" << fadeOutDuration;
+	QLOG_INFO() << "loopEnabled:    " << loopEnabled;
+	QLOG_INFO() << "isValid?:       " << isValid();
+}

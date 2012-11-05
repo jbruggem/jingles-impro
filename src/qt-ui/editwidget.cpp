@@ -7,8 +7,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QSplitter>
-#include <QTreeView>
 #include "tracklisttreemodel.h"
+#include "tracklisttreeview.h"
 #include "tracklist.h"
 #include "twopaneexplorer.h"
 
@@ -25,7 +25,7 @@ EditWidget::EditWidget(QWidget *parent)
 
 	// set up the StockList
 	trackListModel = new TrackListTreeModel;
-	stockListView  = new QTreeView;
+	stockListView  = new TrackListTreeView;
 	stockListView->setModel(trackListModel);
 	stockListView->setHeaderHidden(true);
 	stockListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
