@@ -8,8 +8,8 @@ class QComboBox;
 class QGroupBox;
 class QPushButton;
 class QSplitter;
-class QTreeView;
 class TrackListTreeModel;
+class TrackListTreeView;
 class TrackList;
 class TwoPaneExplorer;
 
@@ -23,14 +23,14 @@ class EditWidget : public QWidget {
 	private slots:
 		void addButtonClicked();
 	private:
-		QGroupBox       *explorerGroupBox;
-		QGroupBox       *stockListGroupBox;
-		QSplitter       *splitter;
-		QPushButton     *addButton;
-		QTreeView       *stockListView;
-		QComboBox       *stockListCBox;
-		TrackListTreeModel       *trackListModel;
-		TwoPaneExplorer *explorer;
+		QGroupBox          *explorerGroupBox;
+		QGroupBox          *stockListGroupBox;
+		QSplitter          *splitter;
+		QPushButton        *addButton;
+		TrackListTreeView  *stockListView;
+		QComboBox          *stockListCBox;
+		TrackListTreeModel *trackListModel;
+		TwoPaneExplorer    *explorer;
 };
 
 #endif

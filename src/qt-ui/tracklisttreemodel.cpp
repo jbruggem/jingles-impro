@@ -5,7 +5,6 @@
 #include <QFileInfo>
 #include <QString>
 #include "QsLog.h"
-#include "tracklist.h"
 #include "nullptr.h"
 
 QMap<TrackListTreeModel::SortingMode, QString> TrackListTreeModel::sortingModeTexts = getSortingModeTexts();
@@ -31,7 +30,9 @@ void TrackListTreeModel::refresh() {
 void TrackListTreeModel::populate(const TrackList *tl) {
 	QLOG_TRACE() << "TestModel::populate()";
 
+	// todo merge these two lines by directly subclassing QAbstractItemModel
 	clear();
+	sortedTrackList.clear();
 
 	if (not tl) {
 		QLOG_TRACE() << "TrackList is nullptr";
@@ -51,7 +52,7 @@ void TrackListTreeModel::populate(const TrackList *tl) {
 			for (int i = 0; i < trackList->length(); i++) {
 				Track *t = trackList->at(i);
 				QString fileName = QFileInfo(t->getPath()).fileName();
-				QString artist = t->isValid() ? t->getTag()->artist().toCString() : ".missing files";
+				QString artist = t->isValid() ? t->getTag()->artist().toCString() : tr(".missing files");
 				if (artist.isEmpty()) {
 					artist = ".unknown";
 				}
@@ -73,6 +74,8 @@ void TrackListTreeModel::populate(const TrackList *tl) {
 					map[folder][fileName]++;
 				}
 			}
+			break;
+		default:
 			break;
 	}
 
@@ -103,6 +106,10 @@ void TrackListTreeModel::setSortingMode(SortingMode mode) {
 
 QString TrackListTreeModel::getSortingModeText(SortingMode mode) {
 	return sortingModeTexts[mode];
+}
+
+void TrackListTreeModel::addTrack(const QString &path) {
+	addTrack(path, true);
 }
 
 void TrackListTreeModel::addTrack(const QString &path, bool refreshAfterAdd) {
@@ -147,4 +154,12 @@ void TrackListTreeModel::addTracks(const QStringList &l) {
 	}
 
 	refresh();
+}
+
+Track *TrackListTreeModel::getTrack(const QModelIndex &) const {
+}
+
+void TrackListTreeModel::printItem(const QModelIndex &index) const {
+	QLOG_TRACE() << "TrackListTreeModel::printItem()";
+	QLOG_INFO() << "data:" << index.data().toString();
 }
