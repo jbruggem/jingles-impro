@@ -19,7 +19,13 @@ class PlayWidgetEntry : public QWidget {
 	public:
 		// PlayWidgetEntry(const QString &, QWidget * = 0);
         PlayWidgetEntry(PlayWidgetEntryController * c,Track &, QWidget * = 0);
+
+public slots:
+      void trackInfosUpdated();
+
 	private:
+        void build();
+        void updateTags();
 		QGroupBox   *groupBox;
 		QGridLayout *outerLayout;
 		QGridLayout *innerLayout;
@@ -28,6 +34,7 @@ class PlayWidgetEntry : public QWidget {
         QPushButton *stopButton;
         Track *track;
         PlayWidgetEntryController * controller;
+
 };
 
 #endif

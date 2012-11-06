@@ -5,14 +5,16 @@
 #include <string>
 #include <QObject>
 #include "common.h"
-#include "TagLibAmalgam.h"
+//#include "TagLibAmalgam.h"
+#include <QFileInfo>
 
 
 class Track : public QObject
 {
 
     Q_OBJECT
-    Q_PROPERTY(const QString path READ getPath)
+    //Q_PROPERTY(const QString path READ getPath)
+    //Q_PROPERTY(const QString filename READ extractFilename)
     Q_PROPERTY(bool loopEnabled READ isLoopEnabled)
     Q_PROPERTY(int startTime READ getStartTime)
     Q_PROPERTY(int endTime READ getEndTime)
@@ -23,6 +25,7 @@ class Track : public QObject
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
+        delete fileInfo;
         //QLOG_TRACE() << "deleting Track[" << this->path << "|"
         //             << this->startTime
        //              << "-"
@@ -33,46 +36,54 @@ public:
 
     Track(const Track& track);
 
-   Track(
-            const QString &url,
-            bool loop,
-            int startTime, // milliseconds
-            int endTime,
-            int fadeInDuration,
-            int fadeOutDuration,
-            QObject *parent = 0);
+    Track(
+        const QString &url,
+        bool loop,
+        int startTime, // milliseconds
+        int endTime,
+        int fadeInDuration,
+        int fadeOutDuration,
+        QObject *parent = 0
+     );
      Track(const QString &url,QObject *parent = 0);
-     Track(QObject *parent = 0);
+     //Track(QObject *parent = 0);
 
 
-    QString getPath() const{return path;}
+    QString getPath() const;
+    QString getFilename() const;
     bool isLoopEnabled() const{return loopEnabled;}
     int getStartTime() const{return startTime;}
     int getEndTime() const{return endTime;}
     int getFadeInDuration() const{return fadeInDuration;}
     int getFadeOutDuration() const{return fadeOutDuration;}
-    bool isValid() const {return not fileRef->isNull();}
-    TagLib::Tag *getTag() const {return fileRef->tag();}
+    bool isValid() const {return fileInfo->exists();}
+    //TagLib::Tag *getTag() const {return fileRef->tag();}
     static int compare(const Track &a, const Track &b);
     bool operator< (const Track &other) const;
     const QString *  getArtist() const{return &artist;}
     const QString *  getTitle() const{return &title;}
-    void  setArtist(const QString * artist) {this->artist = *artist;}
-    void  setTitle(const QString * title) {this->title = *title;}
+    void  setArtist(const QString * artist);
+    void  setTitle(const QString * title);
     void print() const;
 
 private:
-    QString path;
+    QFileInfo * fileInfo;
+    //QString path;
+    //QString filename;
     bool loopEnabled;
     int startTime; // milliseconds
     int endTime;
     int fadeInDuration;
     int fadeOutDuration;
-    TagLib::FileRef *fileRef;
+    //TagLib::FileRef *fileRef;
     QString title;
     QString artist;
+    void extractFilename(const QString & url);
 
 signals:
+    void tagUpdated();
+    void tagArtistUpdate();
+    void tagTitleUpdate();
     
 public slots:
     

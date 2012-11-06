@@ -14,11 +14,12 @@ public:
     void setTrack(Track * t);
 
 signals:
+    void trackInfosUpdated();
     
 public slots:
     void playClicked();
     void stopClicked();
-
+    void updateTrackInfos();
 
 private:
     Track * track;

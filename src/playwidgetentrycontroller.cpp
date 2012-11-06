@@ -11,6 +11,7 @@ PlayWidgetEntryController::PlayWidgetEntryController(Players * p, QObject *paren
 
 void PlayWidgetEntryController::setTrack(Track * t){
     track = t;
+    connect(t,SIGNAL(tagUpdated()),this,SLOT(updateTrackInfos()));
     initPlayer();
 }
 
@@ -29,6 +30,12 @@ void PlayWidgetEntryController::playClicked(){
         }
         initPlayer();
     }
+}
+
+
+void PlayWidgetEntryController::updateTrackInfos(){
+    QLOG_TRACE() << "PlayWidgetEntryController::updateTrackInfos";
+    emit trackInfosUpdated();
 }
 
 void PlayWidgetEntryController::stopClicked(){

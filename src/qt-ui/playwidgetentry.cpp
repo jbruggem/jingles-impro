@@ -11,38 +11,42 @@ PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget
     controller->setTrack(track);
     controller->setParent(this);
 
-    // debug layout
-//    QPalette p(palette());
-//    p.setColor(QPalette::Background, Qt::yellow);
-//    setPalette(p);
-//    setAutoFillBackground(true);
+    build();
 
+    connect(controller,SIGNAL(trackInfosUpdated()),this,SLOT(trackInfosUpdated()));
 
-//    QString title = (*track->getTitle())+" ("+(*track->getArtist())+")";
+    connect(playButton,SIGNAL(clicked()),controller,SLOT(playClicked()));
+    connect(stopButton,SIGNAL(clicked()),controller,SLOT(stopClicked()));
 
-    QString title = *track->getTitle();
+}
 
-	// groupBox = new QGroupBox(title);
-    //groupBox     = new QGroupBox(QFileInfo(t.getPath()).baseName());
-    //groupBox     = new QGroupBox();
-    //outerLayout  = new QGridLayout;
-	innerLayout  = new QGridLayout;
+void PlayWidgetEntry::build(){
+    QLOG_TRACE() << "PlayWidgetEntry::build()";
+    innerLayout  = new QGridLayout;
     buttonLayout = new QVBoxLayout;
-    playButton   = new QPushButton(title);
+    playButton   = new QPushButton(track->getFilename());
     stopButton   = new QPushButton(tr("Stop"));
 
     QSizePolicy sizePol(QSizePolicy::Expanding,QSizePolicy::Expanding);
     playButton->setSizePolicy(sizePol);
 
-	buttonLayout->addWidget(playButton);
-	buttonLayout->addWidget(stopButton);
-    //buttonLayout->addStretch();
-	innerLayout->addLayout(buttonLayout, 0, 0);
-    //groupBox->setLayout(innerLayout);
-    //outerLayout->addWidget(groupBox);
-
-    connect(playButton,SIGNAL(clicked()),controller,SLOT(playClicked()));
-    connect(stopButton,SIGNAL(clicked()),controller,SLOT(stopClicked()));
-
+    buttonLayout->addWidget(playButton);
+    buttonLayout->addWidget(stopButton);
+    innerLayout->addLayout(buttonLayout, 0, 0);
     setLayout(innerLayout);
+}
+
+void PlayWidgetEntry::updateTags(){
+    QLOG_TRACE() << "PlayWid(getEntry::update()";
+    playButton->setText(
+                (track->getTitle()->length() > 0) ?
+                (*track->getTitle()) :
+                    track->getFilename()
+                );
+}
+
+
+void PlayWidgetEntry::trackInfosUpdated(){
+    QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()";
+    this->updateTags();
 }

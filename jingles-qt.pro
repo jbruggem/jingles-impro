@@ -52,7 +52,7 @@ HEADERS += \
     src/qt-ui/editwidget.h \
     src/qt-ui/basicui.h \
     src/qt-ui/autoscrollarea.h \
-    src/externals/taglib/TagLibAmalgam.h \
+#    src/externals/taglib/TagLibAmalgam.h \
     src/history.h \
     src/playwidgetentrycontroller.h \
     src/uicontroller.h
@@ -92,7 +92,7 @@ SOURCES += \
     src/qt-ui/editwidget.cpp \
     src/qt-ui/basicui.cpp \
     src/qt-ui/autoscrollarea.cpp \
-    src/externals/taglib/TagLibAmalgam.cpp \
+#    src/externals/taglib/TagLibAmalgam.cpp \
     src/history.cpp \
     src/playwidgetentrycontroller.cpp \
     src/uicontroller.cpp
