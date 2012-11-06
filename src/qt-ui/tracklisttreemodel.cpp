@@ -52,7 +52,7 @@ void TrackListTreeModel::populate(const TrackList *tl) {
 			for (int i = 0; i < trackList->length(); i++) {
 				Track *t = trackList->at(i);
 				QString fileName = QFileInfo(t->getPath()).fileName();
-				QString artist = t->isValid() ? t->getTag()->artist().toCString() : tr(".missing files");
+                QString artist = t->isValid() ? *t->getArtist() : tr(".missing files");
 				if (artist.isEmpty()) {
 					artist = ".unknown";
 				}
