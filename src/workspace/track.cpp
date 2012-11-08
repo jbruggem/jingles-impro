@@ -1,5 +1,4 @@
 #include "track.h"
-#include "nullptr.h"
 
 //xxx do we want the copy constructor to use a new fileRef or just copy the other object's pointer?
 Track::Track(const Track& track):

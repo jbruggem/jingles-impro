@@ -11,7 +11,6 @@
 #include <QStackedWidget>
 #include "QsLog.h"
 #include "workspace.h"
-#include "nullptr.h"
 #include "playwidget.h"
 #include "editwidget.h"
 #include "uicontroller.h"

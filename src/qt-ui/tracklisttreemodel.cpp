@@ -5,7 +5,6 @@
 #include <QFileInfo>
 #include <QString>
 #include "QsLog.h"
-#include "nullptr.h"
 
 QMap<TrackListTreeModel::SortingMode, QString> TrackListTreeModel::sortingModeTexts = getSortingModeTexts();
 
@@ -156,8 +155,9 @@ void TrackListTreeModel::addTracks(const QStringList &l) {
 	refresh();
 }
 
-Track *TrackListTreeModel::getTrack(const QModelIndex &) const {
-}
+// Track *TrackListTreeModel::getTrack(const QModelIndex &) const {
+	
+// }
 
 void TrackListTreeModel::printItem(const QModelIndex &index) const {
 	QLOG_TRACE() << "TrackListTreeModel::printItem()";

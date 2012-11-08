@@ -11,7 +11,6 @@ INCLUDEPATH += . src src/player src/player/vlc src/player/gst src/workspace \
 
 LIBS += -lvlc
 
-
 # Input
 HEADERS += \
 #	src/avobject.h \
@@ -25,7 +24,6 @@ HEADERS += \
     #src/player/vlc/libvlcmediaplayer.h \
     #src/player/vlc/vlcmediaplayerfactory.h \
     #src/player/trackplayer.h \
-    src/nullptr.h \
     src/externals/qslog/QsDebugOutput.h \
     src/externals/qslog/QsLog.h \
     src/externals/qslog/QsLogDest.h \
@@ -121,3 +119,5 @@ unix:!macx:!symbian: LIBS += -lX11
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += gstreamer-0.10 gstreamer-plugins-base-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10 glibmm-2.4 gstreamermm-0.10
+
+QMAKE_CXXFLAGS += -std=gnu++0x

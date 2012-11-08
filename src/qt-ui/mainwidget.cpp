@@ -3,8 +3,8 @@
 
 MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	: QWidget(parent),
-      controller(controller),
-	  wsp(nullptr) {
+	  wsp(nullptr),
+	  controller(controller) {
 	QLOG_TRACE() << "MainWidget::MainWidget()";
 
 	playMode = true;
