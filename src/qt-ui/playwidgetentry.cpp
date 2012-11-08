@@ -37,7 +37,7 @@ void PlayWidgetEntry::build(){
 }
 
 void PlayWidgetEntry::updateTags(){
-    QLOG_TRACE() << "PlayWid(getEntry::update()";
+    //QLOG_TRACE() << "PlayWid(getEntry::update()";
     playButton->setText(
                 (track->getTitle()->length() > 0) ?
                 (*track->getTitle()) :
@@ -47,6 +47,6 @@ void PlayWidgetEntry::updateTags(){
 
 
 void PlayWidgetEntry::trackInfosUpdated(){
-    QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()";
+    //QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()";
     this->updateTags();
 }

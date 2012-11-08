@@ -20,7 +20,7 @@ void PlayWidgetEntryController::initPlayer(){
 }
 
 void PlayWidgetEntryController::playClicked(){
-    QLOG_TRACE() << "Button play was clicked";
+    //QLOG_TRACE() << "Button play was clicked";
     if(NULL != track){
         IMediaPlayer * player = players->getPlayer(lastPid);
         if(NULL != player){
@@ -34,7 +34,7 @@ void PlayWidgetEntryController::playClicked(){
 
 
 void PlayWidgetEntryController::updateTrackInfos(){
-    QLOG_TRACE() << "PlayWidgetEntryController::updateTrackInfos";
+    //QLOG_TRACE() << "PlayWidgetEntryController::updateTrackInfos";
     emit trackInfosUpdated();
 }
 

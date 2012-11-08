@@ -38,10 +38,12 @@ void GstPlayer::load(){
     gst_object_unref(bus);
 
     GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
-    if(GST_STATE_PAUSED == ret){
+    if(GST_STATE_CHANGE_SUCCESS == ret || GST_STATE_CHANGE_NO_PREROLL == ret ){
         QLOG_TRACE() << "Load finished. Set to pause successful.";
         //isLoaded = true;
-    }else{
+    }else if(GST_STATE_CHANGE_ASYNC == ret){ // this is what usually happens when file exists and is being loaded.
+        QLOG_TRACE() << "Setting to pause asynchronously. Probably all right.";
+    }else  if(GST_STATE_CHANGE_FAILURE == ret){
         QLOG_TRACE() << "Failed to change state to PAUSE: probably failed to load.";
     }
 }
@@ -207,9 +209,11 @@ void GstPlayer::parseMessage(GstMessage *msg){
         GstState old_state, new_state;
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
-        //QLOG_TRACE() << "[GST] "<< GST_OBJECT_NAME (msg->src) <<": " <<  gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
-
-         break;
+        QString objectNamePlayer = "player";
+        if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
+            QLOG_TRACE() << "[GST] "<< this->track->getFilename() <<": " <<  gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+        }
+        break;
     }
     case GST_MESSAGE_TAG: {
         //QLOG_TRACE() << "[GST]" << GST_MESSAGE_TYPE_NAME(msg);
@@ -231,6 +235,10 @@ void GstPlayer::parseMessage(GstMessage *msg){
         gst_message_parse_error(msg, &err, NULL);
         QLOG_TRACE() << "[GST] [ERROR] " << err->message;
         g_error_free(err);
+
+        // TODO: handle some errors
+        // - Resource not found
+        //
 
        // g_main_loop_quit(loop);
         break;
