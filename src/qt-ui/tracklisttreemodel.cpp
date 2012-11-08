@@ -5,7 +5,6 @@
 #include <QFileInfo>
 #include <QString>
 #include "QsLog.h"
-#include "nullptr.h"
 
 QMap<TrackListTreeModel::SortingMode, QString> TrackListTreeModel::sortingModeTexts = getSortingModeTexts();
 

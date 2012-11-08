@@ -2,7 +2,6 @@
 #include "avobject.h"
 
 #include <cstring>
-#include "nullptr.h"
 
 AVObject::AVObject() :
 	inst (nullptr),

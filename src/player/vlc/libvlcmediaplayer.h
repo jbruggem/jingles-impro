@@ -5,7 +5,6 @@
 #include <vlc/vlc.h>
 #include <time.h>
 #include "imediaplayer.h"
-#include "nullptr.h"
 
 class LibvlcMediaPlayer : public IMediaPlayer {
 	
