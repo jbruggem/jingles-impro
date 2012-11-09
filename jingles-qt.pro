@@ -32,6 +32,7 @@ HEADERS += \
     src/qt-ui/twopaneexplorer.h \
     src/qt-ui/tracklisttreemodel.h \
     src/qt-ui/tracklisttreeview.h \
+    src/qt-ui/tracklisttablemodel.h \
     src/qt-ui/testui.h \
     src/qt-ui/playwidgetentry.h \
     src/qt-ui/playwidget.h \
@@ -40,6 +41,7 @@ HEADERS += \
     src/qt-ui/basicui.h \
     src/qt-ui/autoscrollarea.h \
     src/qt-ui/stocklistwidget.h \
+    src/qt-ui/playlistwidget.h \
     src/history.h \
     src/playwidgetentrycontroller.h \
     src/uicontroller.h \
@@ -62,6 +64,7 @@ SOURCES += \
     src/qt-ui/twopaneexplorer.cpp \
     src/qt-ui/tracklisttreemodel.cpp \
     src/qt-ui/tracklisttreeview.cpp \
+    src/qt-ui/tracklisttablemodel.cpp \
     src/qt-ui/testui.cpp \
     src/qt-ui/playwidgetentry.cpp \
     src/qt-ui/playwidget.cpp \
@@ -70,6 +73,7 @@ SOURCES += \
     src/qt-ui/basicui.cpp \
     src/qt-ui/autoscrollarea.cpp \
     src/qt-ui/stocklistwidget.cpp \
+    src/qt-ui/playlistwidget.cpp \
     src/history.cpp \
     src/playwidgetentrycontroller.cpp \
     src/uicontroller.cpp \
