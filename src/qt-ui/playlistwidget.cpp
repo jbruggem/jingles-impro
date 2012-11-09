@@ -3,20 +3,15 @@
 
 #include <QGridLayout>
 #include "tracklisttablemodel.h"
-#include <QTableView>
-#include <QHeaderView>
-// #include "tracklisttableview.h"
+#include "tracklisttableview.h"
 
 PlayListWidget::PlayListWidget(QWidget *parent)
     : QWidget (parent) {
     
     // set up the track list
     model = new TrackListTableModel;
-    view  = new QTableView;
+    view  = new TrackListTableView;
     view->setModel(model);
-    
-    view->horizontalHeader()->setStretchLastSection(true);
-    view->verticalHeader()->hide();
     
     // set up the layout
     setLayout(new QGridLayout);

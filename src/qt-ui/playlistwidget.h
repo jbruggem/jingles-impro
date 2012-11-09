@@ -5,8 +5,7 @@
 #include <QWidget>
 
 class TrackListTableModel;
-class QTableView;
-// class TrackListTableView;
+class TrackListTableView;
 class TrackList;
 
 class PlayListWidget: public QWidget {
@@ -17,9 +16,8 @@ class PlayListWidget: public QWidget {
         PlayListWidget(QWidget *parent = 0);
         void setTrackList(const TrackList *);
     private:
-        // TrackListTableView  *view;
-        QTableView *view;
         TrackListTableModel *model;
+        TrackListTableView  *view;
 };
 
 #endif
