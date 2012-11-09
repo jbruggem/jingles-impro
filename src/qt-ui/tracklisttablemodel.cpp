@@ -14,7 +14,7 @@ TrackListTableModel ::TrackListTableModel (QObject *parent)
 }
 
 void TrackListTableModel::initHeader() {
-    setHorizontalHeaderLabels(QStringList() << "Track" << "File Name" << "Artist" << "Path");
+    setHorizontalHeaderLabels(QStringList() << "File Name" << "Artist" << "Path");
 }
 
 void TrackListTableModel ::refresh() {
@@ -42,7 +42,6 @@ void TrackListTableModel ::populate(const TrackList *tl) {
             artist = ".unknown";
         }
         QList<QStandardItem *> items;
-        items.append(new QStandardItem(QString::number(i+1)));  // track number
         items.append(new QStandardItem(fileName));
         items.append(new QStandardItem(artist));
         items.append(new QStandardItem(path));
