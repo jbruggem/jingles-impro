@@ -34,6 +34,7 @@ HEADERS += \
     src/qt-ui/tracklisttreeview.h \
     src/qt-ui/tracklisttablemodel.h \
     src/qt-ui/tracklisttableview.h \
+    src/qt-ui/tracklisttabledelegate.h \
     src/qt-ui/testui.h \
     src/qt-ui/playwidgetentry.h \
     src/qt-ui/playwidget.h \
@@ -67,6 +68,7 @@ SOURCES += \
     src/qt-ui/tracklisttreeview.cpp \
     src/qt-ui/tracklisttablemodel.cpp \
     src/qt-ui/tracklisttableview.cpp \
+    src/qt-ui/tracklisttabledelegate.cpp \
     src/qt-ui/testui.cpp \
     src/qt-ui/playwidgetentry.cpp \
     src/qt-ui/playwidget.cpp \
