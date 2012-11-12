@@ -7,6 +7,7 @@
 class TrackListTableModel;
 class TrackListTableView;
 class TrackList;
+class QPushButton;
 
 class PlayListWidget: public QWidget {
     
@@ -18,6 +19,8 @@ class PlayListWidget: public QWidget {
     private:
         TrackListTableModel *model;
         TrackListTableView  *view;
+        QPushButton *upButton;
+        QPushButton *downButton;
 };
 
 #endif

@@ -24,7 +24,7 @@ void TrackListTableDelegate::paint(QPainter *painter, const QStyleOptionViewItem
         opt.palette.setColor(QPalette::Text, Qt::darkGray);
         
         // used for changing the background color of table cells
-        opt.backgroundBrush = QBrush(Qt::darkRed);
+        // opt.backgroundBrush = QBrush(Qt::darkRed);
     }
     
     // stole this line from http://qt4-x11.sourcearchive.com/documentation/4.4.2/qstyleditemdelegate_8cpp-source.html
