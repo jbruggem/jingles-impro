@@ -3,15 +3,12 @@
 
 #include <QPainter>
 #include <QApplication>
-#include "QsLog.h"
 
 TrackListTableDelegate::TrackListTableDelegate(QObject *parent)
     : QStyledItemDelegate(parent) {
 }
 
 void TrackListTableDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    
-    QLOG_TRACE() << "TrackListTableDelegate::paint()";
     
     QStyleOptionViewItemV4 opt = option;
     initStyleOption(&opt, index);
