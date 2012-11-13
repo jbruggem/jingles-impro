@@ -7,7 +7,6 @@
 TrackListTableView::TrackListTableView(QWidget *parent)
     : QTableView(parent) {
     
-    
     setItemDelegate(new TrackListTableDelegate);
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setHighlightSections(false);
@@ -18,6 +17,7 @@ TrackListTableView::TrackListTableView(QWidget *parent)
     setSortingEnabled(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setTabKeyNavigation(false);
 }
 
 void TrackListTableView::setModel(QAbstractItemModel *m) {
