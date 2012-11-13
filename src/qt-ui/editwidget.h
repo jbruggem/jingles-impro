@@ -18,7 +18,7 @@ class EditWidget : public QWidget {
 
 	public:
 		EditWidget(QWidget *parent = 0);
-		void update(const TrackList *);
+		void update(TrackList *stockList, TrackList *playList);
 	private slots:
 		void addButtonClicked();
 	private:

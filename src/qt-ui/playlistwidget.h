@@ -23,8 +23,9 @@ class PlayListWidget: public QWidget {
     private:
         TrackListTableModel *model;
         TrackListTableView  *view;
-        QPushButton *upButton;
-        QPushButton *downButton;
+        QPushButton         *upButton;
+        QPushButton         *downButton;
+        TrackList           *trackList;
 };
 
 #endif

@@ -46,8 +46,9 @@ EditWidget::EditWidget(QWidget *parent)
     connect(addButton, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
 }
 
-void EditWidget::update(const TrackList *list) {
-    // trackListModel->populate(list);
+void EditWidget::update(TrackList *stockList, TrackList *playList) {
+    stockListWidget->setTrackList(stockList);
+    playListWidget->setTrackList(playList);
 }
 
 void EditWidget::addButtonClicked() {
