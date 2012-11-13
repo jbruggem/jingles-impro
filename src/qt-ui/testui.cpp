@@ -2,19 +2,23 @@
 #include "testui.h"
 
 #include <QGridLayout>
+#include "stocklistwidget.h"
 #include "playlistwidget.h"
 #include "tracklist.h"
 
 TestUi::TestUi(QWidget *parent)
     : QWidget (parent) {
 
-    playListWidget = new PlayListWidget;
+    stockListWidget = new StockListWidget;
+    playListWidget  = new PlayListWidget;
     
     setLayout(new QGridLayout);
-    layout()->addWidget(playListWidget);
+    layout()->addWidget(stockListWidget);
+    // layout()->addWidget(playListWidget);
 }
 
 void TestUi::setTrackList(const TrackList *list) {
+    stockListWidget->setTrackList(list);
     playListWidget->setTrackList(list);
 }
 

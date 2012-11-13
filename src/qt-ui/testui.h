@@ -4,6 +4,7 @@
 
 #include <QWidget>
 
+class StockListWidget;
 class PlayListWidget;
 class TrackList;
 
@@ -12,7 +13,8 @@ class TestUi : public QWidget {
         TestUi(QWidget *parent = 0);
         void setTrackList(const TrackList *);
     private:
-        PlayListWidget *playListWidget;
+        StockListWidget *stockListWidget;
+        PlayListWidget  *playListWidget;
 };
 
 #endif

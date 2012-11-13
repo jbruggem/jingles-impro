@@ -3,62 +3,54 @@
 
 #include <QComboBox>
 #include <QGridLayout>
-#include <QGroupBox>
 #include <QHBoxLayout>
+#include <QGroupBox>
 #include <QPushButton>
 #include <QSplitter>
-#include "tracklisttreemodel.h"
-#include "tracklisttreeview.h"
+#include "stocklistwidget.h"
+#include "playlistwidget.h"
 #include "tracklist.h"
-#include "twopaneexplorer.h"
 
 EditWidget::EditWidget(QWidget *parent)
-	: QWidget(parent) {
+    : QWidget(parent) {
 
-	// set up the file explorer
-	explorer         = new TwoPaneExplorer;
-	addButton        = new QPushButton("-->");
-	explorerGroupBox = new QGroupBox(tr("FileExplorer"));
-	explorerGroupBox->setLayout(new QHBoxLayout);
-	explorerGroupBox->layout()->addWidget(explorer);
-	explorerGroupBox->layout()->addWidget(addButton);
+    // set up the StockList
+    stockListWidget   = new StockListWidget;
+    stockListGroupBox = new QGroupBox(tr("Library"));
+    stockListGroupBox->setLayout(new QHBoxLayout);
+    stockListGroupBox->layout()->addWidget(stockListWidget);
+    
+    // set up the button
+    addButton = new QPushButton("-->");
+    stockListGroupBox->layout()->addWidget(addButton);
+    
+    // set up the PlayList
+    playListWidget   = new PlayListWidget;
+    playListGroupBox = new QGroupBox(tr("Playlist"));
+    playListGroupBox->setLayout(new QHBoxLayout);
+    playListGroupBox->layout()->addWidget(playListWidget);
+    
+    // set up the splitter
+    splitter = new QSplitter;
+    splitter->addWidget(stockListGroupBox);
+    splitter->setStretchFactor(0, 1);
+    splitter->addWidget(playListGroupBox);
+    splitter->setStretchFactor(1, 2);
 
-	// set up the StockList
-	trackListModel = new TrackListTreeModel;
-	stockListView  = new TrackListTreeView;
-	stockListView->setModel(trackListModel);
-	stockListView->setHeaderHidden(true);
-	stockListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	stockListCBox     = new QComboBox;
-	for (int i = 0; i < TrackListTreeModel::NbSortingModes; i++) {
-		stockListCBox->addItem(TrackListTreeModel::getSortingModeText(TrackListTreeModel::SortingMode(i)));
-	}
-	stockListGroupBox = new QGroupBox(tr("Stock List"));
-	stockListGroupBox->setLayout(new QGridLayout);
-	stockListGroupBox->layout()->addWidget(stockListView);
-	stockListGroupBox->layout()->addWidget(stockListCBox);
+    // set up the layout
+    setLayout(new QGridLayout);
+    layout()->addWidget(splitter);
+    layout()->setContentsMargins(0, 0, 0, 0);
 
-	// set up the splitter
-	splitter = new QSplitter;
-	splitter->addWidget(explorerGroupBox);
-	splitter->setStretchFactor(0, 1);
-	splitter->addWidget(stockListGroupBox);
-	splitter->setStretchFactor(1, 2);
-
-	// set up the layout
-	setLayout(new QGridLayout);
-	layout()->addWidget(splitter);
-
-	// connect signals and slots
-	connect(stockListCBox, SIGNAL(currentIndexChanged(int)), trackListModel, SLOT(setSortingMode(int)));
-	connect(addButton, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
+    // connect signals and slots
+    connect(addButton, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
 }
 
 void EditWidget::update(const TrackList *list) {
-	trackListModel->populate(list);
+    // trackListModel->populate(list);
 }
 
 void EditWidget::addButtonClicked() {
-	QLOG_TRACE() << "EditWidget::addButtonClicked()";
-	trackListModel->addTracks(explorer->getSelection());
+    QLOG_TRACE() << "EditWidget::addButtonClicked()";
+    // trackListModel->addTracks(explorer->getSelection());
 }
