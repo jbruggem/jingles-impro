@@ -18,6 +18,8 @@ class PlayListWidget: public QWidget {
         void setTrackList(const TrackList *);
     private slots:
         void refreshButtons();
+        void upButtonPressed();
+        void downButtonPressed();
     private:
         TrackListTableModel *model;
         TrackListTableView  *view;
