@@ -38,11 +38,13 @@ void PlayWidgetEntry::build(){
 
 void PlayWidgetEntry::updateTags(){
     //QLOG_TRACE() << "PlayWid(getEntry::update()";
-    playButton->setText(
-                (track->getTitle()->length() > 0) ?
-                (*track->getTitle()) :
-                    track->getFilename()
-                );
+    QString text;
+    if(track->getTitle()->length() > 0 && !track->shouldShowFilename()){
+        text = (*track->getTitle());
+    }else{
+        text = track->getFilename();
+    }
+    playButton->setText(text);
 }
 
 
