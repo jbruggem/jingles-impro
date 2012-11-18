@@ -15,17 +15,18 @@ void GstPlayer::run(){
 }*/
 
 void GstPlayer::setTrack(Track * track){
+    QLOG_TRACE() << this << "GstPlayer::setTrack";
     this->track = track;
 }
 
 
 void GstPlayer::load(){
-    QLOG_TRACE() << "LOAD";
+    QLOG_TRACE() << this << "GstPlayer LOAD";
     GstBus *bus;
 
     //const char uri = track->getPath();
     QString realPath = "file://"+track->getPath();
-    QByteArray byteArray = realPath.toLocal8Bit();
+    QByteArray byteArray = realPath.toUtf8();
     const gchar * uri = byteArray.data();
 
     if (uri)
@@ -53,7 +54,7 @@ bool GstPlayer::gstIsInit = false;
 
 int GstPlayer::play()
 {
-    QLOG_TRACE() << "GstPlayer::play";
+    QLOG_TRACE() << this << "GstPlayer::play";
 
     //if(!isLoaded){
         GstState state, pending;
@@ -122,7 +123,7 @@ int GstPlayer::play()
 
 void GstPlayer::pause()
 {
-    QLOG_TRACE() << "PAUSE";
+    QLOG_TRACE() << this << "PAUSE";
 
     /*if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't pause";
@@ -135,7 +136,7 @@ void GstPlayer::pause()
 
 void GstPlayer::stop()
 {
-    QLOG_TRACE() << "stop";
+    QLOG_TRACE() << this << "stop";
 /*
     if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't stop";
@@ -211,7 +212,7 @@ void GstPlayer::parseMessage(GstMessage *msg){
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
         QString objectNamePlayer = "player";
         if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
-            QLOG_TRACE() << "[GST] "<< this->track->getFilename() <<": " <<  gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+            QLOG_TRACE() << "[GST] "/*<< this << this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
         }
         break;
     }
