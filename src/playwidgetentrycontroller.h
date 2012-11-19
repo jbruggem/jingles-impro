@@ -24,7 +24,7 @@ public slots:
 private:
     Track * track;
     Players * players;
-    int lastPid;
+    //int lastPid;
     void initPlayer();
     
 };

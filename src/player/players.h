@@ -16,8 +16,10 @@ public:
     explicit Players(MediaPlayerFactory * playerFactory,QObject *parent = 0);
 
 
-    int createPlayer(Track * t);
+    void removePlayer(int pid);
     IMediaPlayer * getPlayer(int playerId);
+    IMediaPlayer * getAvailablePlayer(Track * t);
+    int createPlayer(Track *t);
     QList<int> * getPlayers(Track * t);
     void stopAll();
     void stopAllForTrack(Track * t);
