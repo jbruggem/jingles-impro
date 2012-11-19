@@ -1,0 +1,5 @@
+/home/jehan/Perso/sons/Annonce.mp3,false,0,-1,0,0,true
+/home/jehan/Perso/sons/Caucus.mp3,false,0,-1,0,0,true
+/home/jehan/Perso/sons/Arbitre (entree).mp3,false,600,-1,0,0,true
+/home/jehan/Perso/sons/Arbitre (sortie).mp3,false,0,-1,0,0,true
+
