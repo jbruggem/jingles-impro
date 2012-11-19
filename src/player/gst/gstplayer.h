@@ -16,6 +16,11 @@ class GstPlayer : public QObject, public IMediaPlayer
     Q_OBJECT
 public:
     GstPlayer(QObject *parent = 0);
+    ~GstPlayer(){
+        if(pipeline)
+            delete pipeline;
+    }
+
     //void run();
 
 
@@ -25,27 +30,46 @@ public:
     void stop();
 
     // TODO
+    Track * getTrack();
     void setTrack(Track * track);
     //void setUri(const char *);
-    bool isPlaying(){return true;}
+    bool isPlaying(){return playing;}
+    bool isLoaded(){return loaded;}
+    bool hasError(){return error;}
     //void print(){}
     //const char * getUri() const {return NULL;}
 
 
 
 private:
-   // IMediaPlayerWatcher * watcher;
+
+
+    // IMediaPlayerWatcher * watcher;
     Track * track;
     //QString uri;
+    bool playing;
+    bool loaded;
+    bool error;
     GstElement *pipeline;
-    //bool isLoaded;
     void parseMessage(GstMessage *msg);
+
 
      // this does not belong to the player I think. Move to a GstEngine class?
     static bool gstIsInit;
     static void ensureInitGst();
     static GstBusSyncReply BusCallSync(GstBus *bus, GstMessage *msg, void *user_data);
     static gboolean BusCallAsync(GstBus *bus, GstMessage *msg, void *user_data);
+
+signals:
+        void requestPause();
+        void requestStop();
+        void requestPlay();
+
+private slots:
+        void doPause();
+        void doStop();
+        void doPlay();
+
 
 };
 

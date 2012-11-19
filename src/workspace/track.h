@@ -52,7 +52,6 @@ public:
 
     QString getPath() const;
     QString getFilename() const;
-    bool showFilename;
     bool shouldShowFilename() const{return showFilename;}
     bool isLoopEnabled() const{return loopEnabled;}
     int getStartTime() const{return startTime;}
@@ -78,6 +77,7 @@ private:
     int endTime;
     int fadeInDuration;
     int fadeOutDuration;
+    bool showFilename;
     //TagLib::FileRef *fileRef;
     QString title;
     QString artist;
