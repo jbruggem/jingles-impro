@@ -34,6 +34,8 @@ public:
             delete list;
         }
     }
+    signals:
+        void playingStateChange(Track *,bool playing);
 
 private:
     QMap<Track *,QList<int> * > playersByTrack;
@@ -44,7 +46,7 @@ signals:
 
     
 public slots:
-    
+    void playerStateChanged();
 };
 
 #endif // PLAYERWRAPPER_H

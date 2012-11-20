@@ -13,6 +13,7 @@ PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget
 
     build();
 
+    connect(controller,SIGNAL(stateChanged(bool)),this,SLOT(stateChanged(bool)));
     connect(controller,SIGNAL(trackInfosUpdated()),this,SLOT(trackInfosUpdated()));
 
     connect(playButton,SIGNAL(clicked()),controller,SLOT(playClicked()));
@@ -47,6 +48,16 @@ void PlayWidgetEntry::updateTags(){
     playButton->setText(text);
 }
 
+
+void PlayWidgetEntry::stateChanged(bool isNowPlaying){
+    QFont font = QFont(playButton->font());
+    if(isNowPlaying){
+        font.setBold(true);
+    }else{
+        font.setBold(false);
+    }
+    playButton->setFont(font);
+}
 
 void PlayWidgetEntry::trackInfosUpdated(){
     //QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()";

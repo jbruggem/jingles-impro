@@ -11,7 +11,7 @@
 
 
 
-class GstPlayer : public QObject, public IMediaPlayer
+class GstPlayer : public IMediaPlayer
 {
     Q_OBJECT
 public:
@@ -39,6 +39,8 @@ public:
     //void print(){}
     //const char * getUri() const {return NULL;}
 
+signals:
+        void stateChanged();
 
 
 private:

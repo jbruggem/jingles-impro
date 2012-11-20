@@ -3,9 +3,10 @@
 
 #include "track.h"
 
-class IMediaPlayer{
+class IMediaPlayer: public QObject{
 
     public:
+        IMediaPlayer(QObject * parent = 0): QObject(parent){}
 		virtual ~IMediaPlayer() {}
         virtual Track * getTrack() = 0;
         virtual void setTrack(Track *) = 0;
@@ -19,6 +20,9 @@ class IMediaPlayer{
         virtual bool isLoaded() = 0;
         virtual bool hasError() = 0;
         //virtual void print() = 0;
+    signals:
+         virtual void stateChanged() = 0;
+
 	private:
 		// MediaPlayerInterface& operator=(const MediaPlayerInterface&);
 		// MediaPlayerInterface(const MediaPlayerInterface&);

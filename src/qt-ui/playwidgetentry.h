@@ -22,6 +22,7 @@ class PlayWidgetEntry : public QWidget {
 
 public slots:
       void trackInfosUpdated();
+      void stateChanged(bool isNowPlaying);
 
 	private:
         void build();

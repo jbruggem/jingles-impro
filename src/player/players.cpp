@@ -14,6 +14,7 @@ int Players::createPlayer(Track *t){
     QLOG_TRACE() << "Players::createPlayer";
     int pid = ++playerIdCounter;
     IMediaPlayer * player = playerFactory->getMediaPlayerInstance();
+    connect(player,SIGNAL(stateChanged()),this,SLOT(playerStateChanged()));
     player->setTrack(t);
     player->load();
     players.insert(pid,player);
@@ -22,6 +23,24 @@ int Players::createPlayer(Track *t){
     }
     (playersByTrack.value(t))->append(pid);
     return pid;
+}
+
+void Players::playerStateChanged(){
+    bool playing;
+    // This sucks big time.
+    // It's a clear sign this whole chain of objects
+    // should be rethought thoroughly.
+
+    //QLOG_TRACE() << "Players::playerStateChanged ";
+    foreach(Track * t,playersByTrack.keys()){
+        playing = false;
+        foreach (int pid, *playersByTrack.value(t)) {
+            playing |= players.value(pid)->isPlaying();
+        }
+       // QLOG_TRACE() << "Update " << t << " "<< playing;
+        this->playingStateChange(t,playing);
+    }
+
 }
 
 IMediaPlayer * Players::getPlayer(int playerId){

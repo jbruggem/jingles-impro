@@ -1,7 +1,7 @@
 #include "gstplayer.h"
 
 GstPlayer::GstPlayer(QObject *parent):
-    QObject(parent),
+    IMediaPlayer(parent),
     playing(false),
     loaded(false),
     error(false),
@@ -241,7 +241,7 @@ void GstPlayer::parseMessage(GstMessage *msg){
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
         QString objectNamePlayer = "player";
         if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
-            QLOG_TRACE() << "[GST] "/*<< this << this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+            QLOG_TRACE() << "[GST] "<< this << /*this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
             switch(new_state){
                 case GST_STATE_VOID_PENDING:
                     loaded=false;
@@ -264,6 +264,8 @@ void GstPlayer::parseMessage(GstMessage *msg){
                     playing=true;
                     break;
             }
+            //QLOG_TRACE() << "GstPlayer: emit state change";
+            this->stateChanged();
         }
         break;
     }
