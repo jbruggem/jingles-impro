@@ -14,6 +14,7 @@
 #include "playwidget.h"
 #include "editwidget.h"
 #include "uicontroller.h"
+#include "QShortcut"
 
 class MainWidget : public QWidget {
 
@@ -38,6 +39,7 @@ class MainWidget : public QWidget {
 		EditWidget  *editWidget;
 		QStackedWidget *stackedWidget;
         UiController * controller;
+        QShortcut * stopAllShortcut;
 };
 
 #endif
