@@ -1,7 +1,20 @@
 
 #include "tracklist.h"
 
-TrackList::TrackList(QObject *parent) : QObject(parent) {
+TrackList::TrackList(QObject *parent) : QAbstractListModel(parent) {
+}
+
+
+QVariant TrackList::data(const QModelIndex &index, int role)  const{
+    if (role == Qt::DisplayRole)
+    {
+        return this->at(index.row())->getFilename();
+    }
+    return QVariant();
+}
+
+int TrackList::rowCount(const QModelIndex &parent) const{
+    return this->length();
 }
 
 std::ostream& operator<< (std::ostream &out, const TrackList &list) {
