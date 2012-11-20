@@ -10,3 +10,9 @@ UiController::UiController(Players * p,QObject *parent) :
 PlayWidgetEntryController * UiController::getPlayWidgetEntryController(){
     return new PlayWidgetEntryController(players);
 }
+
+
+void UiController::stopAllButtonClicked(){
+    QLOG_TRACE() << "[UiController] STOP ALL";
+    players->stopAll();
+}

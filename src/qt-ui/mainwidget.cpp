@@ -18,7 +18,9 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	// initialise mode label and button
 	modeLabel  = new QLabel(tr("Play Mode"));
 	modeButton = new QPushButton(tr("Switch"));
+    stopAllButton = new QPushButton(tr("Stop All"));
 	connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
+    connect(stopAllButton, SIGNAL(clicked()), controller, SLOT(stopAllButtonClicked()));
 
 	// initialise play and edit widgets
     playWidget = new PlayWidget(controller,3);
@@ -31,7 +33,8 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	layout           = new QVBoxLayout;
 	modeButtonLayout = new QHBoxLayout;
 	modeButtonLayout->addStretch();
-	modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
+    modeButtonLayout->addWidget(stopAllButton, 0, Qt::AlignRight);
+    modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
 	layout->addWidget(stackedWidget);

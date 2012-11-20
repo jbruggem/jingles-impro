@@ -14,7 +14,7 @@ public:
 signals:
     
 public slots:
-
+    void stopAllButtonClicked();
 
 private:
     Players * players;

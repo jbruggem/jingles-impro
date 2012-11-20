@@ -23,7 +23,7 @@ class MainWidget : public QWidget {
         MainWidget(UiController * controller, QWidget *parent = 0);
 		void setWorkspace(Workspace *wsp);
 	private slots:
-		void modeButtonClicked();
+        void modeButtonClicked();
 		void doSth();
 		void doSthElse();
 	private:
@@ -33,6 +33,7 @@ class MainWidget : public QWidget {
 		QHBoxLayout *modeButtonLayout;
 		QLabel      *modeLabel;
 		QPushButton *modeButton;
+        QPushButton *stopAllButton;
 		PlayWidget  *playWidget;
 		EditWidget  *editWidget;
 		QStackedWidget *stackedWidget;
