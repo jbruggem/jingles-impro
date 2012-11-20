@@ -36,6 +36,10 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
     QVBoxLayout * playlistLayout = new QVBoxLayout(this);
     playlistLayout->addWidget(playListWidget);
 
+    //connect(playListWidget,SIGNAL(clicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
+    connect(playListWidget,SIGNAL(doubleClicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
+
+
 
     wrapperLayout->addLayout(playlistLayout, 0);
 
@@ -58,6 +62,9 @@ void PlayWidget::update(const TrackList *buttons, TrackList * list) {
     append(buttons);
     tracklist = list;
     playListWidget->setModel(tracklist);
+
+    for(int i=0; i< tracklist->length(); i++)
+        controller->load(tracklist->at(i));
 }
 
 QString const * PlayWidget::getKey(int i){

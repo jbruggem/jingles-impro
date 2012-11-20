@@ -2,22 +2,28 @@
 #define UICONTROLLER_H
 
 #include <QObject>
+#include <QModelIndex>
 #include "playwidgetentrycontroller.h"
+#include "workspace.h"
 
 class UiController : public QObject
 {
     Q_OBJECT
 public:
-    explicit UiController(Players * p,QObject *parent = 0);
+    explicit UiController(Players * p,Workspace * wsp,QObject *parent = 0);
     PlayWidgetEntryController * getPlayWidgetEntryController();
+
+    void load(Track *);
     
 signals:
     
 public slots:
     void stopAllButtonClicked();
+    void playFromPlaylist(QModelIndex);
 
 private:
     Players * players;
+    Workspace * workspace;
 };
 
 #endif // UICONTROLLER_H

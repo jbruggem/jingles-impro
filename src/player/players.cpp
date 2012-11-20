@@ -10,17 +10,22 @@ Players::Players(MediaPlayerFactory * playerFactory,QObject *parent) :
 }
 
 
+
+void Players::ensureTrackExists(Track *t){
+    if(!playersByTrack.contains(t)){
+        playersByTrack.insert(t,new QList<int>());
+    }
+}
+
 int Players::createPlayer(Track *t){
     QLOG_TRACE() << "Players::createPlayer";
+    ensureTrackExists(t);
     int pid = ++playerIdCounter;
     IMediaPlayer * player = playerFactory->getMediaPlayerInstance();
     connect(player,SIGNAL(stateChanged()),this,SLOT(playerStateChanged()));
     player->setTrack(t);
     player->load();
     players.insert(pid,player);
-    if(!playersByTrack.contains(t)){
-        playersByTrack.insert(t,new QList<int>());
-    }
     (playersByTrack.value(t))->append(pid);
     return pid;
 }
@@ -55,6 +60,7 @@ IMediaPlayer * Players::getPlayer(int playerId){
 IMediaPlayer * Players::getAvailablePlayer(Track * t){
     IMediaPlayer * player = 0;
     IMediaPlayer * tmpPlayer;
+    ensureTrackExists(t);
 
     foreach (int pid, *playersByTrack.value(t)) {
         tmpPlayer = players.value(pid);
@@ -77,6 +83,7 @@ IMediaPlayer * Players::getAvailablePlayer(Track * t){
 }
 
 QList<int> *  Players::getPlayers(Track * t){
+    ensureTrackExists(t);
     return playersByTrack.value(t);
 }
 
@@ -94,6 +101,7 @@ void Players::removePlayer(int pid){
 }
 
 void Players::stopAllForTrack(Track *t){
+    ensureTrackExists(t);
     QLOG_TRACE() << "stopAllForTrack " << t->getPath() ;
 
     foreach (int pid, *playersByTrack.value(t)) {

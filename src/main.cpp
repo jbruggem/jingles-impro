@@ -105,7 +105,7 @@ int main(int argc, char ** argv){
     // create a "Players" object to deal with controlling the players
     MediaPlayerFactory * mediaPlayerFactory = new GstMediaPlayerFactory();
     Players * players = new Players(mediaPlayerFactory);
-    UiController controller(players);
+    UiController controller(players,activeWorkspace);
 
     BasicUi ui(&controller);
     ui.setWorkspace(activeWorkspace);
