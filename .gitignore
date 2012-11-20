@@ -8,3 +8,5 @@ Makefile.Debug
 Makefile.Release
 /jingles-qt.pro.user
 /jingles-qt-tests.pro.user
+/filestoload.txt~
+/filestoload (copy).txt

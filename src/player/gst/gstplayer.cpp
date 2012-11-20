@@ -1,9 +1,16 @@
 #include "gstplayer.h"
 
 GstPlayer::GstPlayer(QObject *parent):
-    QObject(parent)
+    IMediaPlayer(parent),
+    playing(false),
+    loaded(false),
+    error(false),
+    pipeline(0)
 {
     GstPlayer::ensureInitGst();
+    connect(this,SIGNAL(requestPause()),this,SLOT(doPause()));
+    connect(this,SIGNAL(requestPlay()),this,SLOT(doPlay()));
+    connect(this,SIGNAL(requestStop()),this,SLOT(doStop()));
     //watcher = NULL;
     pipeline = gst_element_factory_make("playbin2", "player");
 }
@@ -14,18 +21,23 @@ void GstPlayer::run(){
     play();
 }*/
 
+Track * GstPlayer::getTrack(){
+    return this->track;
+}
+
 void GstPlayer::setTrack(Track * track){
+    QLOG_TRACE() << this << "GstPlayer::setTrack";
     this->track = track;
 }
 
 
 void GstPlayer::load(){
-    QLOG_TRACE() << "LOAD";
+    QLOG_TRACE() << this << "GstPlayer LOAD";
     GstBus *bus;
 
     //const char uri = track->getPath();
     QString realPath = "file://"+track->getPath();
-    QByteArray byteArray = realPath.toLocal8Bit();
+    QByteArray byteArray = realPath.toUtf8();
     const gchar * uri = byteArray.data();
 
     if (uri)
@@ -37,15 +49,10 @@ void GstPlayer::load(){
 
     gst_object_unref(bus);
 
-    GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
-    if(GST_STATE_CHANGE_SUCCESS == ret || GST_STATE_CHANGE_NO_PREROLL == ret ){
-        QLOG_TRACE() << "Load finished. Set to pause successful.";
-        //isLoaded = true;
-    }else if(GST_STATE_CHANGE_ASYNC == ret){ // this is what usually happens when file exists and is being loaded.
-        QLOG_TRACE() << "Setting to pause asynchronously. Probably all right.";
-    }else  if(GST_STATE_CHANGE_FAILURE == ret){
-        QLOG_TRACE() << "Failed to change state to PAUSE: probably failed to load.";
-    }
+    QLOG_TRACE() << "Load finished";
+    loaded = true;
+
+    this->requestPause();
 }
 
 bool GstPlayer::gstIsInit = false;
@@ -53,7 +60,7 @@ bool GstPlayer::gstIsInit = false;
 
 int GstPlayer::play()
 {
-    QLOG_TRACE() << "GstPlayer::play";
+    QLOG_TRACE() << this << "GstPlayer::play";
 
     //if(!isLoaded){
         GstState state, pending;
@@ -84,7 +91,14 @@ int GstPlayer::play()
     gst_element_query_position(pipeline,&format,&position);
 
     QLOG_TRACE() << "Position before playing is: "<< position;
-    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+    GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+    if(GST_STATE_CHANGE_SUCCESS == ret || GST_STATE_CHANGE_NO_PREROLL == ret ){
+         QLOG_TRACE() << "Set to play successful.";
+    }else if(GST_STATE_CHANGE_ASYNC == ret){ // this is what usually happens when file exists and is being loaded.
+        QLOG_TRACE() << "Setting to play asynchronously. Probably all right.";
+    }else  if(GST_STATE_CHANGE_FAILURE == ret){
+        QLOG_TRACE() << "Failed to change state to PLAY.";
+    }
 
     //sleep(1);
 
@@ -122,20 +136,36 @@ int GstPlayer::play()
 
 void GstPlayer::pause()
 {
-    QLOG_TRACE() << "PAUSE";
+    QLOG_TRACE() << this << "PAUSE";
 
-    /*if(!isLoaded){
-        QLOG_TRACE() << "Nothing loaded - can't pause";
-        return;
-    }*/
+    GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
+    if(GST_STATE_CHANGE_SUCCESS == ret || GST_STATE_CHANGE_NO_PREROLL == ret ){
+        QLOG_TRACE() << "Set to pause successful.";
+    }else if(GST_STATE_CHANGE_ASYNC == ret){ // this is what usually happens when file exists and is being loaded.
+        QLOG_TRACE() << "Setting to pause asynchronously. Probably all right.";
+    }else  if(GST_STATE_CHANGE_FAILURE == ret){
+        QLOG_TRACE() << "Failed to change state to PAUSE: probably failed to load.";
+    }
 
-    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
-    return;
 }
+
+
+void GstPlayer::doPause(){
+    this->pause();
+}
+
+void GstPlayer::doStop(){
+    this->stop();
+}
+
+void GstPlayer::doPlay(){
+    this->play();
+}
+
 
 void GstPlayer::stop()
 {
-    QLOG_TRACE() << "stop";
+    QLOG_TRACE() << this << "STOP";
 /*
     if(!isLoaded){
         QLOG_TRACE() << "Nothing loaded - can't stop";
@@ -147,7 +177,7 @@ void GstPlayer::stop()
         delete watcher;
         watcher = NULL;
     }*/
-    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
+    this->requestPause();
 
     gint64 position = 0;
     GstFormat format = GST_FORMAT_TIME;
@@ -211,7 +241,31 @@ void GstPlayer::parseMessage(GstMessage *msg){
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
         QString objectNamePlayer = "player";
         if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
-            QLOG_TRACE() << "[GST] "<< this->track->getFilename() <<": " <<  gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+            QLOG_TRACE() << "[GST] "<< this << /*this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+            switch(new_state){
+                case GST_STATE_VOID_PENDING:
+                    loaded=false;
+                    playing=false;
+                    break;
+                case GST_STATE_READY:
+                    loaded=true;
+                    playing=false;
+                    break;
+                case GST_STATE_NULL:
+                    loaded=false;
+                    playing=false;
+                    break;
+                case GST_STATE_PAUSED:
+                    loaded=true;
+                    playing=false;
+                    break;
+                case GST_STATE_PLAYING:
+                    loaded=true;
+                    playing=true;
+                    break;
+            }
+            //QLOG_TRACE() << "GstPlayer: emit state change";
+            this->stateChanged();
         }
         break;
     }
@@ -227,6 +281,7 @@ void GstPlayer::parseMessage(GstMessage *msg){
    }
     case GST_MESSAGE_EOS: {
         QLOG_TRACE() << "[GST] End-of-stream";
+        this->requestStop();
         //g_main_loop_quit(loop);
         break;
     }
@@ -234,6 +289,7 @@ void GstPlayer::parseMessage(GstMessage *msg){
         GError *err;
         gst_message_parse_error(msg, &err, NULL);
         QLOG_TRACE() << "[GST] [ERROR] " << err->message;
+        error = true;
         g_error_free(err);
 
         // TODO: handle some errors

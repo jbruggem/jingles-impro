@@ -4,12 +4,12 @@ CONFIG += debug_and_release
 TEMPLATE = app
 TARGET = 
 
-DEPENDPATH  += . src src/player src/player/vlc src/player/gst src/workspace \
+DEPENDPATH  += . src src/player  src/player/gst src/workspace \
  src/externals/qslog src/externals/taglib src/qt-ui
-INCLUDEPATH += . src src/player src/player/vlc src/player/gst src/workspace \
+INCLUDEPATH += . src src/player  src/player/gst src/workspace \
  src/externals/qslog src/externals/taglib src/qt-ui
 
-LIBS += -lvlc
+
 
 # Input
 HEADERS += \

@@ -3,10 +3,12 @@
 
 #include "track.h"
 
-class IMediaPlayer{
+class IMediaPlayer: public QObject{
 
     public:
+        IMediaPlayer(QObject * parent = 0): QObject(parent){}
 		virtual ~IMediaPlayer() {}
+        virtual Track * getTrack() = 0;
         virtual void setTrack(Track *) = 0;
         virtual void load() = 0;
         //virtual void setUri(const char *) = 0;
@@ -15,7 +17,12 @@ class IMediaPlayer{
 		virtual void pause() = 0;
 		virtual void stop() = 0;
 		virtual bool isPlaying() = 0;
+        virtual bool isLoaded() = 0;
+        virtual bool hasError() = 0;
         //virtual void print() = 0;
+    signals:
+         virtual void stateChanged() = 0;
+
 	private:
 		// MediaPlayerInterface& operator=(const MediaPlayerInterface&);
 		// MediaPlayerInterface(const MediaPlayerInterface&);

@@ -15,16 +15,18 @@ public:
 
 signals:
     void trackInfosUpdated();
+    void stateChanged(bool isNowPlaying);
     
 public slots:
     void playClicked();
     void stopClicked();
     void updateTrackInfos();
+    void playingStateChange(Track *, bool isNowPlaying);
 
 private:
     Track * track;
     Players * players;
-    int lastPid;
+    //int lastPid;
     void initPlayer();
     
 };

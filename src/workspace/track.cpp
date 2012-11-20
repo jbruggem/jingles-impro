@@ -27,14 +27,15 @@ Track::Track(QObject *parent) :
    QLOG_TRACE() << "Building Track from nothing";
 }*/
 
-Track::Track(const QString &url, bool loop, int startTime, int endTime, int fadeInDuration, int fadeOutDuration,QObject *parent) :
+Track::Track(const QString &url, bool loop, int startTime, int endTime, int fadeInDuration, int fadeOutDuration,bool showFilename,QObject *parent) :
     QObject(parent),
     //path(url),
     loopEnabled(loop),
     startTime(startTime),
     endTime(endTime),
     fadeInDuration(fadeInDuration),
-    fadeOutDuration(fadeOutDuration)
+    fadeOutDuration(fadeOutDuration),
+    showFilename(showFilename)
 {
     QLOG_TRACE() << "Building Track with full params";
     this->extractFilename(url);
@@ -51,7 +52,8 @@ Track::Track(const QString &url,QObject *parent) :
     startTime(0),
     endTime(0),
     fadeInDuration(0),
-    fadeOutDuration(0)
+    fadeOutDuration(0),
+    showFilename(false)
 {
     QLOG_TRACE() << "Building Track from URL";
     this->extractFilename(url);
@@ -62,18 +64,18 @@ Track::Track(const QString &url,QObject *parent) :
 }
 
 void Track::extractFilename(const QString &url){
-    fileInfo = new QFileInfo(url);
+    fileInfo = QFileInfo(url);
 }
 
 QString Track::getPath() const{
-    return fileInfo->absoluteFilePath();
+    return fileInfo.absoluteFilePath();
 }
 QString Track::getFilename() const{
-    return fileInfo->baseName();
+    return fileInfo.baseName();
 }
 
 int Track::compare(const Track &a, const Track &b) {
-    int returnValue = QString::localeAwareCompare(a.fileInfo->canonicalFilePath(), b.fileInfo->canonicalFilePath());
+    int returnValue = QString::localeAwareCompare(a.fileInfo.canonicalFilePath(), b.fileInfo.canonicalFilePath());
 	// if the strings are different, we stop the comparison
 	if (returnValue) {return returnValue;}
 
@@ -103,13 +105,13 @@ bool Track::operator<(const Track &other) const {
 }
 
 void  Track::setArtist(const QString * artist) {
-    QLOG_TRACE() << "Track's artist updated.";
+    QLOG_TRACE() << this << "Track's artist updated.";
     this->artist = *artist;
     emit tagUpdated();
     emit tagArtistUpdate();
 }
 void  Track::setTitle(const QString * title) {
-    QLOG_TRACE() << "Track's title updated.";
+    QLOG_TRACE() << this << "Track's title updated.";
     this->title = *title;
     emit tagUpdated();
     emit tagTitleUpdate();

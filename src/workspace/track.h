@@ -16,6 +16,7 @@ class Track : public QObject
     //Q_PROPERTY(const QString path READ getPath)
     //Q_PROPERTY(const QString filename READ extractFilename)
     Q_PROPERTY(bool loopEnabled READ isLoopEnabled)
+    Q_PROPERTY(bool showFilename READ shouldShowFilename)
     Q_PROPERTY(int startTime READ getStartTime)
     Q_PROPERTY(int endTime READ getEndTime)
     Q_PROPERTY(int fadeInDuration READ getFadeInDuration)
@@ -25,8 +26,7 @@ class Track : public QObject
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
-        delete fileInfo;
-        //QLOG_TRACE() << "deleting Track[" << this->path << "|"
+       QLOG_TRACE() << this << " deleting Track"; // << this->path << "|"
         //             << this->startTime
        //              << "-"
        //              << this->endTime
@@ -43,6 +43,7 @@ public:
         int endTime,
         int fadeInDuration,
         int fadeOutDuration,
+        bool showFilename,
         QObject *parent = 0
      );
      Track(const QString &url,QObject *parent = 0);
@@ -51,12 +52,13 @@ public:
 
     QString getPath() const;
     QString getFilename() const;
+    bool shouldShowFilename() const{return showFilename;}
     bool isLoopEnabled() const{return loopEnabled;}
     int getStartTime() const{return startTime;}
     int getEndTime() const{return endTime;}
     int getFadeInDuration() const{return fadeInDuration;}
     int getFadeOutDuration() const{return fadeOutDuration;}
-    bool isValid() const {return fileInfo->exists();}
+    bool isValid() const {return fileInfo.exists();}
     //TagLib::Tag *getTag() const {return fileRef->tag();}
     static int compare(const Track &a, const Track &b);
     bool operator< (const Track &other) const;
@@ -67,7 +69,7 @@ public:
     void print() const;
 
 private:
-    QFileInfo * fileInfo;
+    QFileInfo fileInfo;
     //QString path;
     //QString filename;
     bool loopEnabled;
@@ -75,6 +77,7 @@ private:
     int endTime;
     int fadeInDuration;
     int fadeOutDuration;
+    bool showFilename;
     //TagLib::FileRef *fileRef;
     QString title;
     QString artist;
