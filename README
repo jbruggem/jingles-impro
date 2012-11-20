@@ -3,9 +3,12 @@
 
 This project needs:
 - g++
-- libvlc-dev
+- libgstreamer0.10-dev
 - libqt4-dev
-- a "res" (as in "resources") subdirectory with two audio files named "one.mp3" and "two.mp3"
+
+Temporarly, put the files you want to load in 'filestoload.txt'. Syntax is the following:
+file path,shouldLoop,start,end (or -1),0,0,showFileName
+
 
 To generate the directory structure and the makefiles for the build:
 	$ qmake
