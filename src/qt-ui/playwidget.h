@@ -24,9 +24,12 @@ class PlayWidget : public QWidget {
 		int rowSize;
 		int currentRow;
 		int currentColumn;
+        QList<QString> shortcutKeys;
 		QGridLayout *layout;
 		QList<PlayWidgetEntry *> entryList;
         UiController * controller;
+
+        QString const * getKey(int i);
 };
 
 #endif

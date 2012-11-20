@@ -11,6 +11,8 @@
 #include "QsLog.h"
 #include "track.h"
 #include "playwidgetentrycontroller.h"
+#include "QShortcut"
+
 
 class PlayWidgetEntry : public QWidget {
 
@@ -18,7 +20,7 @@ class PlayWidgetEntry : public QWidget {
 
 	public:
 		// PlayWidgetEntry(const QString &, QWidget * = 0);
-        PlayWidgetEntry(PlayWidgetEntryController * c,Track &, QWidget * = 0);
+        PlayWidgetEntry(PlayWidgetEntryController * c,Track &, QWidget *, QString const & shortcutKey);
 
 public slots:
       void trackInfosUpdated();
@@ -35,6 +37,7 @@ public slots:
         QPushButton *stopButton;
         Track *track;
         PlayWidgetEntryController * controller;
+        QShortcut * shortcut;
 
 };
 

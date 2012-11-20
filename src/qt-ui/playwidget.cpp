@@ -11,6 +11,16 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
       controller(controller){
 	QLOG_TRACE() << "PlayWidget::PlayWidget()";
 
+    shortcutKeys.append("a");
+    shortcutKeys.append("z");
+    shortcutKeys.append("e");
+    shortcutKeys.append("q");
+    shortcutKeys.append("s");
+    shortcutKeys.append("d");
+    shortcutKeys.append("w");
+    shortcutKeys.append("x");
+    shortcutKeys.append("c");
+
     // debug layout
 //    QPalette p(palette());
 //    p.setColor(QPalette::Background, Qt::blue);
@@ -37,9 +47,15 @@ void PlayWidget::update(const TrackList *list) {
 	append(list);
 }
 
+QString const * PlayWidget::getKey(int i){
+    if(i >= shortcutKeys.length())
+        return NULL;
+    return &shortcutKeys[i];
+}
+
 void PlayWidget::append(const TrackList *list) {
 	for(int i = 0; i < list->size(); i++) {
-        entryList.append(new PlayWidgetEntry(controller->getPlayWidgetEntryController(),*list->at(i)));
+        entryList.append(new PlayWidgetEntry(controller->getPlayWidgetEntryController(),*list->at(i),this,*getKey(i)));
 		layout->addWidget(entryList.last(), currentRow, currentColumn);
 
 		currentColumn = (currentColumn + 1) % rowSize;
