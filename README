@@ -7,7 +7,15 @@ This project needs:
 - libqt4-dev
 
 Temporarly, put the files you want to load in 'filestoload.txt'. Syntax is the following:
-file path,shouldLoop,start,end (or -1),0,0,showFileName
+file path,shouldLoop,start,end,fadeIn,fadeOut,showFileName,buttonOrList
+
+file path: currently no escaping: files with "," in them will not be properly loaded
+shouldLoop: boolean
+start: time in ms
+end: time in ms or -1 if track should be played to the end
+fadeIn/fadeOut: [not implemented] time in ms
+showFileName: boolean. Should the UI show the filename or the id3 'title' tag?
+buttonOrList: 'b' to show in the buttons, 'p' to show in the list 
 
 
 To generate the directory structure and the makefiles for the build:
