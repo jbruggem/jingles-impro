@@ -17,8 +17,15 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 
 	// initialise mode label and button
 	modeLabel  = new QLabel(tr("Play Mode"));
-	modeButton = new QPushButton(tr("Switch"));
-	connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
+    modeButton = new QPushButton(tr("Switch"));
+    connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
+
+    stopAllButton = new QPushButton(tr("Stop All"));
+    connect(stopAllButton, SIGNAL(clicked()), controller, SLOT(stopAllButtonClicked()));
+
+    stopAllShortcut = new QShortcut(QKeySequence("Ctrl+s"), this);
+    connect(stopAllShortcut,SIGNAL(activated()),controller,SLOT(stopAllButtonClicked()));
+
 
 	// initialise play and edit widgets
     playWidget = new PlayWidget(controller,3);
@@ -31,7 +38,8 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	layout           = new QVBoxLayout;
 	modeButtonLayout = new QHBoxLayout;
 	modeButtonLayout->addStretch();
-	modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
+    modeButtonLayout->addWidget(stopAllButton, 0, Qt::AlignRight);
+    modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
 	layout->addWidget(stackedWidget);
@@ -46,7 +54,7 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 void MainWidget::setWorkspace(Workspace *wsp) {
 	QLOG_TRACE() << "MainWidget::setWorkspace()";
 	this->wsp = wsp;
-	playWidget->update(wsp->getPlaylist());
+    playWidget->update(wsp->getButtonlist(),wsp->getPlaylist());
 	editWidget->update(wsp->getStock());
 }
 

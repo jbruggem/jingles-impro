@@ -26,7 +26,7 @@ class Track : public QObject
     Q_PROPERTY(int fadeOutDuration READ getFadeOutDuration)
 public:
     ~Track(){
-       QLOG_TRACE() << this << " deleting Track"; // << this->path << "|"
+       //QLOG_TRACE() << this << " deleting Track"; // << this->path << "|"
         //             << this->startTime
        //              << "-"
        //              << this->endTime
@@ -50,6 +50,7 @@ public:
      //Track(QObject *parent = 0);
 
 
+     QString getDisplayName() const;
     QString getPath() const;
     QString getFilename() const;
     bool shouldShowFilename() const{return showFilename;}

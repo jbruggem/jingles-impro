@@ -18,6 +18,22 @@
 #include "basicui.h"
 #include "uicontroller.h"
 
+/****
+  Let's start listing coders & helping hands
+
+  devs:
+  Alexandre D'Erman
+  Jehan Bruggeman
+
+  Contributors:
+  Gary Verhaegen
+
+  Testers:
+  Michaël Waumans
+  Nastassia Gumuchdjian
+
+****/
+
 
 int main(int argc, char ** argv){
     QApplication app(argc, argv);
@@ -50,49 +66,36 @@ int main(int argc, char ** argv){
         QLOG_ERROR() << file.errorString();
         return 1;
     }
+
     QLOG_TRACE() << "Loading file " << file.fileName() ;
     QTextStream in(&file);
-    int count=0;
+    int index=0;
     while(!in.atEnd()) {
         QString line = in.readLine();
         QLOG_TRACE() << "Reading line: " << line ;
         QStringList fields = line.split(",");
-        if(fields.size() < 7 ){
+        if(fields.size() < 8 ){
             QLOG_TRACE() << "Line unreadable";
         }else{
-            QLOG_TRACE() << fields[0]
-                         << " | "
-                         << ("true" == fields[1].toLower())
-                         << " | "
-                         << fields[2].toInt()
-                         << " | "
-                         << fields[3].toInt()
-                         << " | "
-                         << fields[4].toInt()
-                         << " | "
-                         << fields[5].toInt()
-                         << " | "
-                         << ("true" == fields[6].toLower());
-
             t = new Track(
-                        fields[0],
-                        ("true" == fields[1].toLower()),
-                        fields[2].toInt(),
-                        fields[3].toInt(),
-                        fields[4].toInt(),
-                        fields[5].toInt(),
-                        ("true" == fields[6].toLower()),
+                        fields[0], // file name
+                        ("true" == fields[1].toLower()), // loop
+                        fields[2].toInt(), // start
+                        fields[3].toInt(), // stop
+                        fields[4].toInt(), // fade in
+                        fields[5].toInt(), // fade out
+                        ("true" == fields[6].toLower()), // showFilename
                         activeWorkspace
                         );
 
-            activeWorkspace->addTrack(t);
-            count++;
+            index = activeWorkspace->addTrack(t);
+            if( ("b" == fields[7].toLower()) ){
+                activeWorkspace->stockToButtons(index);
+            }else{
+                activeWorkspace->stockToList(index);
+            }
         };
     }
-
-    // add some elements of the stocklist to the playlist using the workspace API
-    for(int i=0; i < count; i++)
-        activeWorkspace->stockToList(i);
 
 
     // give the workspace to the media player (or use the controller as a broker between them?)
@@ -102,7 +105,7 @@ int main(int argc, char ** argv){
     // create a "Players" object to deal with controlling the players
     MediaPlayerFactory * mediaPlayerFactory = new GstMediaPlayerFactory();
     Players * players = new Players(mediaPlayerFactory);
-    UiController controller(players);
+    UiController controller(players,activeWorkspace);
 
     BasicUi ui(&controller);
     ui.setWorkspace(activeWorkspace);

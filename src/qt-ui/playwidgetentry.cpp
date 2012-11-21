@@ -1,7 +1,6 @@
 #include "playwidgetentry.h"
-
 // PlayWidgetEntry::PlayWidgetEntry(const QString &title, QWidget *parent)
-PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget *parent)
+PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget *parent, QString const & shortcutKey)
     : QWidget (parent),
       controller(c){
 	QLOG_TRACE() << "PlayWidgetEntry::PlayWidgetEntry()";
@@ -19,6 +18,10 @@ PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget
     connect(playButton,SIGNAL(clicked()),controller,SLOT(playClicked()));
     connect(stopButton,SIGNAL(clicked()),controller,SLOT(stopClicked()));
 
+    if(NULL != shortcutKey){
+        shortcut = new QShortcut(QKeySequence(shortcutKey), this);
+        connect(shortcut,SIGNAL(activated()),controller,SLOT(playClicked()));
+    }
 }
 
 void PlayWidgetEntry::build(){
@@ -39,13 +42,7 @@ void PlayWidgetEntry::build(){
 
 void PlayWidgetEntry::updateTags(){
     //QLOG_TRACE() << "PlayWid(getEntry::update()";
-    QString text;
-    if(track->getTitle()->length() > 0 && !track->shouldShowFilename()){
-        text = (*track->getTitle());
-    }else{
-        text = track->getFilename();
-    }
-    playButton->setText(text);
+    playButton->setText(track->getDisplayName());
 }
 
 

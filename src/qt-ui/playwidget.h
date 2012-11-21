@@ -10,6 +10,15 @@
 #include "QsLog.h"
 #include "playwidgetentry.h"
 #include "tracklist.h"
+#include "tracklistmodel.h"
+
+// See http://www.qtcentre.org/archive/index.php/t-28905.html
+// qstyleoption.h uses "None" and QListView includes it, so we undef None
+// just before the include.
+#ifdef None
+#undef None
+#endif
+#include <QListView>
 
 class PlayWidget : public QWidget {
 
@@ -18,15 +27,22 @@ class PlayWidget : public QWidget {
 	public:
         PlayWidget(UiController *, int, QWidget *parent = 0);
 		void clear();
-		void update(const TrackList *);
-		void append(const TrackList *);
+        void update(const TrackList *buttons, TrackList * list);
 	private:
+        void append(const TrackList *);
 		int rowSize;
 		int currentRow;
 		int currentColumn;
+        TrackList * tracklist;
+        QList<QString> shortcutKeys;
 		QGridLayout *layout;
+        QHBoxLayout *wrapperLayout;
+        QListView * playListWidget;
+        QAbstractListModel * playListWidgetModel;
 		QList<PlayWidgetEntry *> entryList;
         UiController * controller;
+
+        QString const * getKey(int i);
 };
 
 #endif

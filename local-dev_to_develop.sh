@@ -1,3 +1,4 @@
+#!/bin/bash
 git checkout develop
 read -p "ok?"
 git pull origin develop

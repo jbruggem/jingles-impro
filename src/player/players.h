@@ -42,6 +42,7 @@ private:
     QMap<int,IMediaPlayer *> players;
     MediaPlayerFactory * playerFactory;
     double playerIdCounter;
+    void ensureTrackExists(Track *t);
 signals:
 
     
