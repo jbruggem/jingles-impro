@@ -24,6 +24,7 @@ public slots:
 private:
     Players * players;
     Workspace * workspace;
+    IMediaPlayer * currentPlaylistPlayer;
 };
 
 #endif // UICONTROLLER_H

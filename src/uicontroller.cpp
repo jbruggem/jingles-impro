@@ -3,7 +3,8 @@
 UiController::UiController(Players * p,Workspace * wsp,QObject *parent) :
     QObject(parent),
     players(p),
-    workspace(wsp)
+    workspace(wsp),
+    currentPlaylistPlayer(NULL)
 {
 }
 
@@ -18,9 +19,16 @@ void UiController::load(Track * t){
 
 void UiController::playFromPlaylist(QModelIndex ind){
     QLOG_TRACE() << "[UiController] playFromPlaylist";
+
+    if(currentPlaylistPlayer)
+        currentPlaylistPlayer->stop();
+
     Track * t = workspace->getPlaylist()->at(ind.row());
-    if(t)
-        players->getAvailablePlayer(t)->play();
+    if(t){
+        currentPlaylistPlayer = players->getAvailablePlayer(t);
+        if(currentPlaylistPlayer)
+            currentPlaylistPlayer->play();
+    }
 }
 
 void UiController::stopAllButtonClicked(){
