@@ -21,7 +21,7 @@ HEADERS += \
     src/workspace/trackplaylist.h \
     src/workspace/tracklist.h \
     src/workspace/track.h \
-    src/workspace/trackcollection.h \
+    #src/workspace/trackcollection.h \
     src/player/mediaplayerfactory.h \
     src/common.h \
     src/maintests.h \
@@ -41,7 +41,8 @@ HEADERS += \
     src/qt-ui/autoscrollarea.h \
     src/history.h \
     src/playwidgetentrycontroller.h \
-    src/uicontroller.h
+    src/uicontroller.h \
+    src/workspace/tracklistmodel.h
 
 SOURCES += \
     src/externals/qslog/QsDebugOutput.cpp \
@@ -52,7 +53,7 @@ SOURCES += \
     src/workspace/tracklist.cpp \
     src/workspace/trackplaylist.cpp \
     src/workspace/track.cpp \
-    src/workspace/trackcollection.cpp \
+    #src/workspace/trackcollection.cpp \
     src/player/players.cpp \
     src/player/gst/gstplayer.cpp \
     src/player/gst/gstmediaplayerfactory.cpp \
@@ -69,7 +70,8 @@ SOURCES += \
     src/qt-ui/autoscrollarea.cpp \
     src/history.cpp \
     src/playwidgetentrycontroller.cpp \
-    src/uicontroller.cpp
+    src/uicontroller.cpp \
+    src/workspace/tracklistmodel.cpp
 
 
 CONFIG(debug, debug|release) {

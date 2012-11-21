@@ -7,13 +7,11 @@
 #include "track.h"
 #include <QAbstractListModel>
 
-class TrackList : public  QAbstractListModel, public QList<Track *> {
+class TrackList : public  QObject, public QList<Track *> {
 
 	Q_OBJECT
 
-	public:
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-        int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    public:
 
         TrackList(QObject *parent = 0);
 		friend std::ostream& operator<< (std::ostream &out, const TrackList &list);

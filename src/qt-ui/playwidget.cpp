@@ -60,8 +60,11 @@ void PlayWidget::clear() {
 void PlayWidget::update(const TrackList *buttons, TrackList * list) {
 	clear();
     append(buttons);
+
     tracklist = list;
-    playListWidget->setModel(tracklist);
+
+    playListWidgetModel = new TrackListModel(tracklist,this);
+    playListWidget->setModel(playListWidgetModel);
 
     for(int i=0; i< tracklist->length(); i++)
         controller->load(tracklist->at(i));

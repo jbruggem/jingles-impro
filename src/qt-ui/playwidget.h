@@ -10,6 +10,7 @@
 #include "QsLog.h"
 #include "playwidgetentry.h"
 #include "tracklist.h"
+#include "tracklistmodel.h"
 
 // See http://www.qtcentre.org/archive/index.php/t-28905.html
 // qstyleoption.h uses "None" and QListView includes it, so we undef None
@@ -37,6 +38,7 @@ class PlayWidget : public QWidget {
 		QGridLayout *layout;
         QHBoxLayout *wrapperLayout;
         QListView * playListWidget;
+        QAbstractListModel * playListWidgetModel;
 		QList<PlayWidgetEntry *> entryList;
         UiController * controller;
 
