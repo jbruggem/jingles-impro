@@ -66,6 +66,14 @@ Track::Track(const QString &url,QObject *parent) :
 void Track::extractFilename(const QString &url){
     fileInfo = QFileInfo(url);
 }
+QString Track::getDisplayName() const{
+    if(this->getTitle()->length() > 0 && !this->shouldShowFilename()){
+        return title;
+    }else{
+        return getFilename();
+    }
+}
+
 
 QString Track::getPath() const{
     return fileInfo.absoluteFilePath();

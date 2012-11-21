@@ -50,6 +50,7 @@ public:
      //Track(QObject *parent = 0);
 
 
+     QString getDisplayName() const;
     QString getPath() const;
     QString getFilename() const;
     bool shouldShowFilename() const{return showFilename;}
