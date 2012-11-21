@@ -14,7 +14,9 @@ void pad_added_handler (GstElement *src, GstPad *new_pad, AdvGstPlayer *data);
 class AdvGstPlayer: public GstPlayer{
 
 public:
-    AdvGstPlayer(QObject *parent = 0):GstPlayer(parent){
+    AdvGstPlayer(QObject *parent = 0):
+        GstPlayer(parent)
+    {
         QLOG_TRACE() << "AdvGstPlayer CREATE";
         gst_controller_init(NULL,NULL);
     }
@@ -22,7 +24,8 @@ public:
     virtual ~AdvGstPlayer(){
         QLOG_TRACE() << "AdvGstPlayer DELETE";
     }
-    GstElement * elem2;
+    GstElement * audioconvert;
+    GstElement * volume;
 protected:
     GstElement * decodebin;
     GstElement * audiobin;
@@ -30,7 +33,8 @@ protected:
     GstPad  * pad1;
     GstPad * pad2;
     GstController * ctrl;
-    GValue vol;
+    GValue * vol;
+    GValue theVol;
 
     virtual void setUri(const gchar * uri){
         g_object_set(G_OBJECT(decodebin), "uri", uri, NULL);
@@ -43,18 +47,21 @@ protected:
 
         decodebin = gst_element_factory_make("uridecodebin",NULL);
 
-        audiobin = gst_element_factory_make("autoaudiosink",NULL);
 
         //elem1 = gst_element_factory_make("queue2",NULL);
-        elem2 = gst_element_factory_make("audioconvert",NULL);
+        audioconvert = gst_element_factory_make("audioconvert",NULL);
+        volume = gst_element_factory_make("volume",NULL);
+
+        audiobin = gst_element_factory_make("autoaudiosink",NULL);
 
 
         gst_bin_add(GST_BIN(pipeline), decodebin);
         //gst_bin_add(GST_BIN(pipeline), elem1);
-        gst_bin_add(GST_BIN(pipeline), elem2);
+        gst_bin_add(GST_BIN(pipeline), audioconvert);
+        gst_bin_add(GST_BIN(pipeline), volume);
         gst_bin_add(GST_BIN(pipeline), audiobin);
 
-        gst_element_link(elem2, audiobin);
+        gst_element_link_many(volume, audioconvert, audiobin, NULL);
 
         /* Connect to the pad-added signal */
         g_signal_connect (decodebin, "pad-added", G_CALLBACK (pad_added_handler), this);
@@ -73,32 +80,30 @@ protected:
 
         gst_element_add_pad(bin,pad2);*/
 
-/*
-        if(!(ctrl = gst_controller_new(G_OBJECT(pipeline),"volume",NULL))){
+        vol = &theVol;
+        g_value_init(vol,G_TYPE_DOUBLE);
+       /* g_value_set_double(vol,0.01);
+        g_object_set_property(G_OBJECT(volume),"volume",vol);*/
+
+        if(!(ctrl = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
                QLOG_ERROR() << "Can't control";
-               exit(0);
+               return;
         }
+        QLOG_TRACE() << "I CAN CONTROL";
 
-        gst_controller_set_interpolation_mode(ctrl,"volume",GST_INTERPOLATE_LINEAR);*/
+        gst_controller_set_interpolation_mode(ctrl,"volume",GST_INTERPOLATE_CUBIC);
 
-        //vol;
-/*
-        g_value_init(&vol,G_TYPE_DOUBLE);
 
-        g_value_set_double(&vol,0.0);
-        gst_controller_set(ctrl,"volume",0*GST_SECOND,&vol);
+        g_value_set_double(vol,0.0);
+        gst_controller_set(ctrl,"volume",30*GST_SECOND,vol);
 
-        g_value_set_double(&vol,1.0);
-        gst_controller_set(ctrl,"volume",5*GST_SECOND,&vol);
+        g_value_set_double(vol,1.0);
+        gst_controller_set(ctrl,"volume",31*GST_SECOND,vol);
 
-        g_value_set_double(&vol,220.0);
-        gst_controller_set(ctrl,"freq",0*GST_SECOND,&vol);
 
-        g_value_set_double(&vol,3520.0);
-        gst_controller_set(ctrl,"freq",3*GST_SECOND,&vol);
 
-        g_value_set_double(&vol,440.0);
-        gst_controller_set(ctrl,"freq",6*GST_SECOND,&vol);*/
+
+//*/
 
 
         //gst_element_link(pipeline,bin);
@@ -106,7 +111,7 @@ protected:
 };
 
 void pad_added_handler (GstElement *src, GstPad *new_pad, AdvGstPlayer *data) {
-  GstPad *sink_pad = gst_element_get_static_pad (data->elem2, "sink");
+  GstPad *sink_pad = gst_element_get_static_pad (data->volume, "sink");
   GstPadLinkReturn ret;
   GstCaps *new_pad_caps = NULL;
   GstStructure *new_pad_struct = NULL;
@@ -161,7 +166,7 @@ void testGstreamer(){
 
     player->play();
 
-    sleep(5);
+    sleep(10);
 
     player->stop();
 
