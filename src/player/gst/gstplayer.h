@@ -53,6 +53,7 @@ private:
     bool loaded;
     bool error;
     GstElement *pipeline;
+    QString gstObjectName;
     void parseMessage(GstMessage *msg);
 
 

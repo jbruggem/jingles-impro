@@ -5,14 +5,15 @@ GstPlayer::GstPlayer(QObject *parent):
     playing(false),
     loaded(false),
     error(false),
-    pipeline(0)
+    pipeline(0),
+    gstObjectName("player")
 {
     GstPlayer::ensureInitGst();
     connect(this,SIGNAL(requestPause()),this,SLOT(doPause()));
     connect(this,SIGNAL(requestPlay()),this,SLOT(doPlay()));
     connect(this,SIGNAL(requestStop()),this,SLOT(doStop()));
     //watcher = NULL;
-    pipeline = gst_element_factory_make("playbin2", "player");
+    pipeline = gst_element_factory_make("playbin2", gstObjectName);
 }
 
 /*
@@ -239,7 +240,7 @@ void GstPlayer::parseMessage(GstMessage *msg){
         GstState old_state, new_state;
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
-        QString objectNamePlayer = "player";
+        QString objectNamePlayer = gstObjectName;
         if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
             QLOG_TRACE() << "[GST] "<< this << /*this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
             switch(new_state){
