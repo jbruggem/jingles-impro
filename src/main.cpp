@@ -34,6 +34,7 @@
 
 ****/
 
+#include "maintests.h"
 
 int main(int argc, char ** argv){
     QApplication app(argc, argv);
@@ -49,6 +50,10 @@ int main(int argc, char ** argv){
 
 
     QLOG_TRACE() << "Logging initiated";
+
+
+    testGstreamer();
+    return 0;
 
 
     // manually set some file paths for scaffolding
@@ -120,3 +125,5 @@ int main(int argc, char ** argv){
 
     return 0;
 }
+
+

@@ -16,9 +16,10 @@ class GstPlayer : public IMediaPlayer
     Q_OBJECT
 public:
     GstPlayer(QObject *parent = 0);
-    ~GstPlayer(){
+    virtual ~GstPlayer(){
+        QLOG_TRACE() << "GstPlayer DELETE";
         if(pipeline)
-            delete pipeline;
+            gst_object_unref(pipeline);
     }
 
     //void run();
@@ -42,19 +43,23 @@ public:
 signals:
         void stateChanged();
 
+protected:
+        virtual void buildPipeline();
+        virtual void setUri(const gchar * uri);
+        Track * track;
+        bool playing;
+        bool loaded;
+        bool error;
+        GstElement *pipeline;
+        QString gstObjectName;
 
 private:
 
 
     // IMediaPlayerWatcher * watcher;
-    Track * track;
     //QString uri;
-    bool playing;
-    bool loaded;
-    bool error;
-    GstElement *pipeline;
-    QString gstObjectName;
     void parseMessage(GstMessage *msg);
+
 
 
      // this does not belong to the player I think. Move to a GstEngine class?

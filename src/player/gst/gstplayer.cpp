@@ -13,7 +13,11 @@ GstPlayer::GstPlayer(QObject *parent):
     connect(this,SIGNAL(requestPlay()),this,SLOT(doPlay()));
     connect(this,SIGNAL(requestStop()),this,SLOT(doStop()));
     //watcher = NULL;
-    pipeline = gst_element_factory_make("playbin2", gstObjectName);
+}
+
+void GstPlayer::buildPipeline(){
+    QLOG_TRACE() << "GstPlayer::buildPipeline";
+    pipeline = gst_element_factory_make("playbin2", gstObjectName.toUtf8().data());
 }
 
 /*
@@ -32,7 +36,12 @@ void GstPlayer::setTrack(Track * track){
 }
 
 
+void GstPlayer::setUri(const gchar * uri){
+    g_object_set(G_OBJECT(pipeline), "uri", uri, NULL);
+}
+
 void GstPlayer::load(){
+    this->buildPipeline();
     QLOG_TRACE() << this << "GstPlayer LOAD";
     GstBus *bus;
 
@@ -42,7 +51,7 @@ void GstPlayer::load(){
     const gchar * uri = byteArray.data();
 
     if (uri)
-        g_object_set(G_OBJECT(pipeline), "uri", uri, NULL);
+        this->setUri(uri);
 
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, GstPlayer::BusCallAsync, this);
