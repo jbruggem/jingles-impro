@@ -1,8 +1,8 @@
 #include "tracklistmodel.h"
 
 TrackListModel::TrackListModel(TrackList * list,QObject *parent) :
-    m_list(list),
-    QAbstractListModel(parent)
+    QAbstractListModel(parent),
+    m_list(list)
 {
 }
 
@@ -16,5 +16,7 @@ QVariant TrackListModel::data(const QModelIndex &index, int role)  const{
 }
 
 int TrackListModel::rowCount(const QModelIndex &parent) const{
-    return m_list->length();
+    if(!parent.isValid())
+        return m_list->length();
+    else return 0;
 }
