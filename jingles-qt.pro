@@ -96,6 +96,6 @@ CONFIG(release, debug|release) {
 unix:!macx:!symbian: LIBS += -lX11
 
 unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += gstreamer-0.10 gstreamer-plugins-base-0.10 gstreamer-base-0.10 gstreamer-interfaces-0.10
+unix: PKGCONFIG += gstreamer-0.10
 
 QMAKE_CXXFLAGS += -std=gnu++0x
