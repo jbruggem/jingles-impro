@@ -50,7 +50,6 @@ int main(int argc, char ** argv){
 
     QLOG_TRACE() << "Logging initiated";
 
-
     // manually set some file paths for scaffolding
     // load it in the workspace using the workspace API
     // with the appropriate settings for all the Track properties
@@ -110,7 +109,6 @@ int main(int argc, char ** argv){
     BasicUi ui(&controller);
     ui.setWorkspace(activeWorkspace);
 
-//    TestUi ui;
     ui.show();
     app.exec();
 
@@ -120,3 +118,5 @@ int main(int argc, char ** argv){
 
     return 0;
 }
+
+

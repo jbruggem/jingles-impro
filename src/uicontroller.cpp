@@ -17,18 +17,43 @@ void UiController::load(Track * t){
     players->createPlayer(t);
 }
 
+long  UiController::currentPlayerEndingTime(){
+    if(currentPlaylistPlayer){
+        return currentPlaylistPlayer->getEndingTime();
+    }
+    return -1;
+}
+
+void UiController::pausePlaylist(){
+    if(currentPlaylistPlayer){
+        if(currentPlaylistPlayer->isPlaying()){
+            currentPlaylistPlayer->pause();
+        }else
+            currentPlaylistPlayer->play();
+    }
+}
+
 void UiController::playFromPlaylist(QModelIndex ind){
     QLOG_TRACE() << "[UiController] playFromPlaylist";
 
-    if(currentPlaylistPlayer)
+    if(currentPlaylistPlayer){
+        disconnect(currentPlaylistPlayer,SIGNAL(updatePosition(long)),this,SLOT(currPlayerPosition(long)));
         currentPlaylistPlayer->stop();
+    }
 
     Track * t = workspace->getPlaylist()->at(ind.row());
     if(t){
         currentPlaylistPlayer = players->getAvailablePlayer(t);
-        if(currentPlaylistPlayer)
+
+        if(currentPlaylistPlayer){
+            connect(currentPlaylistPlayer,SIGNAL(updatePosition(long)),this,SLOT(currPlayerPosition(long)));
             currentPlaylistPlayer->play();
+        }
     }
+}
+
+void UiController::currPlayerPosition(long position){
+    this->updatePlayerPosition(position);
 }
 
 void UiController::stopAllButtonClicked(){

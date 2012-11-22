@@ -19,9 +19,11 @@ class IMediaPlayer: public QObject{
 		virtual bool isPlaying() = 0;
         virtual bool isLoaded() = 0;
         virtual bool hasError() = 0;
+        virtual long getEndingTime() = 0;
         //virtual void print() = 0;
     signals:
          virtual void stateChanged() = 0;
+         virtual void updatePosition(long updatePosition) = 0; // in millisec
 
 	private:
 		// MediaPlayerInterface& operator=(const MediaPlayerInterface&);
