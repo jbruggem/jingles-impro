@@ -4,6 +4,8 @@
 
 #include <QWidget>
 #include <QList>
+#include <QLabel>
+#include <QPushButton>
 #include "uicontroller.h"
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -28,6 +30,10 @@ class PlayWidget : public QWidget {
         PlayWidget(UiController *, int, QWidget *parent = 0);
 		void clear();
         void update(const TrackList *buttons, TrackList * list);
+        QString prettyTime(long duration);
+
+    public slots:
+        void updatePlayerPosition(long position);
 	private:
         void append(const TrackList *);
 		int rowSize;
@@ -36,8 +42,10 @@ class PlayWidget : public QWidget {
         TrackList * tracklist;
         QList<QString> shortcutKeys;
 		QGridLayout *layout;
-        QHBoxLayout *wrapperLayout;
+        QGridLayout *wrapperLayout;
         QListView * playListWidget;
+        QLabel * currentPlayingTime;
+        QPushButton * pauseButton;
         QAbstractListModel * playListWidgetModel;
 		QList<PlayWidgetEntry *> entryList;
         UiController * controller;

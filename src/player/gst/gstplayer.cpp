@@ -6,6 +6,10 @@ GstPlayer::GstPlayer(QObject *parent):
     loaded(false),
     error(false),
     playingRequested(false),
+    mustSeek(true),
+    duration(-1),
+    position(0),
+    formatTime(GST_FORMAT_TIME),
     pipeline(0),
     gstObjectName("player")
 {
@@ -15,6 +19,10 @@ GstPlayer::GstPlayer(QObject *parent):
     connect(this,SIGNAL(requestStop()),this,SLOT(doStop()));
     //watcher = NULL;
     theVol = new GValue();
+    g_value_init(theVol,G_TYPE_DOUBLE);
+
+    positionQueryTimer = new QTimer(this);
+
 }
 
 void GstPlayer::buildPipeline(){
@@ -41,26 +49,28 @@ void GstPlayer::buildPipeline(){
     double volumeMax=0.5;
 
 
-    g_value_init(theVol,G_TYPE_DOUBLE);
+    //g_value_init(theVol,G_TYPE_DOUBLE);
     g_value_set_double(theVol,volumeMax);
     g_object_set_property(G_OBJECT(volume),"volume",theVol);
 
     //fade
     long fadeIn,fadeOut, minFade = 500;
     fadeIn = this->track->getFadeInDuration();
-    if(fadeIn < minFade && this->track->getStartTime() > 0)
+    if(fadeIn <= 0 && this->track->getStartTime() > 0)
         fadeIn = minFade;
 
     fadeOut = this->track->getFadeOutDuration();
-    if(fadeOut < minFade && this->track->getEndTime() > 0)
+    if(fadeOut <= 0 && this->track->getEndTime() > 0)
         fadeOut = minFade;
 
-    this->setFade(fadeInController,
+    if(fadeIn > 10)
+        this->setFade(fadeInController,
                   this->track->getStartTime(),
                   this->track->getStartTime()+fadeIn,
                   0.0,volumeMax);
 
-    if(this->track->getEndTime() > 0)
+    if(fadeOut > 10)
+        if(this->track->getEndTime() > 0)
         this->setFade(fadeOutController,
                   this->track->getEndTime()-fadeOut,
                   this->track->getEndTime(),
@@ -72,7 +82,7 @@ void GstPlayer::buildPipeline(){
 // start and end should be expressed in milliseconds
 void GstPlayer::setFade(GstController * & controller,long start,long end,double from,double to){
     QLOG_TRACE() << this << "GstPlayer::setFade " << start << " ->" << end << ", "<< from << " -> " << to;
-    g_value_init(theVol,G_TYPE_DOUBLE);
+    //g_value_init(theVol,G_TYPE_DOUBLE);
 
     if(!(controller = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
            QLOG_ERROR() << "Can't get a controller for fade purposes";
@@ -100,6 +110,21 @@ void GstPlayer::setUri(const gchar * uri){
     g_object_set(G_OBJECT(decodebin), "uri", uri, NULL);
 }
 
+long GstPlayer::getEndingTime(){
+    long ret = track->getEndTime();
+    long dur = duration/GST_MSECOND;
+
+    if(dur >= 0){
+        if(track->getEndTime() >= 0)
+            ret = qMin(dur,track->getEndTime());
+        else
+            ret =  dur;
+    }
+
+    //QLOG_TRACE() << dur << track->getEndTime() << "ret" << ret;
+    return ret;
+}
+
 void GstPlayer::load(){
     this->buildPipeline();
     QLOG_TRACE() << this << "GstPlayer LOAD";
@@ -116,8 +141,8 @@ void GstPlayer::load(){
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, GstPlayer::BusCallAsync, this);
     gst_bus_set_sync_handler(bus, GstPlayer::BusCallSync, this);
-
     gst_object_unref(bus);
+
 
     QLOG_TRACE() << "Load finished";
     loaded = true;
@@ -143,27 +168,11 @@ int GstPlayer::play()
 
     playingRequested = false;
 
-    double start =  ((double)track->getStartTime())*GST_MSECOND;
-    double end = ((double)track->getEndTime())*GST_MSECOND;
+    if(mustSeek)
+        this->seekStart();
 
-    bool ok;
-    if(0 < end){
-        QLOG_TRACE() << "Looping from: "<< start << " to " << end;
-        ok = gst_element_seek(pipeline,1,GST_FORMAT_TIME,GST_SEEK_FLAG_FLUSH,
-                               GST_SEEK_TYPE_SET,start,
-                               GST_SEEK_TYPE_SET, end );
-    }else{
-        QLOG_TRACE() << "Moving to position: "<< start;
-        ok = gst_element_seek_simple(pipeline,GST_FORMAT_TIME,GST_SEEK_FLAG_FLUSH,start);
-    }
-    QLOG_TRACE() << "Moving result: "<< (ok?"ok":"failed");
-
-    gint64 position = 0;
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_position(pipeline,&format,&position);
-
-    QLOG_TRACE() << "Position before playing is: "<< position;
     GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+
     if(GST_STATE_CHANGE_SUCCESS == ret || GST_STATE_CHANGE_NO_PREROLL == ret ){
          QLOG_TRACE() << "Set to play successful.";
     }else if(GST_STATE_CHANGE_ASYNC == ret){ // this is what usually happens when file exists and is being loaded.
@@ -172,11 +181,18 @@ int GstPlayer::play()
         QLOG_TRACE() << "Failed to change state to PLAY.";
     }
 
+    // start querying position:
+    positionQueryTimer->setInterval(500);
+    positionQueryTimer->setSingleShot(false);
+    connect(positionQueryTimer,SIGNAL(timeout()),this,SLOT(doUpdatePosition()));
+    positionQueryTimer->start();
+
     return 0;
 }
 
 void GstPlayer::pause()
 {
+    positionQueryTimer->stop();
     QLOG_TRACE() << this << "PAUSE";
 
     GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
@@ -203,17 +219,40 @@ void GstPlayer::doPlay(){
     this->play();
 }
 
+void GstPlayer::doUpdatePosition(){
+    gint64 pos;
+    if(gst_element_query_position(pipeline,&formatTime,&pos))
+        position = pos;
+
+    //int min = position/GST_SECOND/60;
+    //int sec = position/GST_SECOND - min*60;
+    //QLOG_TRACE() << this << "position:" << min << "m" << sec << "s";
+
+    this->updatePosition(position/GST_MSECOND);
+}
 
 void GstPlayer::stop()
 {
-    QLOG_TRACE() << this << "STOP";
-
     this->requestPause();
+    this->seekStart();
+}
 
-    gint64 position = 0;
-    GstFormat format = GST_FORMAT_TIME;
+void GstPlayer::seekStart(){
+    double start =  ((double)track->getStartTime())*GST_MSECOND;
+    double end = ((double)track->getEndTime())*GST_MSECOND;
 
-    gst_element_query_position(pipeline,&format,&position);
+    bool ok;
+    if(0 < end){
+        QLOG_TRACE() << "Playing from: "<< start << " to " << end;
+        ok = gst_element_seek(pipeline,1,GST_FORMAT_TIME,GST_SEEK_FLAG_FLUSH,
+                               GST_SEEK_TYPE_SET,start,
+                               GST_SEEK_TYPE_SET, end );
+    }else{
+        QLOG_TRACE() << "Moving to position: "<< start;
+        ok = gst_element_seek_simple(pipeline,GST_FORMAT_TIME,GST_SEEK_FLAG_FLUSH,start);
+    }
+    QLOG_TRACE() << "Moving result: "<< (ok?"ok":"failed");
+    mustSeek = !ok;
 }
 
 void GstPlayer::ensureInitGst(){
@@ -265,53 +304,73 @@ void handleGstTag(const GstTagList * list, const gchar * tag, void * user_data_t
     }
 }
 
+
+
+
+void GstPlayer::handleStateChangeMessage(GstMessage *msg){
+    GstState old_state, new_state;
+
+    gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
+    QString objectNamePlayer = gstObjectName;
+    if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
+
+        if(new_state == GST_STATE_PLAYING || old_state == GST_STATE_PLAYING){
+            QLOG_TRACE() << "[GST] "<< this <<
+                            gst_element_state_get_name (old_state) <<
+                            "->"<<  gst_element_state_get_name (new_state);
+        }
+
+        switch(new_state){
+            case GST_STATE_VOID_PENDING:
+                loaded=false;
+                playing=false;
+                break;
+            case GST_STATE_READY:
+                loaded=true;
+                playing=false;
+                break;
+            case GST_STATE_NULL:
+                loaded=false;
+                playing=false;
+                break;
+            case GST_STATE_PAUSED:
+                loaded=true;
+                playing=false;
+                if(playingRequested){
+                    QLOG_TRACE() << "Queued request. Ask to play!";
+                    playingRequested = false;
+                    this->requestPlay();
+                }
+                break;
+            case GST_STATE_PLAYING:
+                loaded=true;
+                playing=true;
+                break;
+        }
+        //QLOG_TRACE() << "GstPlayer: emit state change";
+        this->stateChanged();
+    }
+}
+
+void GstPlayer::queryDuration(){
+    gint64 len;
+    if(gst_element_query_duration(pipeline,&formatTime,&len))
+        duration = len;
+
+    int min = duration/GST_SECOND/60;
+    int sec = duration/GST_SECOND - min*60;
+    QLOG_TRACE() << this << "duration:" << min << "m" << sec << "s";
+}
+
 void GstPlayer::parseMessage(GstMessage *msg){
     switch (GST_MESSAGE_TYPE(msg)) {
     case GST_MESSAGE_STATE_CHANGED: {
-        GstState old_state, new_state;
-
-        gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
-        QString objectNamePlayer = gstObjectName;
-        if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
-
-            if(new_state == GST_STATE_PLAYING || old_state == GST_STATE_PLAYING){
-                QLOG_TRACE() << "[GST] "<< this <<
-                                gst_element_state_get_name (old_state) <<
-                                "->"<<  gst_element_state_get_name (new_state);
-            }
-
-            switch(new_state){
-                case GST_STATE_VOID_PENDING:
-                    loaded=false;
-                    playing=false;
-                    break;
-                case GST_STATE_READY:
-                    loaded=true;
-                    playing=false;
-                    break;
-                case GST_STATE_NULL:
-                    loaded=false;
-                    playing=false;
-                    break;
-                case GST_STATE_PAUSED:
-                    loaded=true;
-                    playing=false;
-                    if(playingRequested){
-                        QLOG_TRACE() << "Queued request. Ask to play!";
-                        playingRequested = false;
-                        this->requestPlay();
-                    }
-                    break;
-                case GST_STATE_PLAYING:
-                    loaded=true;
-                    playing=true;
-                    break;
-            }
-            //QLOG_TRACE() << "GstPlayer: emit state change";
-            this->stateChanged();
-        }
+        this->handleStateChangeMessage(msg);
         break;
     }
+    case GST_MESSAGE_DURATION:
+        this->queryDuration();
+        break;
     case GST_MESSAGE_TAG: {
         //QLOG_TRACE() << "[GST]" << GST_MESSAGE_TYPE_NAME(msg);
         GstTagList * tagList;

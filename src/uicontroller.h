@@ -14,11 +14,15 @@ public:
     PlayWidgetEntryController * getPlayWidgetEntryController();
 
     void load(Track *);
+    long currentPlayerEndingTime();
     
 signals:
+    void updatePlayerPosition(long position);
     
 public slots:
+    void pausePlaylist();
     void stopAllButtonClicked();
+    void currPlayerPosition(long position);
     void playFromPlaylist(QModelIndex);
 
 private:

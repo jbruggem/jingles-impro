@@ -28,26 +28,47 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
 //    setAutoFillBackground(true);
 
 
-    wrapperLayout = new QHBoxLayout(this);
+    wrapperLayout = new QGridLayout(this);
     layout = new QGridLayout(this);
-    wrapperLayout->addLayout(layout, 0);
+    wrapperLayout->addLayout(layout, 0,0);
 
     playListWidget = new QListView(this);
+    currentPlayingTime = new QLabel("",this);
+    currentPlayingTime->setAlignment(Qt::AlignHCenter);
+    pauseButton = new QPushButton("play/pause",this);
+
+
+    QHBoxLayout * playlistControlLayout = new QHBoxLayout(this);
+    playlistControlLayout->addWidget(pauseButton);
+    playlistControlLayout->addWidget(currentPlayingTime);
+
     QVBoxLayout * playlistLayout = new QVBoxLayout(this);
     playlistLayout->addWidget(playListWidget);
+    playlistLayout->addLayout(playlistControlLayout);
 
     //connect(playListWidget,SIGNAL(clicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
     connect(playListWidget,SIGNAL(doubleClicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
+    connect(pauseButton,SIGNAL(clicked()),controller,SLOT(pausePlaylist()));
+    connect(controller,SIGNAL(updatePlayerPosition(long)),this,SLOT(updatePlayerPosition(long)));
 
+    wrapperLayout->addLayout(playlistLayout, 0,1);
 
-
-    wrapperLayout->addLayout(playlistLayout, 0);
 
     //QVBoxLayout *layoutWithStretch = new QVBoxLayout;
     //layoutWithStretch->addLayout(layout);
     //layoutWithStretch->addStretch();
 
     setLayout(wrapperLayout);
+}
+
+void PlayWidget::updatePlayerPosition(long position){
+    currentPlayingTime->setText(prettyTime(position)+" / "+prettyTime(controller->currentPlayerEndingTime()));
+}
+
+QString PlayWidget::prettyTime(long duration){
+    int min = duration/1000/60;
+    int sec = duration/1000- min*60;
+    return (min<10?"0":"")+QString::number(min)+":"+(sec<10?"0":"")+QString::number(sec);
 }
 
 void PlayWidget::clear() {

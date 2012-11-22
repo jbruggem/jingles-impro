@@ -2,6 +2,7 @@
 #define GSTPLAYER_H
 
 #include <QThread>
+#include <QTimer>
 #include "QsLog.h"
 #include "QsLogDest.h"
 #include <gst/gst.h>
@@ -41,6 +42,7 @@ public:
     int play();
     void pause();
     void stop();
+    long getEndingTime();
 
     // TODO
     Track * getTrack();
@@ -56,6 +58,7 @@ signals:
         void stateChanged();
 
 private:
+        void seekStart();
         void buildPipeline();
         void setUri(const gchar * uri);
         void setFade(GstController * & controller,long start,long end,double from,double to);
@@ -64,6 +67,10 @@ private:
         bool loaded;
         bool error;
         bool playingRequested;
+        bool mustSeek;
+        long duration;
+        long position;
+        GstFormat formatTime;
         GstElement *pipeline;
         QString gstObjectName;
         GstElement * decodebin;
@@ -73,16 +80,20 @@ private:
         GstElement * audioconvert;
         GstElement * volume;
         GValue * theVol;
+        QTimer * positionQueryTimer;
 
     // IMediaPlayerWatcher * watcher;
     //QString uri;
     void parseMessage(GstMessage *msg);
+    void handleStateChangeMessage(GstMessage *msg);
+    void queryDuration();
 
 
 
      // this does not belong to the player I think. Move to a GstEngine class?
     static bool gstIsInit;
     static void ensureInitGst();
+    static gboolean runGetPosition(GstPlayer * player);
     static GstBusSyncReply BusCallSync(GstBus *bus, GstMessage *msg, void *user_data);
     static gboolean BusCallAsync(GstBus *bus, GstMessage *msg, void *user_data);
     static void handleAddedPad(GstElement * upstream, GstPad * upstreamNewPad, GstElement * downstream);
@@ -91,11 +102,13 @@ signals:
         void requestPause();
         void requestStop();
         void requestPlay();
+        void updatePosition(long position);
 
 private slots:
         void doPause();
         void doStop();
         void doPlay();
+        void doUpdatePosition();
 
 
 };
