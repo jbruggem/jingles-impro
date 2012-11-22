@@ -8,7 +8,7 @@
 #include "player/gst/gstplayer.h"
 
 class AdvGstPlayer;
-void pad_added_handler (GstElement *src, GstPad *new_pad, AdvGstPlayer *data);
+void pad_added_handler (GstElement *src, GstPad *new_pad, GstElement *data);
 
 
 class AdvGstPlayer: public GstPlayer{
@@ -23,18 +23,21 @@ public:
 
     virtual ~AdvGstPlayer(){
         QLOG_TRACE() << "AdvGstPlayer DELETE";
+        gst_object_unref(audioconvert);
+        gst_object_unref(volume);
+        gst_object_unref(decodebin);
+        gst_object_unref(audiobin);
+        gst_object_unref(fadeInController);
+        gst_object_unref(fadeOutController);
     }
     GstElement * audioconvert;
     GstElement * volume;
 protected:
     GstElement * decodebin;
     GstElement * audiobin;
-    GstElement * elem1;
-    GstPad  * pad1;
-    GstPad * pad2;
-    GstController * ctrl;
-    GValue * vol;
-    GValue theVol;
+    GstController * fadeInController;
+    GstController * fadeOutController;
+    GValue * theVol;
 
     virtual void setUri(const gchar * uri){
         g_object_set(G_OBJECT(decodebin), "uri", uri, NULL);
@@ -64,7 +67,7 @@ protected:
         gst_element_link_many(volume, audioconvert, audiobin, NULL);
 
         /* Connect to the pad-added signal */
-        g_signal_connect (decodebin, "pad-added", G_CALLBACK (pad_added_handler), this);
+        g_signal_connect (decodebin, "pad-added", G_CALLBACK (pad_added_handler), volume);
 /*
         bin = gst_bin_new("inbin");
 
@@ -80,27 +83,40 @@ protected:
 
         gst_element_add_pad(bin,pad2);*/
 
-        vol = &theVol;
-        g_value_init(vol,G_TYPE_DOUBLE);
+
+        //GValue * vol = theVol;
+        theVol = new GValue();
+        g_value_init(theVol,G_TYPE_DOUBLE);
        /* g_value_set_double(vol,0.01);
         g_object_set_property(G_OBJECT(volume),"volume",vol);*/
 
-        if(!(ctrl = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
+        if(!(fadeInController = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
                QLOG_ERROR() << "Can't control";
                return;
         }
-        QLOG_TRACE() << "I CAN CONTROL";
 
-        gst_controller_set_interpolation_mode(ctrl,"volume",GST_INTERPOLATE_CUBIC);
-
-
-        g_value_set_double(vol,0.0);
-        gst_controller_set(ctrl,"volume",30*GST_SECOND,vol);
-
-        g_value_set_double(vol,1.0);
-        gst_controller_set(ctrl,"volume",31*GST_SECOND,vol);
+        gst_controller_set_interpolation_mode(fadeInController,"volume",GST_INTERPOLATE_CUBIC);
 
 
+        g_value_set_double(theVol,0.0);
+        gst_controller_set(fadeInController,"volume",30*GST_SECOND,theVol);
+
+        g_value_set_double(theVol,1.0);
+        gst_controller_set(fadeInController,"volume",31*GST_SECOND,theVol);
+
+        if(!(fadeOutController = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
+               QLOG_ERROR() << "Can't control";
+               return;
+        }
+
+        gst_controller_set_interpolation_mode(fadeOutController,"volume",GST_INTERPOLATE_CUBIC);
+
+
+        g_value_set_double(theVol,1.0);
+        gst_controller_set(fadeOutController,"volume",38*GST_SECOND,theVol);
+
+        g_value_set_double(theVol,0.0);
+        gst_controller_set(fadeOutController,"volume",40*GST_SECOND,theVol);
 
 
 //*/
@@ -110,45 +126,38 @@ protected:
     }
 };
 
-void pad_added_handler (GstElement *src, GstPad *new_pad, AdvGstPlayer *data) {
-  GstPad *sink_pad = gst_element_get_static_pad (data->volume, "sink");
-  GstPadLinkReturn ret;
-  GstCaps *new_pad_caps = NULL;
-  GstStructure *new_pad_struct = NULL;
-  const gchar *new_pad_type = NULL;
+void pad_added_handler (GstElement * upstream, GstPad * upstreamNewPad, GstElement * downstream) {
 
-  g_print ("Received new pad '%s' from '%s':\n", GST_PAD_NAME (new_pad), GST_ELEMENT_NAME (src));
+  GstPad *downstreamPad = gst_element_get_static_pad ( downstream, "sink");
+  GstPadLinkReturn result;
+  GstCaps * newPadCaps = NULL;
+  GstStructure * newPadStruct = NULL;
+  const gchar * newPadType = NULL;
 
-  /* If our converter is already linked, we have nothing to do here */
-  if (gst_pad_is_linked (sink_pad)) {
-    g_print ("  We are already linked. Ignoring.\n");
-    goto exit;
-  }
+  QLOG_TRACE() << "Got pad " << GST_PAD_NAME (upstreamNewPad) << " from " << GST_ELEMENT_NAME (upstream);
 
-  /* Check the new pad's type */
-  new_pad_caps = gst_pad_get_caps (new_pad);
-  new_pad_struct = gst_caps_get_structure (new_pad_caps, 0);
-  new_pad_type = gst_structure_get_name (new_pad_struct);
-  if (!g_str_has_prefix (new_pad_type, "audio/x-raw")) {
-    g_print ("  It has type '%s' which is not raw audio. Ignoring.\n", new_pad_type);
-    goto exit;
-  }
+  if (gst_pad_is_linked (downstreamPad)) {
+      QLOG_TRACE() << " Pad already connected to downstream.";
+  }else{
+      newPadCaps = gst_pad_get_caps (upstreamNewPad);
+      newPadStruct = gst_caps_get_structure (newPadCaps, 0);
+      newPadType = gst_structure_get_name (newPadStruct);
 
-  /* Attempt the link */
-  ret = gst_pad_link (new_pad, sink_pad);
-  if (GST_PAD_LINK_FAILED (ret)) {
-    g_print ("  Type is '%s' but link failed.\n", new_pad_type);
-  } else {
-    g_print ("  Link succeeded (type '%s').\n", new_pad_type);
-  }
+      if (!g_str_has_prefix (newPadType, "audio/x-raw")) {
+          QLOG_TRACE() << "Pad is not of type is not raw audio but of type "<< newPadType <<". Can't connect.";
+      }else{
+          result = gst_pad_link (upstreamNewPad, downstreamPad);
+          if (GST_PAD_LINK_FAILED (result)) {
+              QLOG_TRACE() << "Failed to link.";
+          } else {
+              QLOG_TRACE() << "Link successful.";
+          }
+      }
+    }
 
-exit:
-  /* Unreference the new pad's caps, if we got them */
-  if (new_pad_caps != NULL)
-    gst_caps_unref (new_pad_caps);
-
-  /* Unreference the sink pad */
-  gst_object_unref (sink_pad);
+  if (newPadCaps != NULL)
+    gst_caps_unref (newPadCaps);
+  gst_object_unref (downstreamPad);
 }
 
 

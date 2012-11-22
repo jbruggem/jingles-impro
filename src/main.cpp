@@ -34,7 +34,6 @@
 
 ****/
 
-#include "maintests.h"
 
 int main(int argc, char ** argv){
     QApplication app(argc, argv);
@@ -50,11 +49,6 @@ int main(int argc, char ** argv){
 
 
     QLOG_TRACE() << "Logging initiated";
-
-
-    testGstreamer();
-    return 0;
-
 
     // manually set some file paths for scaffolding
     // load it in the workspace using the workspace API
@@ -115,7 +109,6 @@ int main(int argc, char ** argv){
     BasicUi ui(&controller);
     ui.setWorkspace(activeWorkspace);
 
-//    TestUi ui;
     ui.show();
     app.exec();
 

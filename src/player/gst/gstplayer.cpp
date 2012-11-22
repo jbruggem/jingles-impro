@@ -5,6 +5,7 @@ GstPlayer::GstPlayer(QObject *parent):
     playing(false),
     loaded(false),
     error(false),
+    playingRequested(false),
     pipeline(0),
     gstObjectName("player")
 {
@@ -13,18 +14,76 @@ GstPlayer::GstPlayer(QObject *parent):
     connect(this,SIGNAL(requestPlay()),this,SLOT(doPlay()));
     connect(this,SIGNAL(requestStop()),this,SLOT(doStop()));
     //watcher = NULL;
+    theVol = new GValue();
 }
 
 void GstPlayer::buildPipeline(){
     QLOG_TRACE() << "GstPlayer::buildPipeline";
-    pipeline = gst_element_factory_make("playbin2", gstObjectName.toUtf8().data());
+
+    pipeline = gst_element_factory_make("pipeline", gstObjectName.toUtf8().data());
+    decodebin = gst_element_factory_make("uridecodebin",NULL);
+    audioconvert = gst_element_factory_make("audioconvert",NULL);
+    volume = gst_element_factory_make("volume",NULL);
+    audiobin = gst_element_factory_make("autoaudiosink",NULL);
+
+
+    gst_bin_add(GST_BIN(pipeline), decodebin);
+    gst_bin_add(GST_BIN(pipeline), audioconvert);
+    gst_bin_add(GST_BIN(pipeline), volume);
+    gst_bin_add(GST_BIN(pipeline), audiobin);
+
+    gst_element_link_many(volume, audioconvert, audiobin, NULL);
+
+    // as soon as decodebin has a pad (i.e. file was loaded), connect it to volume
+    g_signal_connect (decodebin, "pad-added", G_CALLBACK (GstPlayer::handleAddedPad), volume);
+
+    // volume needs an initial value
+    double volumeMax=0.5;
+
+
+    g_value_init(theVol,G_TYPE_DOUBLE);
+    g_value_set_double(theVol,volumeMax);
+    g_object_set_property(G_OBJECT(volume),"volume",theVol);
+
+    //fade
+    long fadeIn,fadeOut, minFade = 500;
+    fadeIn = this->track->getFadeInDuration();
+    if(fadeIn < minFade && this->track->getStartTime() > 0)
+        fadeIn = minFade;
+
+    fadeOut = this->track->getFadeOutDuration();
+    if(fadeOut < minFade && this->track->getEndTime() > 0)
+        fadeOut = minFade;
+
+    this->setFade(fadeInController,
+                  this->track->getStartTime(),
+                  this->track->getStartTime()+fadeIn,
+                  0.0,volumeMax);
+
+    if(this->track->getEndTime() > 0)
+        this->setFade(fadeOutController,
+                  this->track->getEndTime()-fadeOut,
+                  this->track->getEndTime(),
+                  volumeMax,0.0);
+
+
 }
 
-/*
-void GstPlayer::run(){
-    QLOG_TRACE() << "PlayThread Start play";
-    play();
-}*/
+// start and end should be expressed in milliseconds
+void GstPlayer::setFade(GstController * & controller,long start,long end,double from,double to){
+    QLOG_TRACE() << this << "GstPlayer::setFade " << start << " ->" << end << ", "<< from << " -> " << to;
+    g_value_init(theVol,G_TYPE_DOUBLE);
+
+    if(!(controller = gst_controller_new(G_OBJECT(volume),"volume",NULL))){
+           QLOG_ERROR() << "Can't get a controller for fade purposes";
+           return;
+    }
+    gst_controller_set_interpolation_mode(controller,"volume",GST_INTERPOLATE_LINEAR);
+    g_value_set_double(theVol,from);
+    gst_controller_set(controller,"volume",start*GST_MSECOND,theVol);
+    g_value_set_double(theVol,to);
+    gst_controller_set(controller,"volume",end*GST_MSECOND,theVol);
+}
 
 Track * GstPlayer::getTrack(){
     return this->track;
@@ -37,7 +96,8 @@ void GstPlayer::setTrack(Track * track){
 
 
 void GstPlayer::setUri(const gchar * uri){
-    g_object_set(G_OBJECT(pipeline), "uri", uri, NULL);
+    QLOG_TRACE() << this << "Loading URI: "<<uri;
+    g_object_set(G_OBJECT(decodebin), "uri", uri, NULL);
 }
 
 void GstPlayer::load(){
@@ -73,13 +133,15 @@ int GstPlayer::play()
     QLOG_TRACE() << this << "GstPlayer::play";
 
     //if(!isLoaded){
-        GstState state, pending;
-        gst_element_get_state(pipeline,&state,&pending,0);
-        if(GST_STATE_PAUSED != state){
-            QLOG_TRACE() << "Nothing loaded - can't play";
-            return 1;
-        }
-    //}
+    GstState state, pending;
+    gst_element_get_state(pipeline,&state,&pending,0);
+    if(GST_STATE_PAUSED != state){
+        QLOG_TRACE() << "Player not ready - can't play. Queueing request.";
+        playingRequested = true;
+        return 0;
+    }
+
+    playingRequested = false;
 
     double start =  ((double)track->getStartTime())*GST_MSECOND;
     double end = ((double)track->getEndTime())*GST_MSECOND;
@@ -110,37 +172,6 @@ int GstPlayer::play()
         QLOG_TRACE() << "Failed to change state to PLAY.";
     }
 
-    //sleep(1);
-
-   /* double start =  ((double)track->getStartTime())*GST_MSECOND;
-    double end = ((double)track->getEndTime())*GST_MSECOND;
-
-    QLOG_TRACE() << "Looping from: "<< start << " to " << end;
-    gst_element_seek(pipeline,1.0,GST_FORMAT_TIME,GST_SEEK_FLAG_FLUSH,
-                               GST_SEEK_TYPE_SET, start,
-                               GST_SEEK_TYPE_SET, end);*/
-   /* if( track->getEndTime() > 0 ){
-        // find the time it should actually play
-        gint64 position = 0;
-        GstFormat format = GST_FORMAT_TIME;
-        gst_element_query_position(pipeline,&format,&position);
-
-        QLOG_TRACE() << "Position before playing is: "<< position;
-
-        int duration = track->getEndTime() - position;
-
-        if(0 < duration){
-            // set the watcher thread to stop this player appropriately
-            watcher = new IMediaPlayerWatcher(this, duration, this);
-            watcher->start();
-            QLOG_TRACE() << "Setting a watcher for duration: "<< duration ;
-            gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
-        }else{
-            QLOG_WARN() << "Could not continue playing. Current position ("<< position <<") bigger or equal to track's endTime ("<< track->getEndTime() <<").";
-        }
-    }else{
-        QLOG_TRACE() << "No need for watcher - endTime < 0.";
-    }*/
     return 0;
 }
 
@@ -176,17 +207,7 @@ void GstPlayer::doPlay(){
 void GstPlayer::stop()
 {
     QLOG_TRACE() << this << "STOP";
-/*
-    if(!isLoaded){
-        QLOG_TRACE() << "Nothing loaded - can't stop";
-        return;
-    }*/
 
-    /*if(watcher){
-        watcher->terminate();
-        delete watcher;
-        watcher = NULL;
-    }*/
     this->requestPause();
 
     gint64 position = 0;
@@ -198,6 +219,7 @@ void GstPlayer::stop()
 void GstPlayer::ensureInitGst(){
     if(!gstIsInit){
         gst_init(NULL,NULL);
+        gst_controller_init(NULL,NULL);
         gstIsInit = true;
     }
 }
@@ -251,7 +273,13 @@ void GstPlayer::parseMessage(GstMessage *msg){
         gst_message_parse_state_changed (msg, &old_state, &new_state, NULL);
         QString objectNamePlayer = gstObjectName;
         if( objectNamePlayer == GST_OBJECT_NAME (msg->src)){
-            QLOG_TRACE() << "[GST] "<< this << /*this->track->getFilename() <<*/ ": " << gst_element_state_get_name (old_state) <<"->"<<  gst_element_state_get_name (new_state);
+
+            if(new_state == GST_STATE_PLAYING || old_state == GST_STATE_PLAYING){
+                QLOG_TRACE() << "[GST] "<< this <<
+                                gst_element_state_get_name (old_state) <<
+                                "->"<<  gst_element_state_get_name (new_state);
+            }
+
             switch(new_state){
                 case GST_STATE_VOID_PENDING:
                     loaded=false;
@@ -268,6 +296,11 @@ void GstPlayer::parseMessage(GstMessage *msg){
                 case GST_STATE_PAUSED:
                     loaded=true;
                     playing=false;
+                    if(playingRequested){
+                        QLOG_TRACE() << "Queued request. Ask to play!";
+                        playingRequested = false;
+                        this->requestPlay();
+                    }
                     break;
                 case GST_STATE_PLAYING:
                     loaded=true;
@@ -313,4 +346,39 @@ void GstPlayer::parseMessage(GstMessage *msg){
         //QLOG_TRACE() << "[GST]" << GST_MESSAGE_TYPE_NAME(msg);
         break;
     }
+}
+
+
+void GstPlayer::handleAddedPad(GstElement * upstream, GstPad * upstreamNewPad, GstElement * downstream) {
+
+  GstPad *downstreamPad = gst_element_get_static_pad ( downstream, "sink");
+  GstPadLinkReturn result;
+  GstCaps * newPadCaps = NULL;
+  GstStructure * newPadStruct = NULL;
+  const gchar * newPadType = NULL;
+
+  QLOG_TRACE() << "Got pad " << GST_PAD_NAME (upstreamNewPad) << " from " << GST_ELEMENT_NAME (upstream);
+
+  if (gst_pad_is_linked (downstreamPad)) {
+      QLOG_TRACE() << " Pad already connected to downstream.";
+  }else{
+      newPadCaps = gst_pad_get_caps (upstreamNewPad);
+      newPadStruct = gst_caps_get_structure (newPadCaps, 0);
+      newPadType = gst_structure_get_name (newPadStruct);
+
+      if (!g_str_has_prefix (newPadType, "audio/x-raw")) {
+          QLOG_TRACE() << "Pad is not of type is not raw audio but of type "<< newPadType <<". Can't connect.";
+      }else{
+          result = gst_pad_link (upstreamNewPad, downstreamPad);
+          if (GST_PAD_LINK_FAILED (result)) {
+              QLOG_TRACE() << "Failed to link.";
+          } else {
+              QLOG_TRACE() << "Link successful.";
+          }
+      }
+    }
+
+  if (newPadCaps != NULL)
+    gst_caps_unref (newPadCaps);
+  gst_object_unref (downstreamPad);
 }

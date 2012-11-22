@@ -39,8 +39,8 @@ public:
     Track(
         const QString &url,
         bool loop,
-        int startTime, // milliseconds
-        int endTime,
+        long startTime, // milliseconds
+        long endTime,
         int fadeInDuration,
         int fadeOutDuration,
         bool showFilename,
@@ -50,13 +50,13 @@ public:
      //Track(QObject *parent = 0);
 
 
-     QString getDisplayName() const;
+    QString getDisplayName() const;
     QString getPath() const;
     QString getFilename() const;
     bool shouldShowFilename() const{return showFilename;}
     bool isLoopEnabled() const{return loopEnabled;}
-    int getStartTime() const{return startTime;}
-    int getEndTime() const{return endTime;}
+    long getStartTime() const{return startTime;}
+    long getEndTime() const{return endTime;}
     int getFadeInDuration() const{return fadeInDuration;}
     int getFadeOutDuration() const{return fadeOutDuration;}
     bool isValid() const {return fileInfo.exists();}

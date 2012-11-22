@@ -5,6 +5,7 @@
 #include "QsLog.h"
 #include "QsLogDest.h"
 #include <gst/gst.h>
+#include <gst/controller/gstcontroller.h>
 #include "track.h"
 #include "imediaplayer.h"
 #include "imediaplayerwatcher.h"
@@ -20,9 +21,20 @@ public:
         QLOG_TRACE() << "GstPlayer DELETE";
         if(pipeline)
             gst_object_unref(pipeline);
+        if(audioconvert)
+            gst_object_unref(audioconvert);
+        if(volume)
+            gst_object_unref(volume);
+        if(decodebin)
+            gst_object_unref(decodebin);
+        if(audiobin)
+            gst_object_unref(audiobin);
+        if(fadeInController)
+            gst_object_unref(fadeInController);
+        if(fadeOutController)
+            gst_object_unref(fadeOutController);
+        delete theVol;
     }
-
-    //void run();
 
 
     void load();
@@ -43,18 +55,24 @@ public:
 signals:
         void stateChanged();
 
-protected:
-        virtual void buildPipeline();
-        virtual void setUri(const gchar * uri);
+private:
+        void buildPipeline();
+        void setUri(const gchar * uri);
+        void setFade(GstController * & controller,long start,long end,double from,double to);
         Track * track;
         bool playing;
         bool loaded;
         bool error;
+        bool playingRequested;
         GstElement *pipeline;
         QString gstObjectName;
-
-private:
-
+        GstElement * decodebin;
+        GstElement * audiobin;
+        GstController * fadeInController;
+        GstController * fadeOutController;
+        GstElement * audioconvert;
+        GstElement * volume;
+        GValue * theVol;
 
     // IMediaPlayerWatcher * watcher;
     //QString uri;
@@ -67,6 +85,7 @@ private:
     static void ensureInitGst();
     static GstBusSyncReply BusCallSync(GstBus *bus, GstMessage *msg, void *user_data);
     static gboolean BusCallAsync(GstBus *bus, GstMessage *msg, void *user_data);
+    static void handleAddedPad(GstElement * upstream, GstPad * upstreamNewPad, GstElement * downstream);
 
 signals:
         void requestPause();

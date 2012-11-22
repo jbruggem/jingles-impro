@@ -13,21 +13,8 @@ Track::Track(const Track& track):
 {
      QLOG_TRACE() << "Building Track from other track";
 }
-/*
-Track::Track(QObject *parent) :
-    QObject(parent),
-    //path(),
-    loopEnabled(false),
-    startTime(0),
-    endTime(0),
-    fadeInDuration(0),
-    fadeOutDuration(0),
-    //fileRef(nullptr)
-{
-   QLOG_TRACE() << "Building Track from nothing";
-}*/
 
-Track::Track(const QString &url, bool loop, int startTime, int endTime, int fadeInDuration, int fadeOutDuration,bool showFilename,QObject *parent) :
+Track::Track(const QString &url, bool loop, long startTime, long endTime, int fadeInDuration, int fadeOutDuration,bool showFilename,QObject *parent) :
     QObject(parent),
     //path(url),
     loopEnabled(loop),
@@ -113,13 +100,13 @@ bool Track::operator<(const Track &other) const {
 }
 
 void  Track::setArtist(const QString * artist) {
-    QLOG_TRACE() << this << "Track's artist updated.";
+    //QLOG_TRACE() << this << "Track's artist updated.";
     this->artist = *artist;
     emit tagUpdated();
     emit tagArtistUpdate();
 }
 void  Track::setTitle(const QString * title) {
-    QLOG_TRACE() << this << "Track's title updated.";
+    //QLOG_TRACE() << this << "Track's title updated.";
     this->title = *title;
     emit tagUpdated();
     emit tagTitleUpdate();
