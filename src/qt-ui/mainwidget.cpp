@@ -37,8 +37,8 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
 	// set up the layout
 	layout           = new QVBoxLayout;
 	modeButtonLayout = new QHBoxLayout;
-	modeButtonLayout->addStretch();
     modeButtonLayout->addWidget(stopAllButton, 0, Qt::AlignRight);
+    modeButtonLayout->addStretch();
     modeButtonLayout->addWidget(modeLabel, 0, Qt::AlignRight);
 	modeButtonLayout->addWidget(modeButton, 0, Qt::AlignRight);
 	layout->addLayout(modeButtonLayout);
