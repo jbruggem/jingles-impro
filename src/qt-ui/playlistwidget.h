@@ -15,7 +15,7 @@ class PlayListWidget: public QWidget {
     
     public:
         PlayListWidget(QWidget *parent = 0);
-        void setTrackList(const TrackList *);
+        void setTrackList(TrackList *);
     private slots:
         void refreshButtons();
         void upButtonPressed();

@@ -1,26 +1,39 @@
 
-#ifndef TRACKLISTTABLEMODEL_H_
-#define TRACKLISTTABLEMODEL_H_
+#ifndef TRACKLISTTABLEMODEL_H
+#define TRACKLISTTABLEMODEL_H
 
-#include <QStandardItemModel>
-#include <QMap>
+#include <QAbstractTableModel>
+#include <QStringList>
 
-#include "tracklist.h"
+class TrackList;
 
-class TrackListTableModel : public QStandardItemModel {
-
+class TrackListTableModel : public QAbstractTableModel {
+    
     Q_OBJECT
-
+    
     public:
-        TrackListTableModel(QObject *parent = 0);
-        void addTrack(const QString &);
-        void addTracks(const QStringList &);
-        void populate(const TrackList *);
+        TrackListTableModel(QObject * parent = 0);
+        void setTrackList(TrackList *);
+        void populate(TrackList *l);
+        int rowCount (const QModelIndex & parent = QModelIndex()) const;
+        int columnCount (const QModelIndex & parent = QModelIndex()) const;
+        QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
+        QVariant headerData (int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        
+        QModelIndexList moveBack(QModelIndexList &);
+        QModelIndexList moveForward(QModelIndexList &);
+    
     private:
-        void initHeader();
-        void addTrack(const QString &path, bool refreshAfterAdd = true);
+        enum Fields {
+            FILENAME,
+            ARTIST,
+            PATH,
+            NB_FIELDS,
+        };
+        QStringList headerNames;
+        TrackList *list;
         void refresh();
-        TrackList *trackList;
 };
 
 #endif
+

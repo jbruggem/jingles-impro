@@ -41,7 +41,7 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     connect(downButton, SIGNAL(clicked()), this, SLOT(downButtonPressed()));
 }
 
-void PlayListWidget::setTrackList(const TrackList *list) {
+void PlayListWidget::setTrackList(TrackList *list) {
     model->populate(list);
 }
 
@@ -108,71 +108,22 @@ void PlayListWidget::refreshButtons() {
 void PlayListWidget::upButtonPressed() {
     QLOG_TRACE() << "PlayListWidget::upButtonPressed()";
     
-    disconnect(view->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(refreshButtons()));
-    
-    // Selected rows need to be sorted to make it easier to know how we are
-    // iterating over them.
+    // Get the selected rows
     auto selectedRows = view->selectionModel()->selectedRows();
-    qSort(selectedRows);
-    
-    // we only move up rows that:
-    // - are not the first row
-    // - are not below another row that cannot move
-    // The following is an example of this logic:
-    // - the table has five rows
-    // - rows 0, 1, 3 and 4 are selected and need to be moved upwards
-    // - row 0 cannot move because it is topmost
-    // - row 1 can also not move because it would displace row 0
-    // - row 3 gets moved to row 2
-    // - row 4 gets moved to row 3
-    for (int i = 0; i < selectedRows.length(); i++) {
-        const auto modelIndex = selectedRows.at(i);
-        int fromRow = modelIndex.row();
-        int toRow   = fromRow-1;
-        if (fromRow != i) {
-            auto temp = model->takeRow(fromRow);
-            model->insertRow(toRow, temp);
-            // add moved row to selection
-            view->selectionModel()->select(model->index(toRow, 0), QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
-        }
-    }
+    // Have the model move them
+    model->moveBack(selectedRows);
     
     refreshButtons();
-    connect(view->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(refreshButtons()));
 }
 
 void PlayListWidget::downButtonPressed() {
     QLOG_TRACE() << "PlayListWidget::downButtonPressed()";
     
-    disconnect(view->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(refreshButtons()));
-    
-    // Selected rows need to be sorted to make it easier to know how we are
-    // iterating over them.
+    // Get the selected rows
     auto selectedRows = view->selectionModel()->selectedRows();
-    qSort(selectedRows);
-    
-    // we only move down rows that:
-    // - are not the last row
-    // - are not above another row that cannot move
-    // The following is an example of this logic:
-    // - the table has five rows
-    // - rows 0, 1, 3 and 4 are selected and need to be moved downwards
-    // - row 4 cannot move because it is bottom
-    // - row 3 can also not move because it would displace row 4
-    // - row 1 gets moved to row 2
-    // - row 0 gets moved to row 1
-    for (int i = 0; i < selectedRows.length(); i++) {
-        const auto modelIndex = selectedRows.at(selectedRows.length() - i - 1);
-        int fromRow = modelIndex.row();
-        int toRow   = fromRow + 1;
-        if (fromRow != model->rowCount() - i - 1) {
-            auto temp = model->takeRow(fromRow);
-            model->insertRow(toRow, temp);
-            // add moved row to selection
-            view->selectionModel()->select(model->index(toRow, 0), QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
-        }
-    }
+    // Have the model move them
+    model->moveForward(selectedRows);
     
     refreshButtons();
-    connect(view->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this, SLOT(refreshButtons()));
 }
+

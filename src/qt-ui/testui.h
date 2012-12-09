@@ -11,7 +11,7 @@ class TrackList;
 class TestUi : public QWidget {
     public:
         TestUi(QWidget *parent = 0);
-        void setTrackList(const TrackList *);
+        void setTrackList(TrackList *);
     private:
         StockListWidget *stockListWidget;
         PlayListWidget  *playListWidget;

@@ -13,11 +13,11 @@ TestUi::TestUi(QWidget *parent)
     playListWidget  = new PlayListWidget;
     
     setLayout(new QGridLayout);
-    layout()->addWidget(stockListWidget);
-    // layout()->addWidget(playListWidget);
+    // layout()->addWidget(stockListWidget);
+    layout()->addWidget(playListWidget);
 }
 
-void TestUi::setTrackList(const TrackList *list) {
+void TestUi::setTrackList(TrackList *list) {
     stockListWidget->setTrackList(list);
     playListWidget->setTrackList(list);
 }
