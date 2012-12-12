@@ -62,7 +62,6 @@ void TestUi::buttonPressed() {
         w1Width->setEndValue(w3->width());
         w3Width->setStartValue(w3->width());
         button->setEnabled(false);
-        state = W1;
         transition->setDirection(QAbstractAnimation::Forward);
         transition->start();
         
@@ -70,7 +69,6 @@ void TestUi::buttonPressed() {
         w1Width->setEndValue(w1->width());
         w3Width->setStartValue(w1->width());
         button->setEnabled(false);
-        state = W3;
         transition->setDirection(QAbstractAnimation::Backward);
         transition->start();
     }
@@ -80,9 +78,11 @@ void TestUi::transitionFinished() {
     QLOG_TRACE() << "TestUi::transitionFinished()";
     
     if (state == W1) {
-        w1->setMaximumWidth(QWIDGETSIZE_MAX);
-    } else if (state == W3) {
+        state = W3;
         w3->setMaximumWidth(QWIDGETSIZE_MAX);
+    } else if (state == W3) {
+        state = W1;
+        w1->setMaximumWidth(QWIDGETSIZE_MAX);
     }
     button->setEnabled(true);
 }

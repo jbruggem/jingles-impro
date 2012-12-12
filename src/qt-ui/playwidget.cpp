@@ -1,8 +1,6 @@
 
 #include "playwidget.h"
 
-
-
 PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
 	: QWidget (parent),
 	  rowSize (rowSize),
@@ -29,9 +27,10 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
 
 
     wrapperLayout = new QGridLayout(this);
+    
     layout = new QGridLayout(this);
-    wrapperLayout->addLayout(layout, 0,0);
-
+    wrapperLayout->addLayout(layout, 1,1);
+    
     playListWidget = new QListView(this);
     currentPlayingTime = new QLabel("",this);
     currentPlayingTime->setAlignment(Qt::AlignHCenter);
@@ -46,12 +45,17 @@ PlayWidget::PlayWidget(UiController * controller, int rowSize, QWidget *parent)
     playlistLayout->addWidget(playListWidget);
     playlistLayout->addLayout(playlistControlLayout);
 
+    // initialize the animation
+    anim_init();
+    wrapperLayout->addWidget(anim_button, 0,1);
+    wrapperLayout->addWidget(anim_label, 1,0);
+
     //connect(playListWidget,SIGNAL(clicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
     connect(playListWidget,SIGNAL(doubleClicked(QModelIndex)),controller,SLOT(playFromPlaylist(QModelIndex)));
     connect(pauseButton,SIGNAL(clicked()),controller,SLOT(pausePlaylist()));
     connect(controller,SIGNAL(updatePlayerPosition(long)),this,SLOT(updatePlayerPosition(long)));
 
-    wrapperLayout->addLayout(playlistLayout, 0,1);
+    wrapperLayout->addLayout(playlistLayout, 1,2);
 
 
     //QVBoxLayout *layoutWithStretch = new QVBoxLayout;
@@ -108,3 +112,65 @@ void PlayWidget::append(const TrackList *buttons) {
 		}
 	}
 }
+
+void PlayWidget::anim_init() {
+    anim_label = new QLabel("This is a test label for the animation");
+    anim_state = LABEL_HIDDEN;
+    anim_label->setMaximumWidth(0);
+    
+    // setup animations
+    anim_labelWidth = new QPropertyAnimation(anim_label, "maximumWidth");
+    anim_labelWidth->setDuration(500);
+    anim_labelWidth->setStartValue(0);
+    // end value to be defined when starting the transition
+    anim_labelWidth->setEasingCurve(QEasingCurve::InOutQuad);
+    
+    anim_listWidth = new QPropertyAnimation(playListWidget, "maximumWidth");
+    anim_listWidth->setDuration(500);
+    // start value to be defined when starting the transition
+    anim_listWidth->setEndValue(0);
+    anim_listWidth->setEasingCurve(QEasingCurve::InOutQuad);
+    
+    anim_transition = new QParallelAnimationGroup;
+    anim_transition->addAnimation(anim_labelWidth);
+    anim_transition->addAnimation(anim_listWidth);
+    
+    anim_button = new QPushButton("animate");
+    
+    connect(anim_button,     SIGNAL(clicked()),  this, SLOT(anim_buttonPressed()));
+    connect(anim_transition, SIGNAL(finished()), this, SLOT(anim_transitionFinished()));
+}
+
+
+void PlayWidget::anim_buttonPressed() {
+    QLOG_TRACE() << "PlayWidget::anim_buttonPressed()";
+    
+    if (anim_state == LABEL_HIDDEN) {
+        anim_labelWidth->setEndValue(playListWidget->width());
+        anim_listWidth->setStartValue(playListWidget->width());
+        anim_button->setEnabled(false);
+        anim_transition->setDirection(QAbstractAnimation::Forward);
+        anim_transition->start();
+        
+    } else if (anim_state == LABEL_SHOWN) {
+        anim_labelWidth->setEndValue(anim_label->width());
+        anim_listWidth->setStartValue(anim_label->width());
+        anim_button->setEnabled(false);
+        anim_transition->setDirection(QAbstractAnimation::Backward);
+        anim_transition->start();
+    }
+}
+
+void PlayWidget::anim_transitionFinished() {
+    QLOG_TRACE() << "PlayWidget::anim_transitionFinished()";
+    
+    if (anim_state == LABEL_HIDDEN) {
+        anim_state = LABEL_SHOWN;
+        anim_label->setMaximumWidth(QWIDGETSIZE_MAX);
+    } else if (anim_state == LABEL_SHOWN) {
+        anim_state = LABEL_HIDDEN;
+        playListWidget->setMaximumWidth(QWIDGETSIZE_MAX);
+    }
+    anim_button->setEnabled(true);
+}
+

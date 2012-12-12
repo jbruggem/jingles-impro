@@ -9,6 +9,8 @@
 #include "uicontroller.h"
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 #include "QsLog.h"
 #include "playwidgetentry.h"
 #include "tracklist.h"
@@ -24,33 +26,48 @@
 
 class PlayWidget : public QWidget {
 
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
+    public:
         PlayWidget(UiController *, int, QWidget *parent = 0);
-		void clear();
+        void clear();
         void update(const TrackList *buttons, TrackList * list);
         QString prettyTime(long duration);
 
     public slots:
         void updatePlayerPosition(long position);
-	private:
+    private:
         void append(const TrackList *);
-		int rowSize;
-		int currentRow;
-		int currentColumn;
+        int rowSize;
+        int currentRow;
+        int currentColumn;
         TrackList * tracklist;
         QList<QString> shortcutKeys;
-		QGridLayout *layout;
+        QGridLayout *layout;
         QGridLayout *wrapperLayout;
         QListView * playListWidget;
         QLabel * currentPlayingTime;
         QPushButton * pauseButton;
         QAbstractListModel * playListWidgetModel;
-		QList<PlayWidgetEntry *> entryList;
+        QList<PlayWidgetEntry *> entryList;
         UiController * controller;
+        
+        // animation demo
+        void anim_init();
+        enum anim_State {
+            LABEL_HIDDEN,
+            LABEL_SHOWN,
+        } anim_state;
+        QLabel *anim_label;
+        QPushButton *anim_button;
+        QPropertyAnimation *anim_labelWidth;
+        QPropertyAnimation *anim_listWidth;
+        QParallelAnimationGroup *anim_transition;
 
         QString const * getKey(int i);
+    private slots:
+        void anim_buttonPressed();
+        void anim_transitionFinished();
 };
 
 #endif

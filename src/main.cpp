@@ -106,11 +106,11 @@ int main(int argc, char ** argv){
     Players * players = new Players(mediaPlayerFactory);
     UiController controller(players,activeWorkspace);
 
-    // BasicUi ui(&controller);
-    // ui.setWorkspace(activeWorkspace);
+    BasicUi ui(&controller);
+    ui.setWorkspace(activeWorkspace);
 
-    TestUi ui;
-    ui.setTrackList(activeWorkspace->getStock());
+    // TestUi ui;
+    // ui.setTrackList(activeWorkspace->getStock());
 
     ui.show();
     app.exec();
