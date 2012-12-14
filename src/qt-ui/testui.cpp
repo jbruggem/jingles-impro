@@ -8,6 +8,7 @@
 #include "stocklistwidget.h"
 #include "playlistwidget.h"
 #include "tracklist.h"
+#include "hslidelayout.h"
 
 TestUi::TestUi(QWidget *parent)
     : QWidget (parent) {
@@ -16,37 +17,24 @@ TestUi::TestUi(QWidget *parent)
     w2 = new PlayListWidget;
     w3 = new PlayListWidget;
     
+    slideLayout = new HSlideLayout;
+    slideLayout->addWidget(w1);
+    slideLayout->addWidget(w2);
+    slideLayout->addWidget(w3);
+    slideLayout->setDuration(500);
+    slideLayout->setEasingCurve(QEasingCurve::InOutCirc);
+    
     button = new QPushButton(tr("switch"));
     
     QHBoxLayout *l = new QHBoxLayout;
     setLayout(l);
     l->addWidget(button);
-    l->addWidget(w1);
-    l->addWidget(w2);
-    l->addWidget(w3);
+    l->addLayout(slideLayout);
     
-    state = W3;
-    w1->setMaximumWidth(0);
+    state = ONE;
+    slideLayout->switchTo(w1, false);  // no animation
     
-    // setup animations
-    w1Width = new QPropertyAnimation(w1, "maximumWidth");
-    w1Width->setDuration(500);
-    w1Width->setStartValue(0);
-    // end value to be defined when starting the transition
-    w1Width->setEasingCurve(QEasingCurve::InOutQuad);
-    
-    w3Width = new QPropertyAnimation(w3, "maximumWidth");
-    w3Width->setDuration(500);
-    // start value to be defined when starting the transition
-    w3Width->setEndValue(0);
-    w3Width->setEasingCurve(QEasingCurve::InOutQuad);
-    
-    transition = new QParallelAnimationGroup;
-    transition->addAnimation(w1Width);
-    transition->addAnimation(w3Width);
-    
-    connect(button,     SIGNAL(clicked()),  this, SLOT(buttonPressed()));
-    connect(transition, SIGNAL(finished()), this, SLOT(transitionFinished()));
+    connect(button,      SIGNAL(clicked()),  this, SLOT(buttonPressed()));
 }
 
 void TestUi::setTrackList(TrackList *list) {
@@ -58,32 +46,17 @@ void TestUi::setTrackList(TrackList *list) {
 void TestUi::buttonPressed() {
     QLOG_TRACE() << "TestUi::buttonPressed()";
     
-    if (state == W3) {
-        w1Width->setEndValue(w3->width());
-        w3Width->setStartValue(w3->width());
-        button->setEnabled(false);
-        transition->setDirection(QAbstractAnimation::Forward);
-        transition->start();
-        
-    } else if (state == W1) {
-        w1Width->setEndValue(w1->width());
-        w3Width->setStartValue(w1->width());
-        button->setEnabled(false);
-        transition->setDirection(QAbstractAnimation::Backward);
-        transition->start();
+    switch (state) {
+        case ONE:
+            if (slideLayout->switchTo(QWidgetList() << w2 << w3)) {
+                state = TWO;
+            }
+            break;
+        case TWO:
+            if (slideLayout->switchTo(QWidgetList() << w1)) {
+                state = ONE;
+            }
+            break;
     }
-}
-
-void TestUi::transitionFinished() {
-    QLOG_TRACE() << "TestUi::transitionFinished()";
-    
-    if (state == W1) {
-        state = W3;
-        w3->setMaximumWidth(QWIDGETSIZE_MAX);
-    } else if (state == W3) {
-        state = W1;
-        w1->setMaximumWidth(QWIDGETSIZE_MAX);
-    }
-    button->setEnabled(true);
 }
 

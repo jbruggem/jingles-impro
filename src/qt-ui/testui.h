@@ -10,6 +10,7 @@ class PlayListWidget;
 class TrackList;
 class QPropertyAnimation;
 class QParallelAnimationGroup;
+class HSlideLayout;
 
 class TestUi : public QWidget {
     
@@ -20,21 +21,19 @@ class TestUi : public QWidget {
         void setTrackList(TrackList *);
     private slots:
         void buttonPressed();
-        void transitionFinished();
     private:
         QPushButton     *button;
         StockListWidget *w1;
         PlayListWidget  *w2;
         PlayListWidget  *w3;
         
+        HSlideLayout *slideLayout;
+        
         // animations
         enum State {
-            W1,
-            W3
+            ONE,
+            TWO
         } state;
-        QPropertyAnimation *w1Width;
-        QPropertyAnimation *w3Width;
-        QParallelAnimationGroup *transition;
 };
 
 #endif

@@ -44,6 +44,7 @@ HEADERS += \
     src/qt-ui/autoscrollarea.h \
     src/qt-ui/stocklistwidget.h \
     src/qt-ui/playlistwidget.h \
+    src/qt-ui/hslidelayout.h \
     src/history.h \
     src/playwidgetentrycontroller.h \
     src/uicontroller.h \
@@ -78,6 +79,7 @@ SOURCES += \
     src/qt-ui/autoscrollarea.cpp \
     src/qt-ui/stocklistwidget.cpp \
     src/qt-ui/playlistwidget.cpp \
+    src/qt-ui/hslidelayout.cpp \
     src/history.cpp \
     src/playwidgetentrycontroller.cpp \
     src/uicontroller.cpp \
