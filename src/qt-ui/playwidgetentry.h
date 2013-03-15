@@ -37,7 +37,9 @@ public slots:
         QPushButton *stopButton;
         Track *track;
         PlayWidgetEntryController * controller;
-        QShortcut * shortcut;
+        QShortcut * shortcutPlay;
+        QShortcut * shortcutStop;
+        QString shortcutKey;
 
 };
 

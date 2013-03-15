@@ -15,11 +15,11 @@ class Players : public QObject
 public:
     explicit Players(MediaPlayerFactory * playerFactory,QObject *parent = 0);
 
+    static const int MAX_NUM_PLAYERS = 10;
 
     void removePlayer(int pid);
     IMediaPlayer * getPlayer(int playerId);
     IMediaPlayer * getAvailablePlayer(Track * t);
-    int createPlayer(Track *t);
     QList<int> * getPlayers(Track * t);
     void stopAll();
     void stopAllForTrack(Track * t);
@@ -38,6 +38,7 @@ public:
         void playingStateChange(Track *,bool playing);
 
 private:
+    int createPlayer(Track *t);
     QMap<Track *,QList<int> * > playersByTrack;
     QMap<int,IMediaPlayer *> players;
     MediaPlayerFactory * playerFactory;

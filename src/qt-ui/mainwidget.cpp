@@ -20,10 +20,10 @@ MainWidget::MainWidget(UiController * controller, QWidget *parent)
     modeButton = new QPushButton(tr("Switch"));
     connect(modeButton, SIGNAL(clicked()), this, SLOT(modeButtonClicked()));
 
-    stopAllButton = new QPushButton(tr("Stop All"));
+    stopAllButton = new QPushButton(tr("Sto&p All"));
     connect(stopAllButton, SIGNAL(clicked()), controller, SLOT(stopAllButtonClicked()));
 
-    stopAllShortcut = new QShortcut(QKeySequence("Ctrl+s"), this);
+    stopAllShortcut = new QShortcut(QKeySequence("p"), this);
     connect(stopAllShortcut,SIGNAL(activated()),controller,SLOT(stopAllButtonClicked()));
 
 

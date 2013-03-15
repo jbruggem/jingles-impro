@@ -17,8 +17,21 @@ void Players::ensureTrackExists(Track *t){
     }
 }
 
+
 int Players::createPlayer(Track *t){
     QLOG_TRACE() << "Players::createPlayer";
+//    int playing;
+
+//    foreach (int pid, *playersByTrack.value(t)) {
+//        playing += players.value(pid)->isPlaying();
+//    }
+
+    if((*playersByTrack.value(t)).size() > MAX_NUM_PLAYERS){
+        QLOG_WARN() << "Players::createPlayer: can't have more than "<< MAX_NUM_PLAYERS <<" players.";
+        QLOG_TRACE() << "Total players: " << players.size();
+        QLOG_TRACE() << "This track: " << (*playersByTrack.value(t)).size();
+        return -1;
+    }
     ensureTrackExists(t);
     int pid = ++playerIdCounter;
     IMediaPlayer * player = playerFactory->getMediaPlayerInstance();
@@ -28,6 +41,7 @@ int Players::createPlayer(Track *t){
     players.insert(pid,player);
     (playersByTrack.value(t))->append(pid);
     return pid;
+
 }
 
 void Players::playerStateChanged(){
@@ -76,7 +90,11 @@ IMediaPlayer * Players::getAvailablePlayer(Track * t){
 
     if(!player){ // no free player. Make a new one
         QLOG_TRACE() << "[players] no free player. Creating.";
-        player = players.value(this->createPlayer(t));
+        int pid  = this->createPlayer(t);
+        if(0 <= pid)
+            player = players.value(pid);
+        else
+            return NULL;
     }
 
     return player;

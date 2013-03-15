@@ -2,7 +2,8 @@
 // PlayWidgetEntry::PlayWidgetEntry(const QString &title, QWidget *parent)
 PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget *parent, QString const & shortcutKey)
     : QWidget (parent),
-      controller(c){
+      controller(c),
+      shortcutKey(shortcutKey){
 	QLOG_TRACE() << "PlayWidgetEntry::PlayWidgetEntry()";
 
     track = &t;
@@ -19,8 +20,10 @@ PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget
     connect(stopButton,SIGNAL(clicked()),controller,SLOT(stopClicked()));
 
     if(NULL != shortcutKey){
-        shortcut = new QShortcut(QKeySequence(shortcutKey), this);
-        connect(shortcut,SIGNAL(activated()),controller,SLOT(playClicked()));
+        shortcutPlay = new QShortcut(QKeySequence(shortcutKey), this);
+        shortcutStop = new QShortcut("Ctrl+"+shortcutKey, this);
+        connect(shortcutPlay,SIGNAL(activated()),controller,SLOT(playClicked()));
+        connect(shortcutStop,SIGNAL(activated()),controller,SLOT(stopClicked()));
     }
 }
 
@@ -42,7 +45,10 @@ void PlayWidgetEntry::build(){
 
 void PlayWidgetEntry::updateTags(){
     //QLOG_TRACE() << "PlayWid(getEntry::update()";
-    playButton->setText(track->getDisplayName());
+    playButton->setText(
+                (NULL != shortcutKey?"["+shortcutKey+"]\n\n":"")
+        + track->getDisplayName()
+    );
 }
 
 
