@@ -57,7 +57,8 @@ Syntax is the following:
 * `shouldLoop`: boolean
 * `start`: time in ms
 * `end`: time in ms or -1 if track should be played to the end
-* `fadeIn/fadeOut`: [not implemented] time in ms
+* `fadeOut`: time in ms
+* `fadeIn`: time in ms
 * `showFileName`: boolean (`true` or `false`). Should the UI show the filename or the id3 'title' tag?
 * `buttonOrList`: 'b' to show in the buttons, 'p' to show in the list 
 
