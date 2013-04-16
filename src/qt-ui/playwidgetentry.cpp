@@ -19,11 +19,14 @@ PlayWidgetEntry::PlayWidgetEntry(PlayWidgetEntryController * c,Track &t, QWidget
     connect(playButton,SIGNAL(clicked()),controller,SLOT(playClicked()));
     connect(stopButton,SIGNAL(clicked()),controller,SLOT(stopClicked()));
 
-    if(NULL != shortcutKey){
+    if(shortcutKey.length()){
         shortcutPlay = new QShortcut(QKeySequence(shortcutKey), this);
         shortcutStop = new QShortcut("Ctrl+"+shortcutKey, this);
         connect(shortcutPlay,SIGNAL(activated()),controller,SLOT(playClicked()));
         connect(shortcutStop,SIGNAL(activated()),controller,SLOT(stopClicked()));
+        QLOG_TRACE() << "PlayWidgetEntry: set shortcut key to "<< shortcutKey;
+    }else{
+        QLOG_TRACE() << "PlayWidgetEntry: no shortcut key.";
     }
 }
 
@@ -31,7 +34,7 @@ void PlayWidgetEntry::build(){
     QLOG_TRACE() << "PlayWidgetEntry::build()";
     innerLayout  = new QGridLayout;
     buttonLayout = new QVBoxLayout;
-    playButton   = new QPushButton(track->getFilename());
+    playButton   = new QPushButton("loading...");
     stopButton   = new QPushButton(tr("Stop"));
 
     QSizePolicy sizePol(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -41,12 +44,14 @@ void PlayWidgetEntry::build(){
     buttonLayout->addWidget(stopButton);
     innerLayout->addLayout(buttonLayout, 0, 0);
     setLayout(innerLayout);
+
+    updateTags();
 }
 
 void PlayWidgetEntry::updateTags(){
-    //QLOG_TRACE() << "PlayWid(getEntry::update()";
+    QLOG_TRACE() << "PlayWidgetEntry::updateTags " << shortcutKey;
     playButton->setText(
-                (NULL != shortcutKey?"["+shortcutKey+"]\n\n":"")
+                (shortcutKey.length()?"["+shortcutKey+"] ":"")
         + track->getDisplayName()
     );
 }
@@ -63,6 +68,6 @@ void PlayWidgetEntry::stateChanged(bool isNowPlaying){
 }
 
 void PlayWidgetEntry::trackInfosUpdated(){
-    //QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()";
+    //QLOG_TRACE() << "PlayWidgetEntry::trackInfosUpdated()" << shortcutKey;
     this->updateTags();
 }
