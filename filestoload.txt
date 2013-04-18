@@ -4,9 +4,10 @@
 /home/jehan/Perso/sons/Arbitre (sortie).mp3,false,0,-1,500,0,true,b
 /home/jehan/Perso/sons/02__impro/jingles_improvoc/01 Jingle Arbitre1.mp3,false,200,-1,1,0,true,b
 /home/jehan/Perso/sons/02__impro/jingles_improvoc/03 Jingle Arbitre 2.mp3,false,200,-1,1,0,true,b
-/home/jehan/Perso/sons/02__impro/jingles_improvoc/07 Jingle 3.mp3,false,0,-1,0,0,true,b
 /home/jehan/Perso/sons/02__impro/jingles_improvoc/04 Caucus.mp3,false,0,-1,0,0,true,b
 /home/jehan/Perso/sons/02__impro/jingles_improvoc/08 Caucus2.mp3,false,0,-1,0,0,true,b
+/home/jehan/Perso/sons/Methodic-Doubt-Banshee.mp3,false,0,20500,0,0,true,b
+/home/jehan/Perso/sons/Methodic-Doubt-Banshee.mp3,false,0,800,0,0,true,b
 
 /home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 01 Prenez place.mp3,false,3000,6000,0,0,false,p
 /home/jehan/Perso/m/Doctor FLAKE/Paradis Dirtyficiels/Doctor FLAKE - Paradis Dirtyficiels - 10 Le vaste espace.mp3,false,1000,-1,0,0,false,p
