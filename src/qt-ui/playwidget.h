@@ -51,6 +51,8 @@ class PlayWidget : public QWidget {
         UiController * controller;
 
         QString const * getKey(int i);
+
+        QString static noKey;
 };
 
 #endif

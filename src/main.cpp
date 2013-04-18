@@ -62,7 +62,7 @@ int main(int argc, char ** argv){
     // this is temporary
     QFile file("./filestoload.txt");
     if(!file.open(QIODevice::ReadOnly)) {
-        QLOG_ERROR() << file.errorString();
+        QLOG_ERROR() << file.errorString() << " when trying to open file: "<< file.fileName() << "in folder " << QDir::currentPath();
         return 1;
     }
 
