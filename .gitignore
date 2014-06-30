@@ -11,3 +11,4 @@ Makefile.Release
 /filestoload.txt~
 /filestoload (copy).txt
 /jingles-qt.exe
+/jingles-qt.pro.user.*
