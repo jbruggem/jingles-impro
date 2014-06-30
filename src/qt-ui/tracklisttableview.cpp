@@ -10,7 +10,7 @@ TrackListTableView::TrackListTableView(QWidget *parent)
     setItemDelegate(new TrackListTableDelegate);
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setHighlightSections(false);
-    horizontalHeader()->setMovable(true);
+    horizontalHeader()->setSectionsMovable(true);
     
     verticalHeader()->setHighlightSections(false);
     
