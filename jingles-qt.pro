@@ -2,14 +2,14 @@
 CONFIG += debug_and_release
 
 TEMPLATE = app
-TARGET = 
+TARGET = jingles-qt
 
 DEPENDPATH  += . src src/player  src/player/gst src/workspace \
  src/externals/qslog src/externals/taglib src/qt-ui
 INCLUDEPATH += . src src/player  src/player/gst src/workspace \
  src/externals/qslog src/externals/taglib src/qt-ui
 
-
+QT += gui widgets
 
 # Input
 HEADERS += \
