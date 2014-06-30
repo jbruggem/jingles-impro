@@ -22,20 +22,18 @@ void PlayWidgetEntryController::setTrack(Track * t){
 }
 
 void PlayWidgetEntryController::initPlayer(){
-    players->createPlayer(track);
+    players->getAvailablePlayer(track);
 }
 
 void PlayWidgetEntryController::playClicked(){
     //QLOG_TRACE() << "Button play was clicked";
     if(NULL != track){
         IMediaPlayer * player = players->getAvailablePlayer(track);
-        //if(NULL != player){
-        player->play();
-        //this->stateChanged(true);
-        /*}else{
-            QLOG_ERROR() << "We should have a player ready to play: none was found. Can't play.";
-        }*/
-       //initPlayer();
+        if(NULL != player){
+            player->play();
+        }else{
+            QLOG_ERROR() << "No player to play.";
+        }
     }
 }
 

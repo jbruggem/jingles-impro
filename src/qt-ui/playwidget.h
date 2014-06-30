@@ -65,9 +65,12 @@ class PlayWidget : public QWidget {
         QParallelAnimationGroup *anim_transition;
 
         QString const * getKey(int i);
+        QString static noKey;
+
     private slots:
         void anim_buttonPressed();
         void anim_transitionFinished();
+
 };
 
 #endif

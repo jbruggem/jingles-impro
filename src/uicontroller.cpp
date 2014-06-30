@@ -14,7 +14,7 @@ PlayWidgetEntryController * UiController::getPlayWidgetEntryController(){
 }
 
 void UiController::load(Track * t){
-    players->createPlayer(t);
+    players->getAvailablePlayer(t);
 }
 
 long  UiController::currentPlayerEndingTime(){

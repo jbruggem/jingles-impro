@@ -18,23 +18,29 @@ class GstPlayer : public IMediaPlayer
     Q_OBJECT
 public:
     GstPlayer(QObject *parent = 0);
+
     virtual ~GstPlayer(){
-        QLOG_TRACE() << "GstPlayer DELETE";
-        if(pipeline)
-            gst_object_unref(pipeline);
-        if(audioconvert)
-            gst_object_unref(audioconvert);
-        if(volume)
-            gst_object_unref(volume);
-        if(decodebin)
-            gst_object_unref(decodebin);
-        if(audiobin)
-            gst_object_unref(audiobin);
+        QLOG_TRACE() << "GstPlayer" << this << " DELETE";
+
+        disposeGstElement(decodebin);
+        disposeGstElement(audiobin);
+        disposeGstElement(volume);
+        disposeGstElement(audioconvert);
+        disposeGstElement(pipeline);
+
         if(fadeInController)
             gst_object_unref(fadeInController);
         if(fadeOutController)
             gst_object_unref(fadeOutController);
+
         delete theVol;
+    }
+
+    void disposeGstElement(GstElement * element){
+        if(element){
+            gst_element_set_state(element,GST_STATE_NULL);
+            gst_object_unref(element);
+        }
     }
 
 
@@ -71,16 +77,16 @@ private:
         long duration;
         long position;
         GstFormat formatTime;
-        GstElement *pipeline;
+        GstElement *pipeline = 0;
         QString gstObjectName;
-        GstElement * decodebin;
-        GstElement * audiobin;
-        GstController * fadeInController;
-        GstController * fadeOutController;
-        GstElement * audioconvert;
-        GstElement * volume;
-        GValue * theVol;
-        QTimer * positionQueryTimer;
+        GstElement * decodebin = 0 ;
+        GstElement * audiobin = 0;
+        GstController * fadeInController = 0;
+        GstController * fadeOutController = 0;
+        GstElement * audioconvert = 0;
+        GstElement * volume = 0;
+        GValue * theVol = 0;
+        QTimer * positionQueryTimer = 0;
 
     // IMediaPlayerWatcher * watcher;
     //QString uri;

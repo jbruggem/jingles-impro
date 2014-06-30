@@ -94,10 +94,11 @@ void PlayWidget::update(const TrackList *buttons, TrackList * list) {
     for(int i=0; i< tracklist->length(); i++)
         controller->load(tracklist->at(i));
 }
+QString PlayWidget::noKey = QString("");
 
 QString const * PlayWidget::getKey(int i){
     if(i >= shortcutKeys.length())
-        return NULL;
+        return &PlayWidget::noKey;
     return &shortcutKeys[i];
 }
 
