@@ -77,16 +77,16 @@ private:
         long duration;
         long position;
         GstFormat formatTime;
-        GstElement *pipeline;
+        GstElement *pipeline = 0;
         QString gstObjectName;
-        GstElement * decodebin;
-        GstElement * audiobin;
-        GstController * fadeInController;
-        GstController * fadeOutController;
-        GstElement * audioconvert;
-        GstElement * volume;
-        GValue * theVol;
-        QTimer * positionQueryTimer;
+        GstElement * decodebin = 0 ;
+        GstElement * audiobin = 0;
+        GstController * fadeInController = 0;
+        GstController * fadeOutController = 0;
+        GstElement * audioconvert = 0;
+        GstElement * volume = 0;
+        GValue * theVol = 0;
+        QTimer * positionQueryTimer = 0;
 
     // IMediaPlayerWatcher * watcher;
     //QString uri;
